@@ -263,7 +263,41 @@ One query answers "how many, by what, where": any of the metrics over a window, 
 | `limit` | 100 | Rows (or, by time and a dimension, values of the dimension), 1 to 1000; past it `truncated` is true |
 | a dimension | none | A filter: `country=US,DE` keeps those values, `country=-US` leaves them out. One dimension cannot do both. |
 
-The dimensions are `link`, `campaign`, `adgroup`, `creative` (the link's tracking fields or the URL's `adto_*` values), `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `country`, `region`, `city`, `browser`, `referrer`, `device` (`ios`, `android`, `desktop`, `other`), `os`, `os_version`, `lang`, `app_version`, `match_source`, `routing_rule` (the rule that routed the tap: a geo, language, schedule or A/B variant), `cta` (the button a visitor took on a link page: `cta_ios`, `cta_android`, `cta_open`, `cta_web`) and `event_source` (events only: `app`, `web` for [`adto.js`](/sdk/web/), `store`).
+The dimensions are `link`, `campaign`, `adgroup`, `creative` (the link's tracking fields or the URL's `adto_*` values), `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `country`, `region`, `city`, `browser`, `referrer`, `channel`, `device` (`ios`, `android`, `desktop`, `other`), `os`, `os_version`, `lang`, `app_version`, `match_source`, `install_store`, `install_source`, `routing_rule` (the rule that routed the tap: a geo, language, schedule or A/B variant), `cta` (the button a visitor took on a link page: `cta_ios`, `cta_android`, `cta_open`, `cta_web`) and `event_source` (events only: `app`, `web` for [`adto.js`](/sdk/web/), `store`).
+
+`channel` reads a tap's referrer, `utm_source` and `utm_medium` as one traffic source:
+
+| Channel | A tap is in it when |
+|---|---|
+| `paid` | Its `utm_medium` says it was bought: `cpc`, `ppc`, `cpm`, `paid`, `paid_social`, `display` and the like. AdTo keeps no ad click ids, so an ad tap without such a `utm_medium` falls into the channel of its referrer. |
+| `ai_assistant` | It came from an AI assistant, such as ChatGPT, Perplexity, Gemini, Claude or Copilot, by referrer or by `utm_source` (ChatGPT adds `utm_source=chatgpt.com` to many of its links). |
+| `email` | Its `utm_medium` is `email` or `newsletter`, or it came from a webmail page or a mail app. |
+| `messaging` | It came from WhatsApp, Telegram, Messenger, Slack, Discord or LINE. |
+| `social` | It came from a social network, such as Facebook, Instagram, X, LinkedIn, TikTok, YouTube, Reddit or Pinterest. |
+| `search` | It came from a search engine. |
+| `app` | An Android app that is none of the above opened the link. |
+| `website` | It has any other referrer, your own website included. |
+| `other` | It has no referrer and a `utm_source` or `utm_medium` the list does not know. |
+| `direct` | It has no referrer and no UTM values: a typed or pasted link, a QR scan, or an app that sends no referrer. |
+
+The first row that fits wins, and the channel is worked out when you ask, so it covers every tap in the retention window. Many apps and private browsing modes send no referrer, which puts their taps under `direct`; a `utm_source` on the link is the reliable way to name a source.
+
+`install_store` (installs and events) is the store that installed the app. On iOS it is `app_store`, `testflight` or `simulator`. On Android it is the installer's store, `google_play`, `huawei`, `samsung`, `xiaomi`, `vivo`, `oppo`, `amazon` or `sideload` (an APK opened from a file), or the installer's package name when it is anything else, such as another store, a phone-to-phone transfer tool or `com.android.shell` for a build installed from a computer; when the device named no installer, it is the store whose install referrer the SDK read (`google_play`, `huawei`, `samsung`, `xiaomi`, `vivo`).
+
+`install_source` (installs and events) is what the store's install referrer names. Google Play fills that referrer for many installs that no AdTo link started, so this shows where part of your organic Android installs came from:
+
+| Install source | The referrer carries |
+|---|---|
+| `adto_link` | An AdTo link's own tag |
+| `google_ads` | A Google Ads click id (`gclid`, `gbraid`, `wbraid`) |
+| `adjust` | An Adjust tracking link's id |
+| `instagram`, `facebook` | `utm_source=apps.instagram.com` or `apps.facebook.com`: the install started in that app |
+| `gemini` | The Gemini app's tag: the assistant sent the person to the store page |
+| `google_search` | `utm_source=google` with `utm_medium=organic`: a Google search result that led to the store page |
+| `play_store` | Play's own organic tag |
+| `other` | Anything else, such as another store's own format |
+
+An install without a referrer has no install source, which is every iOS install and most Android ones: Play fills the referrer only when the store page was opened from outside the Play app. It is read from the referrer the install already stores, so it covers earlier installs too.
 
 An install takes the dimensions of the tap that won it; an event those of the link it counts for (the link that last opened the app within its re-engagement window, else the install's), and an open those of its tap. What no link brought is `(organic)`; a link that carried no value for a dimension is `(none)`. Both are values like any other, so `country=-US` keeps the rows without a country and `utm_source=(none)` finds the taps without one.
 
