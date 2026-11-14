@@ -103,7 +103,7 @@ The `data` of `app.installed` and `app.install_updated`:
 | `type` | string | `non-organic` when matched, else `organic`. |
 | `match_source` | string or null | `referrer`, `clipboard`, `fingerprint`, or `null` (organic, or credit withheld by a blocked fraud rule). |
 | `referrer_source` | string or null | `google_play`, `huawei`, `samsung`, `xiaomi`, `vivo`, `meta`, or `null`. |
-| `install_store` | string or null | The store that installed the app: `app_store` (every iOS install), `google_play`, `huawei`, `samsung`, `xiaomi`, `vivo`, `amazon`, `sideload`, another installer's package name, or `null` when the device named none. |
+| `install_store` | string or null | The store that installed the app: `app_store`, `testflight`, `simulator`, `google_play`, `huawei`, `samsung`, `xiaomi`, `vivo`, `oppo`, `amazon`, `sideload`, another installer's package name, or `null` when the device named none. |
 | `match_confidence` | string or null | `guaranteed`, `high`, `medium`, `low`, or `null`. |
 | `install_state` | string or null | `install`, `reinstall`, `update`, or `null`. |
 | `is_reinstall` | boolean | |
