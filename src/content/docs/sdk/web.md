@@ -74,9 +74,16 @@ A bar at the bottom of the page (`position: 'top'` moves it) that opens an AdTo 
 
 A visitor finds your website through a search engine, an AI assistant or a campaign, then taps **Get the app**. Without help that tap's source is your own website. `adto.link()` returns your AdTo link with the visit's source added, so the tap, and the install that follows, are credited to where the visitor really came from:
 
-```js
-document.querySelector('#get-the-app').href = adto.link('https://acme.adto.app/app');
+```html
+<a id="get-the-app" href="https://acme.adto.app/app">Get the app</a>
+<script>
+  document.querySelector('#get-the-app').addEventListener('click', function (e) {
+    if (window.adto && adto.link) e.currentTarget.href = adto.link('https://acme.adto.app/app');
+  });
+</script>
 ```
+
+Read the link when the button is tapped, as above, not when the page loads: by then the script has loaded and knows whether it may use the source. A button whose link was set at page load would usually get the plain link.
 
 The source is what the visitor arrived with: the landing URL's `utm_source`, `utm_medium`, `utm_campaign`, `utm_term` and `utm_content`, and the origin of the page that linked to your site (never one of your own pages). `adto.link()` adds them to the link as `utm_*` and [`adto_web_referrer`](/links/url-parameters/#adto_web_referrer-the-page-that-sent-the-visitor); a value the link already carries stays as it is.
 
@@ -84,7 +91,9 @@ The source is what the visitor arrived with: the landing URL's `utm_source`, `ut
 - Until storing is allowed (see [Consent](#consent)), nothing is kept and `adto.link()` returns the link unchanged. `adto.consent(false)` deletes the cookie.
 - A visit with no UTM values and no outside referrer has no source: the link comes back unchanged and the tap is credited to your website.
 - The [app banner](#the-app-banner) does this for its button; you only call `adto.link()` for your own buttons.
-- Call it after the script has loaded. With the queue line from [Set it up](#set-it-up), `adto.push` runs calls in order, but it returns nothing, so set the button's link from a callback of your own once `window.adto.link` exists.
+- With the default `data-consent="auto"`, the script first asks the server whether this visitor needs consent; until it has the answer the link comes back unchanged, which is one more reason to read it on the tap.
+- A browser that sends Global Privacy Control (Brave does by default) counts as no, so there the link stays unchanged unless the page calls `adto.consent(true)`.
+- When the tap opens the installed app directly (a Universal Link or App Link), the app reports the tap itself: its `utm_*` values are kept, the referring page is not.
 
 In the [Breakdown](/dashboard/overview/#breakdown), such a tap then shows the real referrer and UTM values.
 
