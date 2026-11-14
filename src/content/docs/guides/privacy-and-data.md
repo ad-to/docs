@@ -35,7 +35,7 @@ Bots (recognized by their User-Agent) never produce a click row. Link taps set n
 | Geo and network | `country`; `region`, `city`, `asn`, `as_org` (128 characters) | DB-IP's location data for the request's address, looked up on AdTo's servers | `country` forever; the rest at retention |
 | Screen profile | `screen_width`, `screen_height`, `pixel_ratio`, `max_touch_points`, `connection_type` | the beacon of the pages a phone gets instead of a plain redirect: the mobile interstitial, the iOS tap-to-store page, and the Facebook and Instagram page on Android | screen fields after 30 days; `connection_type` forever |
 | Device settings | `text_size` (iOS and iPadOS only), `dark_mode`, `high_contrast` (Increase Contrast), `reduce_motion` (Reduce Motion), `utc_offset_min` | the same beacon, from the browser's media queries, the system body font and the page's clock | with the screen fields, after 30 days |
-| Traffic source | `referrer` | `Referer` header reduced to its origin; null for AdTo's own hosts | forever |
+| Traffic source | `referrer` | `Referer` header reduced to its origin, or to `android-app://<package>` when an Android app opened the link; null for AdTo's own hosts | forever |
 | Campaign | `utm_*`, `link_params` (`adto_*` values) | the link URL's query string | forever |
 | Page button | `cta`, `cta_at` | the link page's beacon: which store, app or website button was tapped first | forever |
 | SDK-reported opens | `device_id`, `session_id`, `client_click_time`, `launch_referrer` | the SDK's `POST /api/v1/clicks` | `device_id` and `launch_referrer` at retention; the rest forever |

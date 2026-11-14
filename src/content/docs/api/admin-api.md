@@ -263,7 +263,26 @@ One query answers "how many, by what, where": any of the metrics over a window, 
 | `limit` | 100 | Rows (or, by time and a dimension, values of the dimension), 1 to 1000; past it `truncated` is true |
 | a dimension | none | A filter: `country=US,DE` keeps those values, `country=-US` leaves them out. One dimension cannot do both. |
 
-The dimensions are `link`, `campaign`, `adgroup`, `creative` (the link's tracking fields or the URL's `adto_*` values), `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `country`, `region`, `city`, `browser`, `referrer`, `device` (`ios`, `android`, `desktop`, `other`), `os`, `os_version`, `lang`, `app_version`, `match_source`, `routing_rule` (the rule that routed the tap: a geo, language, schedule or A/B variant), `cta` (the button a visitor took on a link page: `cta_ios`, `cta_android`, `cta_open`, `cta_web`) and `event_source` (events only: `app`, `web` for [`adto.js`](/sdk/web/), `store`).
+The dimensions are `link`, `campaign`, `adgroup`, `creative` (the link's tracking fields or the URL's `adto_*` values), `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `country`, `region`, `city`, `browser`, `referrer`, `channel`, `device` (`ios`, `android`, `desktop`, `other`), `os`, `os_version`, `lang`, `app_version`, `match_source`, `install_store`, `routing_rule` (the rule that routed the tap: a geo, language, schedule or A/B variant), `cta` (the button a visitor took on a link page: `cta_ios`, `cta_android`, `cta_open`, `cta_web`) and `event_source` (events only: `app`, `web` for [`adto.js`](/sdk/web/), `store`).
+
+`channel` reads a tap's referrer, `utm_source` and `utm_medium` as one traffic source:
+
+| Channel | A tap is in it when |
+|---|---|
+| `paid` | Its `utm_medium` says it was bought: `cpc`, `ppc`, `cpm`, `paid`, `paid_social`, `display` and the like. AdTo keeps no ad click ids, so an ad tap without such a `utm_medium` falls into the channel of its referrer. |
+| `ai_assistant` | It came from an AI assistant, such as ChatGPT, Perplexity, Gemini, Claude or Copilot, by referrer or by `utm_source` (ChatGPT adds `utm_source=chatgpt.com` to many of its links). |
+| `email` | Its `utm_medium` is `email` or `newsletter`, or it came from a webmail page or a mail app. |
+| `messaging` | It came from WhatsApp, Telegram, Messenger, Slack, Discord or LINE. |
+| `social` | It came from a social network, such as Facebook, Instagram, X, LinkedIn, TikTok, YouTube, Reddit or Pinterest. |
+| `search` | It came from a search engine. |
+| `app` | An Android app that is none of the above opened the link. |
+| `website` | It has any other referrer, your own website included. |
+| `other` | It has no referrer and a `utm_source` or `utm_medium` the list does not know. |
+| `direct` | It has no referrer and no UTM values: a typed or pasted link, a QR scan, or an app that sends no referrer. |
+
+The first row that fits wins, and the channel is worked out when you ask, so it covers every tap in the retention window. Many apps and private browsing modes send no referrer, which puts their taps under `direct`; a `utm_source` on the link is the reliable way to name a source.
+
+`install_store` (installs and events) is the store that installed the app. Every iOS install is `app_store`: iOS does not say where an app came from, so TestFlight and alternative marketplaces read the same. On Android it is the installer's store, `google_play`, `huawei`, `samsung`, `amazon` or `sideload` (an APK opened from a file), or the installer's package name when it is another store; when the device named no installer, it is the store whose install referrer the SDK read (`google_play`, `huawei`, `samsung`, `xiaomi`, `vivo`).
 
 An install takes the dimensions of the tap that won it; an event those of the link it counts for (the link that last opened the app within its re-engagement window, else the install's), and an open those of its tap. What no link brought is `(organic)`; a link that carried no value for a dimension is `(none)`. Both are values like any other, so `country=-US` keeps the rows without a country and `utm_source=(none)` finds the taps without one.
 
