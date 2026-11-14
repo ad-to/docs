@@ -81,6 +81,16 @@ https://acme.adto.app/invite?adto_referrer=1042&adto_label=spring
 
 It is stored on the click, not in `click_params`. An install credited to the tap gets it as `install.link?.referrerCustomerId`, and the new user's first `identify` records a referral and sends `referral.converted`, exactly as a [referral link](/guides/referral-programs/) does. On a referral link the link's own customer wins and `adto_referrer` is ignored. The value is trimmed; one longer than 200 characters or with control characters is dropped, never cut. Anyone can edit the URL to name another customer, so when that matters, give each customer a referral link instead.
 
+## `adto_web_referrer`: the page that sent the visitor
+
+A tap on a link placed on your own website arrives with your website as its referrer. `adto_web_referrer` names the page that sent the visitor to your website in the first place:
+
+```
+https://acme.adto.app/app?adto_web_referrer=https%3A%2F%2Fwww.google.com&utm_source=spring
+```
+
+[`adto.js`](/sdk/web/#carry-the-visits-source-into-the-link) adds it for you (`adto.link()` and the app banner). The tap stores its origin as the click's `referrer`, in place of the `Referer` header. Only an `http` or `https` URL is accepted; anything else is ignored and the header is used. It is never passed on to a destination.
+
 :::caution[Tracking values do not feed the Overview charts]
 The Overview's **Installs by campaign** and **Installs by source** charts group installs by the `utm_campaign` and `utm_source` of the matched click, not by `adto_campaign` or the link's Tracking fields. Use `utm_*` for dashboard charts and `adto_*` for values your app needs at runtime.
 :::
