@@ -87,7 +87,8 @@ Read the link when the button is tapped, as above, not when the page loads: by t
 
 The source is what the visitor arrived with: the landing URL's `utm_source`, `utm_medium`, `utm_campaign`, `utm_term` and `utm_content`, and the origin of the page that linked to your site (never one of your own pages). `adto.link()` adds them to the link as `utm_*` and [`adto_web_referrer`](/links/url-parameters/#adto_web_referrer-the-page-that-sent-the-visitor); a value the link already carries stays as it is.
 
-- The source is kept in the `adto_src` cookie for 30 days, so a button on a later page, or on a later visit, still has it. A new visit with a source of its own replaces it.
+- The source is kept in the `adto_src` cookie for 30 days, so a button on a later page, or on a later visit, still has it.
+- A later visit that arrives with `utm_*` values replaces the kept source. A referring page alone does not: coming back from a payment page, or over from your blog on another subdomain, keeps the source the visitor first arrived with.
 - Until storing is allowed (see [Consent](#consent)), nothing is kept and `adto.link()` returns the link unchanged. `adto.consent(false)` deletes the cookie.
 - A visit with no UTM values and no outside referrer has no source: the link comes back unchanged and the tap is credited to your website.
 - The [app banner](#the-app-banner) does this for its button; you only call `adto.link()` for your own buttons.
