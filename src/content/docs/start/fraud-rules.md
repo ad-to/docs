@@ -13,7 +13,7 @@ Each rule is a plain comparison with a name, so every flag can be explained. The
 
 | Rule | Label | Strength | Fires when |
 |---|---|---|---|
-| `emulator` | Emulator | strong | The SDK reports a simulator or emulator, the device model names one (`sdk`, `emulator`, `simulator`, `genymotion`, `virtual`, `gphone`, `pdv`, `avd`), or an Android phone reports an x86 CPU. |
+| `emulator` | Emulator | strong | The SDK reports a simulator or emulator, the device model names one (`sdk`, `emulator`, `simulator`, `genymotion`, `virtual`, `gphone`, `pdv`, `avd`), or an Android phone reports an x86 CPU. A Chromebook is a real x86 device that installs Android apps from Play, so an install whose build id is a ChromeOS release (such as `R143-16463.51.0`) is not flagged for its CPU. |
 | `impossible_speed` | Too fast | strong | The matched tap came less than 10 seconds before the first launch. No store download fits in that time. |
 | `click_injection` | Tap after download | strong | Android: the matched tap came more than 5 seconds after Google Play began the download, so it cannot have caused the install. |
 | `installer_mismatch` | Not installed by Play | strong | Android: a Google Play install referrer names a tap, but the app was installed by something other than Google Play. Never flagged when the installer is unknown, or for Play Instant. |
