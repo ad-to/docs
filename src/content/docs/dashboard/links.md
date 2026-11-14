@@ -169,6 +169,8 @@ Permanent links only.
 | **Mobile landing pages** | **iOS tap-to-store page** and **Interstitial page**, each **App setting (on)** or **App setting (off)** (the default, following the link's app), **On for this link** or **Off for this link**. See [How a tap is routed](/links/how-a-tap-is-routed/#mobile-delivering-it). |
 | **If the app can't open the link (desktop)** | **Branded QR page**, or **App fallback URL** when the link's app has one (marked **Default**), or **Custom URL** (placeholder `https://web.example.com/page`). Sets `fallback_url`. |
 
+**See where this link goes**, at the bottom of the drawer, routes one tap from an iPhone, an Android phone and a computer through the saved link and lists where each one ends up, without counting any of them. See [Check where a link goes](/links/how-a-tap-is-routed/#check-where-a-link-goes).
+
 The last row sets the same `fallback_url` field, with the same labels, as the create form. The field is the desktop and no-destination tail: with no custom URL, a desktop visitor gets the app's Fallback URL if there is one, otherwise the branded QR page.
 
 **Save** sends the preview choice and, for permanent links, every routing field at once; an emptied field clears the stored value. Before sending, the drawer checks "Enter the custom redirect URL" and "Enter the custom fallback URL" when a Custom URL option is selected with an empty box. Success shows "Saved ✓"; failures show the server's message.

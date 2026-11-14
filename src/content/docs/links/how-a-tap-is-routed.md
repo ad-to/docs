@@ -155,6 +155,27 @@ The QR page, the interstitial, the tap-to-store page and the error pages share t
 - **Which way out.** A tap on a store badge or the **Get** button, an **Open in app** button, or the QR page's website link sends `/_/collect` `{c: <click id>, a: "cta_ios" | "cta_android" | "cta_open" | "cta_web"}` with `sendBeacon`, which survives the navigation the tap starts. The first one is kept on the click as `cta` with `cta_at`, from the same network within an hour of the tap. The Overview's Breakdown shows it as **Page button**, the analytics query as the `cta` dimension: how many QR-page visitors went to a store, to the app or to the website.
 
 
+## Check where a link goes
+
+The link drawer's **See where this link goes** (`GET /api/admin/links/:slug/route-check`) runs the saved link through this page's decision once for each of five devices and lists what each visitor gets:
+
+| Device | What it stands for |
+|---|---|
+| iPhone, Safari | An iPhone in its own browser |
+| iPhone, inside Instagram | An iPhone in an app's built-in browser |
+| Android, Chrome | An Android phone in Chrome |
+| Android, inside Facebook | An Android phone in Facebook's or Instagram's built-in browser |
+| Computer | A Windows computer |
+
+Each row says what the visitor sees (a straight redirect, the [tap-to-store page](#the-ios-tap-to-store-page), the [interstitial page](#the-interstitial-page), a page that tries the app first, or the page with the QR code), where they end up, the in-app route the app would open, and the routing rule that decided, by name. A paused, expired or deleted link shows as not routed.
+
+**Visitor's country** (two letters, such as `DE`) and **Language** (such as `fr`) are optional: fill them in to see what a visitor a [geo or language rule](#geo-and-language-routing) names would get.
+
+- Nothing is counted: no click, no webhook, and the link's numbers do not move.
+- It checks the saved link, so save your edits first.
+- It shows the browser's path. A phone that already has the app opens it from the link itself, through Universal Links or App Links, without reaching AdTo; see [Entry points](#entry-points).
+- An A/B rule picks its variant from the visitor's address, and the check is one visitor, so it shows one variant.
+
 ## When the click is recorded
 
 | Path | Click |
