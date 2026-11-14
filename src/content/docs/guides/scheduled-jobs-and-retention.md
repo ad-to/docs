@@ -71,6 +71,8 @@ Downloads the ECB's daily euro reference rates into `fx_rates` (`date`, `currenc
 
 The cutoff is now minus 400 days. An account with a shorter window of its own (Settings → **Data retention**, 1 to 400 days; `PUT /api/admin/settings/retention`) is then swept again with its own cutoff, in the same order; a longer one has no effect.
 
+Two tables can keep less than that, because they are most of what a busy deployment stores and nothing reads them back as far: `app_sessions` (the screen views) for `SESSION_RETENTION_DAYS` and `device_days` (one row per device per day it started the app) for `DEVICE_DAY_RETENTION_DAYS`, never under 30 days, the window monthly active users are counted over. Each applies when it is shorter than the window being swept; unset, the table follows the window. The hosted service keeps sessions 90 days and daily app starts 180. The screens a link led to and the retention read-out cover at most what their table keeps, and say which window they used.
+
 First, for every account whose rollups are built through the cutoff's day, the clicks, installs, events and app opens older than the cutoff are deleted, except events with a `transaction_id` (purchases, renewals, refunds), which stay and are nulled as below, so a restored purchase still counts once and a refund finds its purchase. `frozen_through` becomes the cutoff's day: those days' totals now live only in `link_daily` and are never rebuilt (a later change of account currency converts them with each day's exchange rates instead). This is what keeps storage at about the retention window's worth of rows.
 
 Then `anonymiseExpiredDeviceData` runs one `db.batch`, so every statement commits or none does. Each account's pass is on its own: one that fails is logged (`[adto] retention: sweep failed`) and runs again the next day, and the others, and the purges in the table, still run. The sweep also runs when the day's rollup build failed, since it deletes only the days the rollups hold. Rows of accounts whose rollups are not that far yet are kept for aggregate analytics with their personal columns set to `NULL`, as below.
@@ -80,8 +82,8 @@ Then `anonymiseExpiredDeviceData` runs one `db.batch`, so every statement commit
 | Table | Action | Condition | Columns affected |
 |---|---|---|---|
 | `ad_identifiers` | DELETE rows | `created_at < cutoff` | whole row |
-| `device_days` | DELETE rows | `day` before the cutoff's day | whole row |
-| `app_sessions` | DELETE rows | `started_at < cutoff` | whole row |
+| `device_days` | DELETE rows | `day` before the cutoff's day, or `DEVICE_DAY_RETENTION_DAYS` ago when shorter | whole row |
+| `app_sessions` | DELETE rows | `started_at < cutoff`, or `SESSION_RETENTION_DAYS` ago when shorter | whole row |
 | `rejected_requests` | DELETE rows | `created_at` older than 30 days, whatever the retention setting | whole row |
 | `events` | SET NULL | `created_at < cutoff` | `device_id`, `customer_id`, `metadata`, `ip_raw` |
 | `customers` | SET NULL | `updated_at < cutoff` (last identify, not creation) | `name`, `email`, `phone`, `first_install_id` |
