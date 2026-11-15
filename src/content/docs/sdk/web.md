@@ -45,11 +45,11 @@ The event counts for the link of the click in `adto_click` when the visitor land
 
 | `data-consent` on the script | Behaviour |
 |---|---|
-| `auto` (default) | The script asks the server where the visitor is. In the EU and EEA, the UK and Switzerland it stores nothing and sends nothing until `adto.consent(true)`; elsewhere it starts at once. |
+| `auto` (default) | The script asks the server where the visitor is. In the EU and EEA, the UK and Switzerland, and wherever the server cannot tell the visitor's country, it stores nothing and sends nothing until `adto.consent(true)`; elsewhere it starts at once. |
 | `required` | Always waits for `adto.consent(true)`. |
 | `granted` | Your page already has consent; it starts at once. |
 
-Call `adto.consent(true)` or `adto.consent(false)` from your consent banner. The answer is remembered in `adto_consent` for a year; `false` also deletes the click cookie and drops anything queued. A browser that sends Global Privacy Control (Brave does by default) counts as no until the page calls `adto.consent(true)`. The server enforces the same rule: from a consent country, or with a `Sec-GPC: 1` header, an event without `consent: true` is answered `202` and not stored.
+Call `adto.consent(true)` or `adto.consent(false)` from your consent banner. The answer is remembered in `adto_consent` for a year; `false` also deletes the click cookie and drops anything queued. A browser that sends Global Privacy Control (Brave does by default) counts as no until the page calls `adto.consent(true)`. The server enforces the same rule: from a consent country or an unknown one, or with a `Sec-GPC: 1` header, an event without `consent: true` is answered `202` and not stored.
 
 | Cookie | Holds | Lifetime |
 |---|---|---|
