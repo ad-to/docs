@@ -23,8 +23,8 @@ A customer exists as soon as the SDK sends an `identify` event with a customer I
 |---|---|
 | **First seen** | The date and time of the customer's first `identify`. |
 | **Customer** | The name, or the customer ID when there is no name. Under it: the email masked as `e****@domain.com` (the detail page shows it in full), or the ID in monospace when there is a name but no email. An amber **Shared device · {n}** chip appears when other customers sent events from one of this customer's devices; its tooltip reads "Shares a device with {n} other customer(s)". |
-| **Attributed link** | `/{slug}` of the link credited with the customer's install, or **Organic** (also when a blocked [fraud rule](/start/fraud-rules/) withheld the credit). |
-| **Country** | A flag and the name of the country the customer's install request came from, by the geolocation of its network address, for attributed and organic customers alike. **Unknown** when no install is linked yet or its request had no country. |
+| **Attributed link** | `/{slug}` of the link credited with the customer's install, or **Organic** (also when a blocked [fraud rule](/start/fraud-rules/) withheld the credit). **Unknown** when the customer's device data was deleted (see **Country**). |
+| **Country** | A flag and the name of the country the customer's install request came from, by the geolocation of its network address, for attributed and organic customers alike. **Device data deleted** when erasing the customer's device took its install and events, so neither the country nor the link is known any more; its tooltip gives the date and time. **Unknown** when no install is linked yet or its request had no country. |
 
 Empty states: "No customers yet — call `AdTo.identify(customerId: …)` in your app after sign-in." and "No customers match your search."
 
@@ -65,7 +65,7 @@ Empty fields are hidden. Name, email and phone are stored in plain text; see [Pr
 
 ### Attribution
 
-Subtitle: "The link click that led to this customer's install. Open install shows why it matched or stayed organic." Empty state: "No install linked to this customer yet."
+Subtitle: "The link click that led to this customer's install. Open install shows why it matched or stayed organic." Empty state: "No install linked to this customer yet.", or, when the customer's device data was deleted, "This customer's device data was deleted on {date · time}: its install, with the attributed link and country, and its events."
 
 | Field | Value |
 |---|---|
