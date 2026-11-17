@@ -12,17 +12,18 @@ On hosted AdTo, a custom domain comes with the Growth and Scale plans and with c
 ## Add the domain
 
 1. In **Settings > Custom domain**, enter the subdomain, for example `go.yourbrand.com`, and select **Add**. A subdomain, not the bare `yourbrand.com`: a CNAME record cannot sit on a domain apex at most DNS hosts.
-2. The card lists three DNS records. Add them at your DNS host:
+2. The card lists the DNS records. Add them at your DNS host, each as a record of its own:
 
 | Type | Name | Value | Why |
 |---|---|---|---|
 | TXT | `_cf-custom-hostname.go.yourbrand.com` | a token | Proves the domain is yours |
-| TXT | `_acme-challenge.go.yourbrand.com` | a token | Lets Cloudflare issue the certificate |
+| TXT | `_acme-challenge.go.yourbrand.com` | a token, often two: add each as its own record under this one name | Lets Cloudflare issue the certificate |
 | CNAME | `go.yourbrand.com` | the deployment's target, `domains.adto.app` on hosted AdTo | Sends the domain to AdTo. Add it last. |
 
-3. Wait. The card checks every minute while it is open, and the server once an hour otherwise; **Check now** asks at once.
+Cloudflare makes the certificate's records a moment after the domain is added. If they are not ready yet, the card says so, and they appear within a minute or two.
+3. Wait. Each record is marked **✓ Found** once Cloudflare has used it, or for the CNAME, once public DNS shows it. The card checks every minute while it is open (every ten seconds while records are still to come), and the server once an hour otherwise; **Check now** asks at once.
 
-The two TXT records let the certificate issue while `go.yourbrand.com` still points wherever it does today. That is what makes moving a live link domain over (from Branch or Firebase Dynamic Links, say) free of downtime: the CNAME changes only once AdTo can already answer on it with HTTPS. If the subdomain is new and nothing uses it yet, you can add the CNAME straight away and skip the TXT records; Cloudflare then validates over HTTP once the CNAME points at it.
+The TXT records let the certificate issue while `go.yourbrand.com` still points wherever it does today. That is what makes moving a live link domain over (from Branch or Firebase Dynamic Links, say) free of downtime: the CNAME changes only once AdTo can already answer on it with HTTPS. If the subdomain is new and nothing uses it yet, you can add the CNAME straight away and skip the TXT records; Cloudflare then validates over HTTP once the CNAME points at it.
 
 ## The states
 
