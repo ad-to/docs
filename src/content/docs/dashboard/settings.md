@@ -85,7 +85,7 @@ Keys for [`adto.js`](/sdk/web/) on your website. **New site key** takes a name a
 
 ## Custom domain
 
-Not available on AdTo at the moment: the card says so, and your links stay on `{username}.adto.app`. Where it is offered, it puts your links on a subdomain of your own, like `go.yourbrand.com`. Enter it and select **Add**; the card then shows the DNS records to add (two TXT records, then the CNAME), a status chip (**Waiting for DNS**, **Issuing certificate**, **Ready: point the CNAME**, **Active**, **No longer points here**, **Failed**, or **Removed**), Cloudflare's own message while it waits, **Check now** and **Remove**. While the domain is pending, the card checks again every minute on its own. Select a record's name or value to copy it. A removed domain shows when it will be deleted, and **Restore**. The whole flow is in [Custom domains](/links/custom-domains/).
+On Growth, Scale and custom plans, it puts your links on a subdomain of your own, like `go.yourbrand.com`. On Free and Starter, the card says it comes with Growth and Scale, and **See plans** leads to the Plan card. Enter the subdomain and select **Add**; the card then shows the DNS records to add (two TXT records, then the CNAME), a status chip (**Waiting for DNS**, **Issuing certificate**, **Ready: point the CNAME**, **Active**, **No longer points here**, **Failed**, or **Removed**), Cloudflare's own message while it waits, **Check now** and **Remove**. While the domain is pending, the card checks again every minute on its own. Select a record's name or value to copy it. A removed domain shows when it will be deleted, and **Restore**, or, on a plan without a domain, the plans to move to. The whole flow is in [Custom domains](/links/custom-domains/).
 
 ## Team
 
@@ -107,7 +107,7 @@ Every change to the account, newest first, 25 at a time (**Show older** loads mo
 - every sign-in, wrong password, sign-out and password reset;
 - every CSV export.
 
-Each entry has its number, when it happened, what happened and to what (the link, app, key or webhook), who did it, and the fields that changed, before and after. Who is the email of the person signed in, the account key (by its prefix), an SDK key (by name and prefix), **AdTo** for changes AdTo made itself, or **Someone not signed in** for a wrong password or a reset request. AdTo's own changes are a webhook turned off after 20 failed deliveries, a custom domain's status moving (for example to **Active**), a removed domain deleted at the end of its grace, and the subscription changes Creem reports.
+Each entry has its number, when it happened, what happened and to what (the link, app, key or webhook), who did it, and the fields that changed, before and after. Who is the email of the person signed in, the account key (by its prefix), an SDK key (by name and prefix), **AdTo** for changes AdTo made itself, or **Someone not signed in** for a wrong password or a reset request. AdTo's own changes are a webhook turned off after 20 failed deliveries, a custom domain's status moving (for example to **Active**), a custom domain removed when the plan no longer includes one, a removed domain deleted at the end of its grace, and the subscription changes Creem reports.
 
 What is never recorded:
 

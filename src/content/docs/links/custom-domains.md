@@ -7,7 +7,7 @@ sidebar:
 
 Your links can live on a subdomain of your own: `https://go.yourbrand.com/sale` instead of `https://yourname.adto.app/sale`. One custom domain per account. Links on your AdTo subdomain keep working either way, so links already shared never break.
 
-Custom link domains are not available on AdTo at the moment; the Settings card says so. Your links are on `{username}.adto.app`.
+On hosted AdTo, a custom domain comes with the Growth and Scale plans and with custom plans. On Free and Starter, the Settings card says so and links to your Plan card, and your links are on `{username}.adto.app`.
 
 ## Add the domain
 
@@ -58,3 +58,7 @@ Ship a build with these before you share links on the new domain: until then, ta
 **Remove** asks first. A domain that was serving is suspended rather than deleted: new links are built on your AdTo subdomain at once, taps on the domain keep working for 7 days, and **Restore** undoes the removal in that time. After 7 days the hostname is deleted. A domain that never went live is deleted at once.
 
 Adding another domain during those 7 days replaces the removed one only once Cloudflare has accepted the new hostname: if it refuses (the hostname is taken, or Cloudflare does not answer), the removed domain keeps serving and **Restore** still works. Adding the removed domain again restores it.
+
+## When your plan changes
+
+If your account moves to a plan without a custom domain, or its paid plan ends, AdTo removes the domain within the hour, the same way **Remove** does: new links are built on your AdTo subdomain at once, and taps on the domain keep working for 7 days. Move back to Growth or Scale within those 7 days and **Restore** brings it back; after that, add it again.
