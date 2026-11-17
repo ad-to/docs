@@ -15,7 +15,7 @@ Still deciding whether AdTo fits? The [Firebase Dynamic Links alternative](https
 | Firebase Dynamic Links | AdTo | Notes |
 |---|---|---|
 | Firebase project | Account: one username, an account key for servers and SDK keys for apps | The username is the link subdomain. See [Concepts](/start/concepts/). |
-| Dynamic link domain (`*.page.link` or your own) | `https://{username}.adto.app`, or a subdomain of your own as a [custom domain](/links/custom-domains/), where the deployment offers it | One subdomain per account, and at most one custom domain. |
+| Dynamic link domain (`*.page.link` or your own) | `https://{username}.adto.app`, or a subdomain of your own as a [custom domain](/links/custom-domains/), on Growth, Scale and custom plans | One subdomain per account, and at most one custom domain. |
 | Short dynamic link | Link: `slug` plus stored routing | You choose the slug (`[A-Za-z0-9_-]`, up to 128 characters). Slugs are unique across permanent and temporary links. |
 | `suffix.option: UNGUESSABLE` | Temporary link with an automatic slug `t_<10 hex>` | Temporary links expire after `ttlSeconds` (60 seconds to 30 days). See [Temporary links](/links/temporary-links/). |
 | Long dynamic link (every parameter in the URL) | No equivalent. Every link is stored. Per-tap overrides go in `adto_*` query parameters. | See [URL parameters](/links/url-parameters/). |
@@ -146,7 +146,7 @@ Per-link numbers on the Links page are lifetime totals. See [Links](/dashboard/l
 - Minimum app version gating (`amv`, `imv`).
 - iPad-specific fallback and bundle (`ipfl`, `ipbi`).
 - Long dynamic links built in the app (`buildLink`).
-- More than one link domain of your own per account, and any where the deployment does not offer [custom domains](/links/custom-domains/).
+- More than one link domain of your own per account, and any on a plan without [custom domains](/links/custom-domains/) (Free and Starter).
 - Firebase Analytics integration and the Firebase console link list.
 - App Store analytics tags other than the `ct` AdTo sets itself.
 
@@ -174,6 +174,6 @@ The **AdTo columns** preset takes headers named like the [create fields](/api/li
 3. Add `applinks:{username}.adto.app` to Associated Domains and an `autoVerify` intent filter for `{username}.adto.app`. Reinstall the app. See [Platform setup](/sdk/platform-setup/).
 4. Replace `firebase_dynamic_links` with `flutter_adto` using the table above. Inject the SDK key (`adto_pub_…`) at build time with `--dart-define`.
 5. Recreate your links. If you exported them before the shutdown (Firebase's export came from [Google Takeout](https://firebase.google.com/support/guides/export-dynamic-links), one CSV per domain), the quickest way is to import that file: on the Links page, **Import CSV**, choose **Firebase Dynamic Links export** and pick it (see [Importing an FDL export](#importing-an-fdl-export)). From a script, send up to 100 links per call to `POST /api/v1/links/bulk`. Either way the old suffixes become the slugs, the former `link` destination the `target`, and its path the in-app route.
-6. Replace the old `page.link` URLs wherever they are published: those domains belong to Google and cannot be pointed at AdTo. A subdomain of your own that served FDL links, such as `links.yourbrand.com`, can move to AdTo as a [custom domain](/links/custom-domains/), where the deployment offers it.
+6. Replace the old `page.link` URLs wherever they are published: those domains belong to Google and cannot be pointed at AdTo. A subdomain of your own that served FDL links, such as `links.yourbrand.com`, can move to AdTo as a [custom domain](/links/custom-domains/) on Growth, Scale and custom plans.
 7. Test on a physical device: tap a link, install from the store, open the app, and check Overview and `onAppInstalled`. See [Testing](/sdk/testing/).
 8. Update your privacy declarations for the device data the SDK collects by default. See [Device data and privacy](/sdk/device-data-and-privacy/).

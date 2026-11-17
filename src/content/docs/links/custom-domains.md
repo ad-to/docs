@@ -7,22 +7,23 @@ sidebar:
 
 Your links can live on a subdomain of your own: `https://go.yourbrand.com/sale` instead of `https://yourname.adto.app/sale`. One custom domain per account. Links on your AdTo subdomain keep working either way, so links already shared never break.
 
-Custom link domains are not available on AdTo at the moment; the Settings card says so. Your links are on `{username}.adto.app`.
+On hosted AdTo, a custom domain comes with the Growth and Scale plans and with custom plans. On Free and Starter, the Settings card says so and links to your Plan card, and your links are on `{username}.adto.app`.
 
 ## Add the domain
 
 1. In **Settings > Custom domain**, enter the subdomain, for example `go.yourbrand.com`, and select **Add**. A subdomain, not the bare `yourbrand.com`: a CNAME record cannot sit on a domain apex at most DNS hosts.
-2. The card lists three DNS records. Add them at your DNS host:
+2. The card lists the DNS records. Add them at your DNS host, each as a record of its own:
 
 | Type | Name | Value | Why |
 |---|---|---|---|
 | TXT | `_cf-custom-hostname.go.yourbrand.com` | a token | Proves the domain is yours |
-| TXT | `_acme-challenge.go.yourbrand.com` | a token | Lets Cloudflare issue the certificate |
-| CNAME | `go.yourbrand.com` | the deployment's target, `domains.adto.app` on hosted AdTo | Sends the domain to AdTo. Add it last. |
+| TXT | `_acme-challenge.go.yourbrand.com` | a token, often two: add each as its own record under this one name | Lets Cloudflare issue the certificate |
+| CNAME | `go.yourbrand.com` | the deployment's target, `domains.adto.app` on hosted AdTo | Sends the domain to AdTo. Add it last, as DNS only (proxy off) if your DNS is on Cloudflare. |
 
-3. Wait. The card checks every minute while it is open, and the server once an hour otherwise; **Check now** asks at once.
+Cloudflare makes the certificate's records a moment after the domain is added. If they are not ready yet, the card says so, and they appear within a minute or two.
+3. Wait. Each record is marked **✓ Found** once Cloudflare has used it, or for the CNAME, once public DNS shows it. The card checks every minute while it is open (every ten seconds while records are still to come), and the server once an hour otherwise; **Check now** asks at once.
 
-The two TXT records let the certificate issue while `go.yourbrand.com` still points wherever it does today. That is what makes moving a live link domain over (from Branch or Firebase Dynamic Links, say) free of downtime: the CNAME changes only once AdTo can already answer on it with HTTPS. If the subdomain is new and nothing uses it yet, you can add the CNAME straight away and skip the TXT records; Cloudflare then validates over HTTP once the CNAME points at it.
+The TXT records let the certificate issue while `go.yourbrand.com` still points wherever it does today. That is what makes moving a live link domain over (from Branch or Firebase Dynamic Links, say) free of downtime: the CNAME changes only once AdTo can already answer on it with HTTPS. If the subdomain is new and nothing uses it yet, you can add the CNAME straight away and skip the TXT records; Cloudflare then validates over HTTP once the CNAME points at it.
 
 ## The states
 
@@ -35,7 +36,7 @@ The two TXT records let the certificate issue while `go.yourbrand.com` still poi
 | **No longer points here** | It was active, and Cloudflare reports the CNAME moved away. Links are built on your AdTo subdomain again. | Restore the CNAME; otherwise the domain is removed 7 days later. |
 | **Failed** | Cloudflare refused the hostname or gave up validating it. | Remove it and add it again, or check the records. |
 
-A DNS host that hides the CNAME behind its own proxy (a proxied record on a domain that is itself on Cloudflare) never shows it to a DNS lookup; such a domain turns active with the first tap that reaches it, once its addresses are Cloudflare's. A request alone never activates a domain: before you move DNS, anyone can ask Cloudflare for the certificate-ready host, so AdTo also checks that public DNS really sends it there.
+If your DNS is on Cloudflare, keep the CNAME DNS only (proxy off). With the proxy on, your own Cloudflare rules sit in front of AdTo, where they could block the checks Apple and Google make for app links. A proxied CNAME, like one Cloudflare flattens, is hidden from DNS lookups: the card then shows **Hidden by Cloudflare: make it DNS only**, before and after the domain is active. A flattened CNAME that is DNS only works as it is, and such a domain still turns active with the first tap that reaches it, once its addresses are Cloudflare's. A CNAME that still points to another host (your old provider, say) shows **Points to** that host until you change it. A request alone never activates a domain: before you move DNS, anyone can ask Cloudflare for the certificate-ready host, so AdTo also checks that public DNS really sends it there.
 
 ## What changes once it is active
 
@@ -45,7 +46,7 @@ A DNS host that hides the CNAME behind its own proxy (a proxied record on a doma
 
 ## Add it to your apps
 
-Universal Links and App Links are per host, so the apps need the new host next to the old one. The **Apps** page's "Copy for AI" prompts list both once the domain is active.
+Universal Links and App Links are per host, so the apps need the new host next to the old one. Once the domain is active, the card's **Copy steps for your AI assistant** copies the changes below, with your apps' IDs and the address of AdTo's guide for AI assistants, ready to paste into one. The **Apps** page's "Copy for AI" prompts list both hosts too.
 
 - **iOS:** add `applinks:go.yourbrand.com` to the Associated Domains, next to `applinks:yourname.adto.app`, in every entitlements file.
 - **Android:** add `<data android:host="go.yourbrand.com"/>` to the `autoVerify` intent filter that has your AdTo host.
@@ -58,3 +59,7 @@ Ship a build with these before you share links on the new domain: until then, ta
 **Remove** asks first. A domain that was serving is suspended rather than deleted: new links are built on your AdTo subdomain at once, taps on the domain keep working for 7 days, and **Restore** undoes the removal in that time. After 7 days the hostname is deleted. A domain that never went live is deleted at once.
 
 Adding another domain during those 7 days replaces the removed one only once Cloudflare has accepted the new hostname: if it refuses (the hostname is taken, or Cloudflare does not answer), the removed domain keeps serving and **Restore** still works. Adding the removed domain again restores it.
+
+## When your plan changes
+
+If your account moves to a plan without a custom domain, or its paid plan ends, AdTo removes the domain within the hour, the same way **Remove** does: new links are built on your AdTo subdomain at once, and taps on the domain keep working for 7 days. Move back to Growth or Scale within those 7 days and **Restore** brings it back; after that, add it again.
