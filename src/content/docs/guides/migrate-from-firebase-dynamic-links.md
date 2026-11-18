@@ -16,8 +16,8 @@ Still deciding whether AdTo fits? The [Firebase Dynamic Links alternative](https
 |---|---|---|
 | Firebase project | Account: one username, an account key for servers and SDK keys for apps | The username is the link subdomain. See [Concepts](/start/concepts/). |
 | Dynamic link domain (`*.page.link` or your own) | `https://{username}.adto.app`, or a subdomain of your own as a [custom domain](/links/custom-domains/), on Growth, Scale and custom plans | One subdomain per account, and at most one custom domain. |
-| Short dynamic link | Link: `slug` plus stored routing | You choose the slug (`[A-Za-z0-9_-]`, up to 128 characters). Slugs are unique across permanent and temporary links. |
-| `suffix.option: UNGUESSABLE` | Temporary link with an automatic slug `t_<10 hex>` | Temporary links expire after `ttlSeconds` (60 seconds to 30 days). See [Temporary links](/links/temporary-links/). |
+| Short dynamic link | Link: `slug` plus stored routing | You choose the slug (`[A-Za-z0-9_-]`, up to 128 characters), or leave it out for a generated one of 5 random letters and digits, like the `SHORT` suffix. Slugs are unique across permanent and temporary links. |
+| `suffix.option: UNGUESSABLE` | A long random `slug` of your own, such as 17 random letters and digits | A generated slug is 5 characters: short, not unguessable. A [temporary link](/links/temporary-links/) also stops working after `ttlSeconds` (60 seconds to 30 days). |
 | Long dynamic link (every parameter in the URL) | No equivalent. Every link is stored. Per-tap overrides go in `adto_*` query parameters. | See [URL parameters](/links/url-parameters/). |
 | App registered in Firebase | App on the Apps page | Package, SHA-256 fingerprints, bundle ID, Team ID, store URLs, custom schemes. See [Apps](/dashboard/apps/). |
 | Automatic `assetlinks.json` and AASA | Generated from the registered apps and served on `https://{username}.adto.app/.well-known/` | See [Platform setup](/sdk/platform-setup/). |
@@ -63,7 +63,7 @@ Two routing differences to plan for:
 | `androidInfo.androidFallbackLink`, `iosInfo.iosFallbackLink` | `redirect_url` on the link, or `adto_redirect_android` and `adto_redirect_ios` per tap |
 | `socialMetaTagInfo` | `og_title`, `og_description`, `og_image_url` |
 | `analyticsInfo.googlePlayAnalytics` | The link's own `utm_*` fields (added to its web destinations), or `utm_*` on the URL you share |
-| `suffix.option` | Your own `slug`; temporary links get `t_<10 hex>` when you omit it |
+| `suffix.option` | Your own `slug`, or none for a generated one of 5 random letters and digits (`SHORT`); a long random slug of your own for `UNGUESSABLE` |
 | API key in the query string | `Authorization: Bearer adto_…` plus the request signature |
 | `GET …/v1/{shortLink}/linkStats` | `GET /api/v1/links` returns `click_count` per link; installs and opens per link come from the MCP [`analytics` tool](/guides/automation-and-agents/#mcp-server) or the [raw export](/api/export/), with the account key |
 

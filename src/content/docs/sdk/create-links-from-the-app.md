@@ -22,7 +22,7 @@ final link = await adto.createLink(
 print(link.url); // https://{username}.adto.app/spring-sale
 ```
 
-Only `slug` is required. Every other parameter is optional and omitted from the request when `null`:
+Only `slug` is required; pass `''` and the server generates one, 5 random letters and digits such as `Xk3pQ` (read it from `link.slug`). Every other parameter is optional and omitted from the request when `null`:
 
 | Parameter | Server rule |
 |---|---|
@@ -75,7 +75,7 @@ await adto.deleteTempLink(temp.slug);
 ```
 
 - `ttlSeconds` is clamped to 60 seconds to 30 days; `0` becomes 900. The SDK always sends an integer.
-- `slug` is optional. Without one the server generates `t_` followed by 10 hex characters. A given slug follows the permanent-link rules and shares the same namespace.
+- `slug` is optional. Without one the server generates 5 random letters and digits, as for permanent links. A given slug follows the permanent-link rules and shares the same namespace.
 - Temporary links take `target`, `ogTitle`, `ogDescription` and `ogImageUrl` only. They use the default app's routing and fallback, have no deep-link paths and no click counter.
 - After `expiresAt` a tap shows the 410 "Link expired" page (or goes to the link's expired URL), and `resolveLink` throws `AdtoError` with code `link_expired`. A daily job deletes links expired for more than 24 hours that have no expired URL; their clicks are kept and the slug becomes free again, after which the link answers 404.
 
@@ -117,7 +117,6 @@ try {
 
 | Status | `message` | When |
 |---|---|---|
-| 400 | `slug is required` | `createLink` with an empty slug |
 | 400 | `Invalid slug: only letters, numbers, hyphens and underscores are allowed` | A slug outside `[A-Za-z0-9_-]{1,128}` (`Invalid slug` for temporary links) |
 | 400 | `Unknown app_id` | `appId` is not one of your apps |
 | 400 | `Invalid target: must be a valid http(s) URL`, `Invalid ios_deep_link_path: …`, `Invalid campaign: max 255 characters`, `og_title must be at most 150 characters`, … | A field failed validation |

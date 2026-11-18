@@ -12,7 +12,7 @@ A temporary link is a slug with an expiry. It routes like a permanent link until
 | | Permanent | Temporary |
 |---|---|---|
 | Expiry | Never | `ttl_seconds` after creation, 60 seconds to 30 days |
-| Slug | Required | Optional; auto-generated as `t_` plus 10 hex characters |
+| Slug | Optional; left out, a generated one: 5 random letters and digits, like `Xk3pQ` | Same |
 | App | The link's app, else the default app | Always the account's default (oldest) app |
 | Target | Optional; `null` inherits the app's fallback URL | Same |
 | Deep-link paths, custom mobile redirect, custom desktop fallback, Tracking defaults | Yes | No |
@@ -27,7 +27,7 @@ Slugs share one namespace: a temporary link cannot take a permanent link's slug 
 
 | Where | How |
 |---|---|
-| Dashboard | **Links > New link**, then pick an **Expires** value other than **Never**: **5 min**, **1 hour**, **1 day** or **7 days**. The slug box reads `auto` and may stay empty. The button becomes **Create temporary link**, and the list switches to the **Temporary** tab. |
+| Dashboard | **Links > New link**, then pick an **Expires** value other than **Never**: **5 min**, **1 hour**, **1 day** or **7 days**. The slug box reads `auto` and may stay empty, as it may for a permanent link. The button becomes **Create temporary link**, and the list switches to the **Temporary** tab. |
 | API | `POST /api/v1/temp-links` with `ttlSeconds` (a number; omitted means 900), an optional `slug`, an optional `target` and optional `og_*` fields. The admin route `POST /api/admin/temp-links` takes the same body. |
 | SDK | `adto.createTempLink(target: ..., slug: ..., ttlSeconds: 3600)`; `ttlSeconds` defaults to 900. |
 
@@ -36,9 +36,9 @@ Slugs share one namespace: a temporary link cannot take a permanent link's slug 
 ```json title="POST /api/v1/temp-links → 201"
 {
   "id": "…",
-  "slug": "t_3f9a1c27b0",
+  "slug": "Xk3pQ",
   "target": "https://example.com/offer",
-  "url": "https://acme.adto.app/t_3f9a1c27b0",
+  "url": "https://acme.adto.app/Xk3pQ",
   "expires_at": "2026-10-13T09:15:00.000Z",
   "created_at": "2026-10-12T09:15:00.000Z",
   "ttl_seconds": 86400,
