@@ -86,9 +86,9 @@ Every permanent-link route returns the full object, including fields you never s
 ## Slug rules
 
 - Allowed characters: `A-Z`, `a-z`, `0-9`, `_` and `-`. Length 1 to 128.
-- Optional when you create a link, permanent or temporary: absent, `null` or `""`, the server generates one, 5 random letters and digits such as `Xk3pQ`. It is never a slug your account already holds (live, deleted or temporary), so a generated slug never answers `409`; should 5-character draws keep colliding, it is 6 characters long. A generated slug is short, not secret: anyone can try 5-character slugs, so a link that must stay private needs a long random slug of your own.
+- Optional when you create a link, permanent or temporary: absent, `null` or `""`, the server generates one, 5 random letters and digits such as `Xk3pQ`. It is drawn again while your account holds it (live, deleted or temporary), and again if another create stores it first, instead of answering `409`; should 5-character draws keep colliding, it is 6 characters long. A generated slug is short, not secret: anyone can try 5-character slugs, so a link that must stay private needs a long random slug of your own.
 - Reserved: `healthz`, `readyz`, `bulk` and `upsert` (any case), and any slug starting with `ext_`, which names a link by its external id.
-- The slug is used exactly as sent. Leading or trailing whitespace makes it invalid. Slugs are case-sensitive: `Sale` and `sale` are two different links.
+- The slug is used exactly as sent. Leading or trailing whitespace makes it invalid. Slugs are case-sensitive: `Sale` and `sale` are two different links. A generated slug mixes both cases, so share it as a link or QR code rather than reading it out.
 - One namespace per account for permanent **and** temporary links. Creating either kind with a slug the other kind holds returns `409 {"error": {"code": "conflict", "message": "Slug already exists", "slug": "<slug>"}}`.
 - A slug becomes free again only when the link is deleted permanently. The daily job's delete of an expired temporary link is a soft delete, so it keeps its slug. A deleted link keeps its slug, because its history is filed under it: creating that slug answers `409 {"error": {"code": "conflict", "message": "Slug belongs to a deleted link: restore it, or delete it permanently to reuse the slug", "slug": "<slug>", "deleted": true}}`.
 
