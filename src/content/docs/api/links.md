@@ -86,8 +86,9 @@ Every permanent-link route returns the full object, including fields you never s
 ## Slug rules
 
 - Allowed characters: `A-Z`, `a-z`, `0-9`, `_` and `-`. Length 1 to 128.
+- Optional when you create a link, permanent or temporary: absent, `null` or `""`, the server generates one, 5 random letters and digits such as `Xk3pQ`. It is drawn again while your account holds it (live, deleted or temporary), and again if another create stores it first, instead of answering `409`; should 5-character draws keep colliding, it is 6 characters long. A generated slug is short, not secret: anyone can try 5-character slugs, so a link that must stay private needs a long random slug of your own.
 - Reserved: `healthz`, `readyz`, `bulk` and `upsert` (any case), and any slug starting with `ext_`, which names a link by its external id.
-- The slug is used exactly as sent. Leading or trailing whitespace makes it invalid. Slugs are case-sensitive: `Sale` and `sale` are two different links.
+- The slug is used exactly as sent. Leading or trailing whitespace makes it invalid. Slugs are case-sensitive: `Sale` and `sale` are two different links. A generated slug mixes both cases, so share it as a link or QR code rather than reading it out.
 - One namespace per account for permanent **and** temporary links. Creating either kind with a slug the other kind holds returns `409 {"error": {"code": "conflict", "message": "Slug already exists", "slug": "<slug>"}}`.
 - A slug becomes free again only when the link is deleted permanently. The daily job's delete of an expired temporary link is a soft delete, so it keeps its slug. A deleted link keeps its slug, because its history is filed under it: creating that slug answers `409 {"error": {"code": "conflict", "message": "Slug belongs to a deleted link: restore it, or delete it permanently to reuse the slug", "slug": "<slug>", "deleted": true}}`.
 
@@ -97,7 +98,7 @@ Every permanent-link route returns the full object, including fields you never s
 
 | Field | Type | Required | Meaning |
 |---|---|---|---|
-| `slug` | string | yes | See the slug rules above. |
+| `slug` | string | no | See the slug rules above. Absent, `null` or `""`: a generated slug, 5 random letters and digits. |
 | `target` | string or null | no | An http(s) URL. `null`, `""` or absent stores `null` (inherit the app's fallback URL). |
 | `app_id` | string | no | The id of one of your apps. Default: your oldest app, or `null` when the account has no app yet. |
 | `metadata` | JSON object | no | Your own key-value data. `null` or `""` stores `null`; any other non-object value (a string, number, boolean or array) answers `400 {"error": {"code": "invalid_request", "message": "metadata must be a JSON object"}}`. |
@@ -122,7 +123,6 @@ Checks run in this order and stop at the first failure:
 | Status | Body |
 |---|---|
 | 400 | `{"error": {"code": "invalid_request", "message": "Invalid JSON body"}}` |
-| 400 | `{"error": {"code": "invalid_request", "message": "slug is required"}}` |
 | 400 | `{"error": {"code": "invalid_request", "message": "Invalid slug: only letters, numbers, hyphens and underscores are allowed"}}` |
 | 400 | `{"error": {"code": "invalid_request", "message": "Slug 'healthz' is reserved"}}`: `healthz` and `readyz` (any case) are answered by the service itself on every host, so they are refused for permanent and temporary links |
 | 400 | `{"error": {"code": "invalid_request", "message": "Invalid target: must be a valid http(s) URL"}}` |
@@ -159,7 +159,7 @@ adto POST /api/v1/links '{
 }
 ```
 
-`created` holds full Link objects; `errors` names each failed item by its position in `links`, with the same `code` and message a single create would give. A slug or external id that appears twice in the batch fails from its second appearance. An empty array, more than 100 links, or a body without `links` answers `400`. The dashboard's **Import CSV** and the MCP `create_links` tool use this route.
+`created` holds full Link objects; `errors` names each failed item by its position in `links`, with the same `code` and message a single create would give. A slug or external id that appears twice in the batch fails from its second appearance. Items without a slug get generated ones, drawn for the batch together: they never repeat each other or a slug another item names. An empty array, more than 100 links, or a body without `links` answers `400`. The dashboard's **Import CSV** and the MCP `create_links` tool use this route.
 
 ## Upsert and external ids
 
@@ -171,7 +171,9 @@ A link created with `external_id` can be named by it anywhere a v1 link route ta
 |---|---|
 | A live link | Updated with the `PUT` rules (absent keeps, `null` or `""` clears); `200` with the Link. A `slug` in the body that differs from the found link's answers `400`: a link's slug never changes. |
 | A deleted link | `409` with `"deleted": true`: restore it first |
-| Nothing | Created with the create rules (`slug` is then required); `201` with the Link |
+| Nothing | Created with the create rules; `201` with the Link. Named by `external_id` alone, it gets a generated slug, which later calls find it by. |
+
+A body with neither `external_id` nor `slug` answers `400 {"error": {"code": "invalid_request", "message": "slug or external_id is required"}}`: it would create another link on every call.
 
 ```bash title="Sync one product's link"
 adto PUT /api/v1/links/upsert '{"external_id": "product-42", "slug": "p42", "target": "https://shop.example.com/p/42", "campaign": "catalog"}'
@@ -294,9 +296,9 @@ Temporary links expire after a TTL. They have no app binding, no deep-link paths
 ```json title="TempLink"
 {
   "id": "9a7b5c3d-1e2f-4a6b-8c9d-0e1f2a3b4c5d",
-  "slug": "t_4f1e9c2b7a",
+  "slug": "Xk3pQ",
   "target": "https://example.com/build/1234",
-  "url": "https://acme.adto.app/t_4f1e9c2b7a",
+  "url": "https://acme.adto.app/Xk3pQ",
   "expires_at": "2026-10-12T10:00:00.000Z",
   "created_at": "2026-10-12T09:00:00.000Z",
   "ttl_seconds": 3600,
@@ -318,7 +320,7 @@ Temporary links expire after a TTL. They have no app binding, no deep-link paths
 | Field | Type | Required | Meaning |
 |---|---|---|---|
 | `target` | string or null | no | Same rules as for permanent links. |
-| `slug` | string | no | Same rules as for permanent links. When absent, `null` or `""`, the server generates `t_` followed by 10 lowercase hex characters, for example `t_4f1e9c2b7a`. |
+| `slug` | string | no | Same rules as for permanent links. When absent, `null` or `""`, the server generates one as for permanent links: 5 random letters and digits, for example `Xk3pQ`. |
 | `ttlSeconds` | number | no | Lifetime in seconds. Default 900 (15 minutes). |
 | `og_title`, `og_description`, `og_image_url` | string | no | Same rules as for permanent links. |
 | `expired_url`, `disabled`, `disabled_reason`, `archived` | | no | As on permanent links. The expiry is always the TTL: `expires_at` in the body answers `400`. |
