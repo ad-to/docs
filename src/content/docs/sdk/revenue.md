@@ -129,9 +129,9 @@ The last 20 notifications of the app, with what each did (`recorded`, `updated`,
 
 ## One currency
 
-Every total in the dashboard is in your account's revenue currency, EUR unless you change it in [Settings](/dashboard/settings/). Each amount is converted with the European Central Bank's euro reference rate of its day: the rate published on that day, or the last one before it on weekends and holidays. The event keeps the amount and currency you sent; only the totals are converted.
+Every total in the dashboard is in your account's revenue currency, EUR unless you change it in [Settings](/dashboard/settings/). Each amount is converted with the euro rate of its day: the European Central Bank's reference rate for the 30 currencies it publishes, and the [exchange-api](https://github.com/fawazahmed0/exchange-api) feed's for every other current ISO 4217 currency but one, 124 of them, such as the Egyptian pound (EGP) or the Saudi riyal (SAR). The rate is the one published on that day, or the last one before it (the ECB skips weekends and holidays). The event keeps the amount and currency you sent; only the totals are converted.
 
-The server fetches the rates once a day. An amount in a currency whose rate it does not have yet counts as 0 until the next daily run converts it. Currencies the ECB does not publish (about 30 are covered) never convert. Changing the revenue currency converts every stored amount again.
+The server fetches the rates once a day. An amount in a currency whose rate it does not have yet counts as 0 until the next daily run converts it. A currency with no rate at all never converts: the Syrian pound (SYP), left out because the feed's rate for it is about a hundred times other sources', and codes that are no longer currencies, such as BGN since Bulgaria adopted the euro. Changing the revenue currency converts every stored amount again.
 
 ## What the server stores
 

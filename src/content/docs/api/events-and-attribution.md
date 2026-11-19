@@ -24,7 +24,7 @@ Each event:
 | `type` | string | yes | `identify`, `lead`, `conversion`, `custom` or `screen_view`. |
 | `event_name` | string, 200 | `screen_view` only | Free text, for example `purchase` or `signup`; for a `screen_view`, the screen. |
 | `revenue` | number | `conversion` only (not for a cancel) | Must be finite and not negative. Stored as sent, and also converted into the account's revenue currency (`revenue_base`). |
-| `currency` | string, 8 | no | Upper-cased on storage (`usd` becomes `USD`). Totals convert it with the ECB reference rate of the event's day; no currency means the account's currency. |
+| `currency` | string, 8 | no | Upper-cased on storage (`usd` becomes `USD`). Totals convert it with the exchange rate of the event's day (the ECB's, or the exchange-api feed's for the currencies the ECB does not publish); no currency means the account's currency. |
 | `customer_id` | string, 200 | `identify` only | Your user id. |
 | `metadata` | JSON | no | Stored as sent. |
 | `client_timestamp` | string, 64 | no | Device clock. |
