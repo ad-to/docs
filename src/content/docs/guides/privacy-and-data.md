@@ -32,7 +32,7 @@ Bots (recognized by their User-Agent) never produce a click row. Link taps set n
 | Device model | `device_model` | `Sec-CH-UA-Model` client hint or the WebView `Build/` token, lower-cased; from the SDK on in-app clicks | retention |
 | Raw User-Agent | `ua_raw` | header, cut to 512 characters | retention |
 | Language | `accept_language` (128 characters), `lang` (primary tag) | `Accept-Language` | `accept_language` at retention; `lang` forever |
-| Geo and network | `country`; `region`, `city`, `asn`, `as_org` (128 characters) | DB-IP's location data for the request's address, looked up on AdTo's servers | `country` forever; the rest at retention |
+| Geo and network | `country`; `region`, `city`, `asn`, `as_org` (128 characters) | Cloudflare's location data for the request's address, from its proxy in front of AdTo. Cloudflare does not pass on the network's name, so `as_org` stays empty | `country` forever; the rest at retention |
 | Screen profile | `screen_width`, `screen_height`, `pixel_ratio`, `max_touch_points`, `connection_type` | the beacon of the pages a phone gets instead of a plain redirect: the mobile interstitial, the iOS tap-to-store page, and the Facebook and Instagram page on Android | screen fields after 30 days; `connection_type` forever |
 | Device settings | `text_size` (iOS and iPadOS only), `dark_mode`, `high_contrast` (Increase Contrast), `reduce_motion` (Reduce Motion), `utc_offset_min` | the same beacon, from the browser's media queries, the system body font and the page's clock | with the screen fields, after 30 days |
 | Traffic source | `referrer` | `Referer` header reduced to its origin, or to `android-app://<package>` when an Android app opened the link; null for AdTo's own hosts | forever |
@@ -49,7 +49,7 @@ Bots (recognized by their User-Agent) never produce a click row. Link taps set n
 | Screen | `screen_width`, `screen_height`, `screen_density` | device tier | retention |
 | Device settings | `text_size` (iOS only), `dark_mode`, `high_contrast` (iOS only), `reduce_motion` | device tier | retention |
 | Network | `connectivity_type`, `carrier_mcc`, `carrier_mnc` | device tier | retention |
-| Country, ASN | `country`, `asn` | DB-IP's location data for the install request's address | forever |
+| Country, ASN | `country`, `asn` | Cloudflare's location data for the install request's address | forever |
 | OS, locale | `os`, `os_version`, `os_major`, `os_minor`, `language`, `lang`, `timezone` | always sent | forever |
 | UTC offset | `utc_offset_min` | always sent, like the time zone | retention, with the device tier |
 | App | `app_platform`, `app_version`, `app_build_number`, `package_name`, `installer_package`, `install_time`, `update_time`, `first_install_ts`, `install_state`, `is_physical_device` | always sent | forever |
@@ -98,7 +98,8 @@ When a `/api/v1` call is refused as malformed, the server stores the account, th
 - **Cloudflare Email Sending:** account emails (password resets, team invites and webhook failure alerts): the recipient address and the email's link.
 - **Google:** the OAuth code exchange when you sign in with Google, and, when an app receives Play notifications, a download of Google's public signing keys (`https://www.googleapis.com/oauth2/v3/certs`) to verify the push tokens. That request carries no data.
 - **Render:** the service and its Postgres database run on Render in Frankfurt, Germany, in the EU.
-- **Visitors' browsers contact only AdTo.** Link pages and the dashboard load their fonts (Outfit, Inter, Fira Code, all SIL OFL) and country flags from AdTo itself; no page asks Google Fonts, a CDN or any other host for anything.
+- **Cloudflare's proxy:** every request to links, the API and the dashboard (`*.adto.app`) passes through Cloudflare, which sees the request and the visitor's IP address and adds its location data (country, region, city and ASN) before handing it to AdTo.
+- **Visitors' browsers contact only AdTo's hosts.** Link pages and the dashboard load their fonts (Outfit, Inter, Fira Code, all SIL OFL) and country flags from AdTo itself; no page asks Google Fonts, a CDN or any other host for anything.
 
 ## Accounts
 
@@ -166,7 +167,7 @@ You are the controller of this data and AdTo is your processor; email support@ad
 8. **Retention:** clicks, installs, events and app opens deleted after your retention window (400 days, or shorter if your account sets one), keeping only daily per-link counts; other personal columns anonymized then; the screen profile and device settings of taps after 30 days, Apple tokens as soon as resolved.
 9. **Your website, with [`adto.js`](/sdk/web/):** first-party cookies `adto_click` (the click a visitor landed with, 30 days), `adto_consent` (their answer, a year), `adto_banner` and `adto_src` (the UTM values and the referring site's origin the visitor arrived with, 30 days, which `adto.link()` adds to an AdTo link so the tap's `referrer` is that site rather than yours); the leads, purchases and custom events your pages send, with no IP stored. In the EU and EEA, the UK and Switzerland, and for browsers that send Global Privacy Control, nothing is stored before consent.
 10. **Consent in your app:** with `AdtoConfig(enabled: false)` the SDK sends nothing and reads no pasteboard until your app calls `setEnabled(true)`; events tracked meanwhile wait on the device (at most 7 days). See [Waiting for consent](/sdk/device-data-and-privacy/#waiting-for-consent).
-11. **Processors:** AdTo, which runs on Render in Frankfurt, plus Apple, Cloudflare (account emails), Google and your own webhook endpoint where used.
+11. **Processors:** AdTo, which runs on Render in Frankfurt, plus Apple, Cloudflare (the proxy in front of AdTo, and account emails), Google and your own webhook endpoint where used.
 
 The device settings in items 1 and 2 need particular care. Text size, dark mode, Increase Contrast, Reduce Motion and the UTC offset are device configuration, and Apple's user-privacy rules for developers prohibit deriving data from a device's configuration to identify it; AdTo compares them one by one for 0 points and combines them into no identifier, but the App Store review risk is yours. Increase Contrast, Reduce Motion and a large text size can suggest a disability, which EU data-protection law may treat as health data. An app that cannot carry this leaves the SDK's device tier out or turns **Probabilistic match** off; the link pages still record the settings on the tap. See [Device data and privacy](/sdk/device-data-and-privacy/#device-settings).
 
