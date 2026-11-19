@@ -104,7 +104,7 @@ When a `/api/v1` call is refused as malformed, the server stores the account, th
 
 ## Accounts
 
-`users` keeps the email, a PBKDF2-SHA256 password hash (100,000 iterations), the username, the SHA-256 of the account key with its 8-character prefix (never the key itself), the role and the Google `sub`. Nothing in `users` is ever anonymized. `password_resets` stores token hashes with expiry and use time, never pruned. `contact_messages` stores name, email, subject and message from the public form until an owner deletes them.
+`users` keeps the email, a PBKDF2-SHA256 password hash (100,000 iterations), the username, the SHA-256 of the account key with its 8-character prefix (never the key itself), the role and the Google `sub`. It also keeps the revenue currency, which starts as the currency of the country the account was opened from: the country Cloudflare's location data gives the sign-up request is read once to pick it and is not stored. Nothing in `users` is ever anonymized. `password_resets` stores token hashes with expiry and use time, never pruned. `contact_messages` stores name, email, subject and message from the public form until an owner deletes them.
 
 ## Teams
 
