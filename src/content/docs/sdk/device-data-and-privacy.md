@@ -205,7 +205,7 @@ Uninstalling the app removes all three. A restored backup never contains them, s
 
 ## Transport
 
-Every authenticated call carries the API key as a Bearer token plus an HMAC-SHA256 signature over the timestamp and the body (`x-adto-timestamp`, `x-adto-signature: v1=<hex>`), a `User-Agent` of `AdtoSDK/<version> (<platform>)`, and a 30-second timeout. The server rejects unsigned requests and timestamps more than 30 minutes off. Requests are plain HTTPS to `effectiveBaseUrl`; the public resolve call is the only unsigned one.
+Every authenticated call carries the API key as a Bearer token plus an HMAC-SHA256 signature over the timestamp and the body (`x-adto-timestamp`, `x-adto-signature: v1=<hex>`), a `User-Agent` of `AdtoSDK/<version> (<platform>)`, and a 30-second timeout. The server rejects unsigned requests, and timestamps more than 30 minutes off except on the calls a repeat cannot change: the install, events, the device ping, the app settings, attribution and late claims are served from a phone whose clock is wrong, and its events' times are corrected by the gap. Requests are plain HTTPS to `effectiveBaseUrl`; the public resolve call is the only unsigned one.
 
 ## Retention on the server
 
