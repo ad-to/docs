@@ -88,6 +88,7 @@ With a destination in hand, the response depends on the app's settings and the b
 
 | # | Condition | Response | Click recorded |
 |---|---|---|---|
+| — | iOS, inside an in-app browser (Facebook, Instagram, Messenger, LINE, WeChat, Snapchat, TikTok or X), **Open the app from in-app browsers (iOS)** is on for the app, the app has a Team ID and bundle ID, the link is on another host than the API, and the tap is not on its way back (see below) | `302` to the [in-app browser page](#the-in-app-browser-page-ios) on the API host | Before the response |
 | a | iOS, **iOS tap-to-store** is on for the link (its own setting, else the app's), and the destination is the App Store (a tagged `apple.com` custom redirect, or no custom redirect and an App Store URL) | `200` tap-to-store page | Before the response |
 | b | Android, inside the Facebook or Instagram in-app browser (`FB_IAB`, `FB4A`, `FBAV` or `Instagram` in the user agent), the app has an **Android app scheme** and an **Android package**, and a destination exists | `200` opening page that tries the intent and falls back by itself (see below) | Before the response |
 | c | **Mobile beacon interstitial** is on for the link (its own setting, else the app's) and a destination exists | `200` interstitial page. Hint-less Chromium first gets a one-shot `302` to the same URL with `?_ch=1` and `Critical-CH`, which inserts nothing. | Before the response |
@@ -113,6 +114,12 @@ Their in-app browsers open an installed app from an `intent://` URL but ignore i
 ### The interstitial page
 
 Turned on per app with **Mobile beacon interstitial**, and on or off for a single link under **Mobile landing pages** in the link drawer (`mobile_interstitial: true | false`; `null` follows the app). The page is titled "Opening the app…", carries `noindex`, and on load sends `{c, w, h, dpr, t, e, fs, cs, hc, rm, tz}` to `/_/collect`, which updates the click row once: the click id, the screen width and height, the pixel ratio, touch points and connection type, then the text size (`fs`, the computed px of `font: -apple-system-body`, sent only when the browser resolves the iOS system text style), the color scheme (`cs`, `dark` or `light`), Increase Contrast (`hc`, 1 or 0 from `prefers-contrast: more` or `no-preference`), Reduce Motion (`rm`, 1 or 0 from `prefers-reduced-motion`) and the UTC offset in minutes (`tz`). A key the browser cannot answer is left out; a value out of range is stored as null. It then routes automatically: to the intent bounce after 450 ms when the bounce applies, otherwise to the destination after 300 ms. A custom scheme is never tried automatically. After 1.6 seconds it shows "Taking too long?" with an **Open app** button; that tap copies `https://acme.adto.app/welcome?adto_click=<id>` to the clipboard, tries the scheme URL when the app has one, and after 2 seconds goes to the destination if the page is still visible. Without JavaScript a plain **Continue** link remains. When iOS tap-to-store is also on, iPhone taps take the tap-to-store page instead, so the switch affects Android only.
+
+### The in-app browser page (iOS)
+
+Instagram, Facebook and the other in-app browsers never open an app from a link on the page's own host, so an existing user's tap there used to reach the App Store instead of the app. With **Open the app from in-app browsers (iOS)** on for the app (Beta, off by default), such a tap first goes to `https://api.adto.app/_/continue/<click id>`, which carries the tap's query along. That page, titled "Continue in the app", has an **Open in app** button that is a plain link back to the tapped URL on the link's own domain, with `adto_click=<click id>&adto_b=1` added. A tap on it crosses domains, so iOS can open the app through its Universal Link; the SDK reads `adto_click` and turns the web click into the app's own, as with the Android intent bounce. When the app has an iOS scheme, "Taking too long?" and an **Open app** button with the scheme come after it. Either tap also copies `https://acme.adto.app/welcome?adto_click=<id>` to the clipboard.
+
+Without the app, the in-app browser loads the link again. `adto_b=1` never goes to the page a second time, and an `adto_click` of the same link from the last hour is the same click, so nothing more is counted and the tap-to-store page copies that click; then the tap routes as in the table. A visitor without the app therefore sees one more page. The page answers `404` for an unknown click or one more than an hour old. Taps with `adto_nt=1`, and links on the API host itself, never take it. Whether each in-app browser opens the app this way has not been confirmed on every device, which is why the setting is marked Beta.
 
 ### The iOS tap-to-store page
 
@@ -147,6 +154,8 @@ Desktop never redirects to the link's target automatically. The target only appe
 Both pages carry `noindex`, a status chip, a **Go to AdTo** button pointing at `https://adto.app/` and the footer "Check the link for typos, or ask whoever shared it for a new one." They are in the visitor's language like every link page (see [The link pages](#the-link-pages)). Two or more path segments on a tenant host return JSON `404 {"error":{"code":"not_found","message":"Not found"}}` instead.
 
 ## The link pages
+
+The in-app browser page, the interstitial and the tap-to-store page show the app's **Link pages** look when one is saved (Apps → the app → Link pages): its logo above the app's name, its colours and button shape, and on the in-app browser and tap-to-store pages its own title and text, which replace the translated words in every language.
 
 The QR page, the interstitial, the tap-to-store page and the error pages share three things.
 
