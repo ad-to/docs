@@ -76,6 +76,7 @@ signature = HMAC-SHA256( key = the API key, message = "<timestamp>.<sha256hex(ra
 
 - The body is hashed exactly as the bytes you send. For `GET` and `HEAD` the body is always the empty string, whatever the request carries. For `DELETE` without a body it is also the empty string.
 - The timestamp must be within 1,800 seconds (30 minutes) of the server clock, in either direction. The signature binds the timestamp to the body, so inside that window a captured request can only be repeated as it was, never altered. Creates answer 409 on a repeat and installs replay their stored verdict; clicks and events are recorded again, so do not retry those blindly.
+- With a public SDK key (`adto_pub_…`), the calls a repeat cannot change are served however far off the clock is, as long as the signature matches: `GET /api/v1/sdk-config`, `GET /api/v1/attribution`, `POST /api/v1/events`, `POST /api/v1/device-ping`, `POST /api/v1/app-installs` and `POST /api/v1/app-installs/:id/claim`. A phone's clock can be hours or weeks off (a wrong time zone, a daylight-saving mix-up, a date set by hand), and that key ships inside the app, so the window only kept real phones out. Such a call moves its events' own times (`client_timestamp`, `open_at`) back by the gap, and every event in it needs a `client_event_id` (one without it comes back in `rejected`). Clicks, app opens and every call with the account key keep the window, and a timestamp before 1970 or after 2100 (milliseconds sent as seconds) is refused on every route.
 - The checks run in this order and stop at the first failure: Bearer key, then signature, then the account rate limit, then the device or IP rate limit, then the route handler.
 
 | Status | `code` | `message` | When |
@@ -85,7 +86,7 @@ signature = HMAC-SHA256( key = the API key, message = "<timestamp>.<sha256hex(ra
 | 401 | `revoked_api_key` | `This API key was revoked` | An SDK key revoked in Settings. |
 | 403 | `insufficient_scope` | `This key does not have the <scope> scope` | An SDK key used on a route outside its scopes; the error carries `required_scope`. |
 | 401 | `signature_required` | `SDK request signature required (upgrade flutter_adto)` | Either signature header is missing. |
-| 401 | `stale_timestamp` | `SDK request timestamp is stale or invalid` | The timestamp is not an integer or is more than 1,800 s from server time. |
+| 401 | `stale_timestamp` | `SDK request timestamp is stale or invalid` | The timestamp is not an integer, or is more than 1,800 s from server time on a call that keeps the window (see above). |
 | 401 | `invalid_signature` | `Invalid SDK request signature` | The HMAC does not match (wrong key, wrong message, re-encoded body, uppercase hex). |
 
 ### Worked example
