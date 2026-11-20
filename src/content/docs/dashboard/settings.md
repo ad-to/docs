@@ -5,7 +5,7 @@ sidebar:
   order: 6
 ---
 
-The Settings screen, at https://dashboard.adto.app/dashboard/settings, has up to twelve cards: **Account**, **Plan**, **Account key**, **SDK keys**, **Link configuration**, **QR code style**, **Site keys**, **Custom domain**, **Team**, **Test environment**, **Audit log** and **Flutter SDK quickstart**. Which you see depends on your [role](/dashboard/account-and-sign-in/#teams) in the account: **Account key** is for owners; **SDK keys**, **Team** and **Audit log** are hidden from viewers; only owners can change the revenue currency and the retention window. Messages appear in a banner under the title: green for a copied or regenerated key, red for an error.
+The Settings screen, at https://dashboard.adto.app/dashboard/settings, has up to thirteen cards: **Account**, **Revenue currency**, **Plan**, **Account key**, **SDK keys**, **Link configuration**, **QR code style**, **Site keys**, **Custom domain**, **Team**, **Test environment**, **Audit log** and **Flutter SDK quickstart**. Which you see depends on your [role](/dashboard/account-and-sign-in/#teams) in the account: **Account key** is for owners; **SDK keys**, **Team** and **Audit log** are hidden from viewers; only owners can change the revenue currency and the retention window. Messages appear in a banner under the title: green for a copied or regenerated key, red for an error.
 
 ## Account
 
@@ -14,10 +14,17 @@ The Settings screen, at https://dashboard.adto.app/dashboard/settings, has up to
 | **Email** | The email you sign in with. |
 | **Username / subdomain** | Your username, which is also the host of your links: `https://{username}.adto.app/{slug}`. |
 | **Sign in with Google** | Shown when the deployment has Google sign-in configured: **Connect Google** links a Google account to your sign-in (yours, in every account you work in), and the row then reads **Connected**. Connecting signs out your other sessions. See [Connect Google](/dashboard/account-and-sign-in/#connect-google). |
-| **Revenue currency** | The currency every revenue total is in, EUR by default; one of the 154 currencies with a daily exchange rate: the 30 the European Central Bank publishes and the other current ISO 4217 currencies but SYP, such as EGP or SAR. The list shows each code with its name. Changing it converts every stored amount again, after fetching the day's rates when the server has none for the new currency yet. See [Revenue](/sdk/revenue/). |
 | **Data retention** | How many days the account keeps raw taps, installs, events and app starts, 1 to the deployment's maximum (400 on the hosted service). Empty keeps the maximum. **Save** applies it from the next daily run (03:17 UTC): older rows lose their personal columns, or go once the daily totals hold their day; totals stay. See [Scheduled jobs and retention](/guides/scheduled-jobs-and-retention/#anonymization-sweep-daily). |
 
-Apart from the revenue currency, the retention window and connecting Google nothing on this card is editable. There is no way to rename the account, change its email or delete it; see [Account and sign-in](/dashboard/account-and-sign-in/).
+Apart from the retention window and connecting Google nothing on this card is editable. There is no way to rename the account, change its email or delete it; see [Account and sign-in](/dashboard/account-and-sign-in/).
+
+## Revenue currency
+
+The currency every revenue total in the dashboard is in, on a card of its own right under **Account**. It is one of the 154 currencies with a daily exchange rate: the 30 the European Central Bank publishes and the other current ISO 4217 currencies but SYP. Each purchase is converted with the exchange rate of its day, and keeps the amount and currency your app sent. See [Revenue](/sdk/revenue/).
+
+- **Where it starts:** a new account starts in the currency of the country it was opened from (the sign-up's, Google sign-up's or, for someone who joined from an invite, the one where they opened their own account): EGP from Egypt, SAR from Saudi Arabia. Without a known country, or from Syria, whose currency has no rate, it starts in EUR.
+- **Changing it:** the button shows the current currency; an owner opens it and searches by code (`egp`), by a word of the name (`egyptian`, `riyal`, `dinar`) or by `UAE`, `KSA`, `UK` or `USA`, then picks one with a click or the arrow keys and Enter. Escape closes the list without a change. Every stored amount is converted again, after fetching the day's rates when the server has none for the new currency yet.
+- Members and viewers see the currency but cannot change it.
 
 ## Plan
 

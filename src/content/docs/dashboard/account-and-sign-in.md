@@ -19,7 +19,7 @@ Sign-in lives at https://dashboard.adto.app/login. The page is titled **Dashboar
 
 On success you are signed in and see **Account created — you are signed in.** with two keys: **SDK key, for your app** (listed again under Settings → [SDK keys](/dashboard/settings/#sdk-keys)) and **Account key, for servers and scripts**, which this screen shows once: "Copy it now: it is not shown again (Settings can replace it)." Then **Go to dashboard**.
 
-A footer line reads "Your account gets its own link subdomain and API key." Every account created through signup has the `user` role (see [Roles](#roles)).
+A footer line reads "Your account gets its own link subdomain and API key." Every account created through signup has the `user` role (see [Roles](#roles)). Its revenue currency starts as the currency of the country you signed up from, EGP from Egypt for example, or EUR when the country is not known; an owner changes it under Settings → [Revenue currency](/dashboard/settings/#revenue-currency).
 
 ## Log in
 

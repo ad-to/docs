@@ -47,6 +47,8 @@ curl -sS -b jar.txt https://dashboard.adto.app/api/admin/links | jq '.links[] | 
 
 Password rule for signup and reset: 8 to 72 characters with at least one lowercase letter, one uppercase letter and one digit (`Password must be at least 8 characters`, `Password must be less than 72 characters`, `Password must include a lowercase letter`, `Password must include an uppercase letter`, `Password must include a number`). Username rule: `^[a-z0-9][a-z0-9-]{1,30}[a-z0-9]$` after lower-casing; reserved: `app`, `www`, `api`, `links`, `dashboard`, `admin`, `mail`, `static`, `cdn`, `docs`, `status`, `help`, `support`, and any name starting with `t-` (the prefix of test environments).
 
+A new account's revenue currency (`base_currency`) is the currency of the country its request came from: `POST /api/admin/signup` with a username, `POST /api/auth/google/complete`, `POST /api/admin/accounts` and `POST /api/admin/bootstrap` with credentials each map `request.cf.country` (Cloudflare's location data for the request) to that country's currency, EGP for `EG`. With no country, or one whose currency has no daily rate (Syria), it is EUR. The country is not stored. `PUT /api/admin/settings/base-currency` changes it later.
+
 ### Bootstrap
 
 `POST /api/admin/bootstrap` has two body forms. Both answer `409 {"error": {"code": "conflict", "message": "Already bootstrapped"}}` once any user exists, and `201 {"ok": true, "email", "username", "api_key", "sdk_key", "demo"}` on success: `api_key` is the account key, `sdk_key` the first SDK key (`null` for the demo seed). The SDK key can be viewed again in Settings; the account key is shown only in this response.
