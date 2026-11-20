@@ -155,8 +155,6 @@ Both pages carry `noindex`, a status chip, a **Go to AdTo** button pointing at `
 
 ## The link pages
 
-The in-app browser page, the interstitial and the tap-to-store page show the app's **Link pages** look when one is saved (Apps → the app → Link pages): its logo above the app's name, its colours and button shape, and on the in-app browser and tap-to-store pages its own title and text, which replace the translated words in every language.
-
 The QR page, the interstitial, the tap-to-store page and the error pages share three things.
 
 - **Language.** English, German, French, Spanish or Italian, the first of them in the browser's `Accept-Language` by weight; English when none matches. `<html lang>` says which.
