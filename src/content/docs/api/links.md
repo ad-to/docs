@@ -78,6 +78,7 @@ Every permanent-link route returns the full object, including fields you never s
 | `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content` | string or null | Added to the link's web destinations and stored on clicks whose URL has none. See [Link-level UTM values](/links/url-parameters/#link-level-utm-values). |
 | `external_id` | string or null | Your own id for the link (a product or CMS row id), unique in the account. See [Upsert and external ids](#upsert-and-external-ids). |
 | `referrer_customer_id` | string or null | Set on a customer's referral link. See [Referral programs](/guides/referral-programs/). |
+| `created_via` | string or null | Where the link was made, read-only. The values are `dashboard` (a signed-in session), `api` (an account key), `sdk` (an SDK key) and `mcp` (the MCP server). Links made before this field took it from the account's audit log. `null` means the audit log no longer holds the link's creation. |
 | `expires_at`, `expired_url` | string or null | When the link expires, and where taps go after that instead of a `410` page. |
 | `disabled_at`, `disabled_reason` | string or null | Paused since, and your note on why. A paused link answers `410` and records nothing. |
 | `archived_at` | string or null | Filed away in the dashboard. The link keeps working. |
@@ -282,6 +283,25 @@ adto PUT /api/v1/links/spring-sale '{"expires_at": "2026-12-31T23:59:00Z", "expi
 Deleting is a soft delete. The link leaves the list (unless `include_deleted=true`), its URL answers 404, and `GET` and `PUT` answer 404. Its clicks and the installs, events and app opens attributed to it stay, so the Overview and every past verdict keep their numbers. The link keeps its slug. Thirty days after the delete, the daily job anonymises its clicks and app opens (IP hash, device id, user agent and the like), as retention would do after `RETENTION_DAYS`; installs and events keep the normal schedule.
 
 `POST /api/v1/links/:slug/restore` brings a deleted link back and returns `200` with the Link; restoring a live link changes nothing. An unknown slug answers 404.
+
+### Clone
+
+`POST /api/v1/links/:slug/clone`, with an optional body `{"slug": "summer-sale"}`, makes a new permanent link from an existing one. Left out, the slug is generated. Answers:
+- **`201` with the copy.** Its `created_via` is where the clone was made.
+- **`404`** when the source is unknown or deleted.
+- **`409`** when the slug is taken.
+
+The copy is checked like a create.
+
+**Copied:** the target, app, template, metadata, social preview, deep-link paths, redirect and fallback URLs, label, campaign, adgroup and creative, UTMs, the page settings, `append_click_id`, `forward_query` and the routing rules.
+
+**Not copied:**
+- the history and counters;
+- `external_id`, which is unique;
+- the expiry, the pause and the archive;
+- a referral link's customer.
+
+The dashboard's **Clone** on a link's row and the MCP `clone_link` tool use the same route.
 
 `DELETE /api/v1/links/:slug?permanent=true` deletes the link and its history in one atomic batch, on a live or a deleted link: the events of installs it attributed and events denormalized to its slug, its app opens and referrals, the installs attributed through its clicks (customers that pointed at those installs keep their identity but lose `first_install_id`), its clicks, then the link. The dashboard's totals drop accordingly, and the slug is free again. This cannot be undone; see [Dashboard: Links](/dashboard/links/).
 
