@@ -125,10 +125,10 @@ A request from one person, for a device or a customer; see [A request from one p
 
 | Method and path | Auth | Purpose | Response |
 |---|---|---|---|
-| `GET /api/admin/devices/:deviceId/export` | session | Everything stored about one device. | `200`, a JSON file: `{subject, account, exported_at, retention_days, installs, clicks, events, app_opens, device_days, app_sessions, advertising_ids, referred_by}` |
-| `DELETE /api/admin/devices/:deviceId` | session | Erases the device. | `200 {erased: true, device_id, deleted: {events, app_opens, device_days, app_sessions, ad_identifiers, referrals, customers_unlinked, webhook_deliveries, clicks_blanked, installs}}` (rows per table; `clicks_blanked` were kept without their personal columns) |
-| `GET /api/admin/customers/:customerId/export` | session | Everything stored about one customer. | `200`, a JSON file: `{subject, account, exported_at, retention_days, customer, events, referred_by, referrals_made, devices: [{device_id, shared, …the device export when not shared}]}` |
-| `DELETE /api/admin/customers/:customerId` | session | Erases the customer, and each device only they used. | `200 {erased: true, customer_id, deleted: {customer, events, app_sessions, referrals, webhook_deliveries, devices, shared_devices_kept, …the device counts}}` |
+| `GET /api/admin/devices/:deviceId/export` | session | Everything stored about one device. | `200`, a JSON file: `{subject, account, exported_at, retention_days, installs, clicks, events, app_opens, device_days, app_sessions, advertising_ids, referred_by, customer_installs}` |
+| `DELETE /api/admin/devices/:deviceId` | session | Erases the device. | `200 {erased: true, device_id, deleted: {events, app_opens, device_days, app_sessions, ad_identifiers, customer_installs, referrals, customers_unlinked, webhook_deliveries, clicks_blanked, installs}}` (rows per table; `clicks_blanked` were kept without their personal columns) |
+| `GET /api/admin/customers/:customerId/export` | session | Everything stored about one customer. | `200`, a JSON file: `{subject, account, exported_at, retention_days, customer, events, referred_by, referrals_made, customer_installs, devices: [{device_id, shared, …the device export when not shared}]}` |
+| `DELETE /api/admin/customers/:customerId` | session | Erases the customer, and each device only they used. | `200 {erased: true, customer_id, deleted: {customer, events, app_sessions, customer_installs, referrals, webhook_deliveries, devices, shared_devices_kept, …the device counts}}` |
 
 Erasing something that was never stored answers `200` with zero counts: the request is still recorded, and the tombstone still drops queued events.
 

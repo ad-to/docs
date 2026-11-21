@@ -100,7 +100,7 @@ See [Events](/sdk/events/) and [Events and attribution](/api/events-and-attribut
 
 ## Webhooks
 
-An account can have any number of webhooks, each taking one app's events or every app's. The server POSTs the events a webhook is subscribed to: `app.installed` for every first-launch verdict and `app.install_updated` when a claim upgrades it, conversions and leads, app opens, referrals, link changes and, opt-in, every tap. The body is the envelope `{event_id, event, created_at, attempt, data}`, signed with `x-adto-signature: sha256=<HMAC-SHA256 of the raw body>`. Every delivery is logged, and a failed one is retried for about a day. See [Webhooks](/api/webhooks/).
+An account can have any number of webhooks, each taking one app's events or every app's, and all of them or only those a link earned. The server POSTs the events a webhook is subscribed to: `app.installed` for every first-launch verdict and `app.install_updated` when a claim upgrades it, `customer.identified` when one of your users signs in on an install (with that install's link), conversions and leads, app opens, referrals, link changes and, opt-in, every tap. The body is the envelope `{event_id, event, created_at, attempt, data}`, signed with `x-adto-signature: sha256=<HMAC-SHA256 of the raw body>`. Every delivery is logged, and a failed one is retried for about a day. See [Webhooks](/api/webhooks/).
 
 ## Where things live
 
