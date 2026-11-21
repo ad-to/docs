@@ -183,7 +183,7 @@ The routes behind Apps → Webhooks; see [Webhooks](/api/webhooks/) for the enve
 
 | Method and path | Auth | Purpose | Response |
 |---|---|---|---|
-| `GET /api/admin/webhooks` | session | Every webhook of the account. | `200 {data: [Webhook], events, default_events}`; a Webhook is `{id, app_id, url, events, active, consecutive_failures, disabled_at, disabled_reason, created_at, updated_at}`, never its secret |
+| `GET /api/admin/webhooks` | session | Every webhook of the account. | `200 {data: [Webhook], events, default_events}`; a Webhook is `{id, app_id, url, events, active, consecutive_failures, failing_since, disabled_at, disabled_reason, created_at, updated_at}`, never its secret |
 | `POST /api/admin/webhooks` | session | `{url, app_id?, events?}`; `app_id` null or absent takes every app's events; `events` defaults to all but `click.recorded`. | `201` Webhook plus `secret` (`whsec_` and 64 hex), the only time it is shown; `400 url must be a valid http(s) URL`, `Unknown event …`, `Unknown app_id` |
 | `PUT /api/admin/webhooks/:id` | session | Any of `url`, `app_id`, `events`, `active` (boolean); `true` resets the failure count. | `200` Webhook; `404 Webhook not found` |
 | `DELETE /api/admin/webhooks/:id` | session | Deletes the webhook and its delivery log. | `200 {deleted: true}`; `404` |

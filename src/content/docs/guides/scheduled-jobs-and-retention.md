@@ -5,14 +5,15 @@ sidebar:
   order: 4
 ---
 
-AdTo runs two scheduled jobs, on UTC time:
+AdTo runs three scheduled jobs, on UTC time:
 
 | Expression | Fires | Runs |
 |---|---|---|
+| `* * * * *` | Every minute | Webhook retries only |
 | `7 * * * *` | Every hour at :07 | Apple Search Ads retry, the daily rollups and webhook retries |
 | `17 3 * * *` | Daily at 03:17 UTC | The same, then the expired temporary links' delete, the deleted-link anonymization, the webhook delivery-log purge, the exchange rates and, once the rollups are done, the retention sweep |
 
-The code branches on the expression: `7 * * * *` returns after the Apple Search Ads pass and the rollups; any other expression runs everything. The jobs run inside `waitUntil`, so a failure in one does not stop the others, except that the retention sweep waits for the rollup build. There is no job-level logging beyond console warnings.
+The code branches on the expression: `* * * * *` runs the webhook retries and returns; `7 * * * *` returns after the Apple Search Ads pass and the rollups; any other expression runs everything. The jobs run inside `waitUntil`, so a failure in one does not stop the others, except that the retention sweep waits for the rollup build. There is no job-level logging beyond console warnings.
 
 ## Apple Search Ads retry (both triggers)
 
@@ -42,9 +43,17 @@ After `link_daily`, `buildBreakdowns` (`apps/worker/src/breakdowns.ts`) fills `b
 
 What reads the rollups: the Overview's clicks, installs, reinstalls, opens, leads and revenue, its clicks per day and per device, for windows over 7 days (which are whole UTC days, today included), and the lifetime installs, reinstalls, opens, leads and revenue of every link on the Links screen.
 
-## Webhook retries (both triggers)
+## Webhook retries (every trigger)
 
-`retryDueDeliveries` (`apps/worker/src/webhooks.ts`) sends again every pending delivery whose `next_attempt_at` has passed and whose webhook is on, oldest first, up to 300 per run, ten at a time with a 10-second timeout each. A failure schedules the next attempt 5 minutes, 30 minutes, 2 hours, 6 hours and 24 hours after the previous one (six attempts in all), then marks the delivery failed. Because the job runs hourly, the 5- and 30-minute retries happen at the next :07. A larger backlog waits for the next run. See [Webhooks](/api/webhooks/#delivery-and-retries).
+`retryDueDeliveries` (`apps/worker/src/webhooks.ts`) sends again the pending deliveries whose `next_attempt_at` has passed and whose webhook is on. It runs every minute, and on the hourly and daily triggers too, so a deployment that runs only those still retries, at the next :07.
+
+How a run works:
+- **Order and caps:** oldest first, up to 20 per webhook and 300 in all. A receiver with a backlog cannot hold the others back.
+- **Claiming:** each delivery is claimed before it is sent, by moving its `next_attempt_at` 2 minutes out. Two runs that overlap never send it twice.
+- **Sending:** ten at a time, with a 10-second timeout each. New sends start only in the first 45 seconds of a run. A claimed delivery left unsent is due again 2 minutes later, and a larger backlog waits for the next run.
+- **Schedule:** a failure schedules the next attempt 1 minute, 5 minutes, 30 minutes, 2 hours, 5 hours, 10 hours and 12 hours after the previous one, then daily, 13 attempts in all. Then the delivery is marked failed.
+
+The Node server logs a run of the minute trigger only when it fails. See [Webhooks](/api/webhooks/#delivery-and-retries).
 
 ## Device names (daily)
 

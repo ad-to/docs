@@ -143,12 +143,14 @@ confirms the iOS device id survives the reinstall.
 
 ## Settled for links and analytics
 
-**19. Webhook retries run on D1 and the hourly cron.** A
-failed delivery waits in `webhook_deliveries` for the hourly job, which sends at
-most 300 retries a run, so the 5- and 30-minute retries land at the next run.
-*Rejected:* Cloudflare Queues, which retries within the minute but is a second
-service to provision on every deployment. *Revisit* if a receiver's backlog
-outgrows 300 an hour.
+**19. Webhook retries run on the database and a cron that runs every minute.**
+A failed delivery waits in `webhook_deliveries` for that job. A run sends at most
+300 retries and 20 per webhook, claiming each one before it sends it, so the
+first retries come a minute after a failure. A webhook is turned off after 5 days
+without a delivery, measured in time rather than a count, so a busy receiver's
+short outage never turns it off.
+*Rejected:* Cloudflare Queues, which is a second service to provision on every
+deployment. *Revisit* if a receiver's backlog outgrows 300 a minute.
 
 **20. Retention counts calendar days in UTC, and day N means exactly day N,**
 as Adjust and AppsFlyer report it; the weekly table counts
