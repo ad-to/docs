@@ -23,16 +23,16 @@ The page shows "Loading analytics…" on first load. If the overview request fai
 
 ## Setup banner
 
-While an app still has setup steps left, a banner above the title names the next one from the app's [Are we live yet?](/dashboard/apps/#are-we-live-yet) checklist, for example "Next step for My App: App identifiers saved.", with the step's hint, how many steps are done, a link to the rest, and a button to where the step is done:
+While an app still has setup steps left, a banner above the title names the next one from the app's [Are we live yet?](/dashboard/apps/#are-we-live-yet) checklist, for example "Next step for My App: Save the app’s identifiers.", with the step's hint, how many steps are done, a link to the rest, and a button to where the step is done:
 
 | Step | Button |
 |---|---|
-| App identifiers saved, Universal Links file, App Links file | **Open iOS settings** or **Open Android settings**: the app's editor opens at that section with the cursor in its first empty field |
-| The SDK has reported | **Install the SDK** ([Installation](/sdk/installation/), in a new tab) |
-| A link was tapped | **Open your links** |
-| First install registered | **Initialize the SDK** ([Initialize and handle links](/sdk/initialize-and-handle-links/)) |
-| First install attributed to a link | **Test attribution** ([Testing](/sdk/testing/)) |
-| First event received | **Send events** ([Events](/sdk/events/)) |
+| Save the app's identifiers, Fix the Universal Links file, Fix the App Links file | **Open iOS settings** or **Open Android settings**: the app's editor opens at that section with the cursor in its first empty field |
+| Install the SDK | **Install the SDK** ([Installation](/sdk/installation/), in a new tab) |
+| Tap a link | **Open your links** |
+| Register a first install | **Initialize the SDK** ([Initialize and handle links](/sdk/initialize-and-handle-links/)) |
+| Attribute a first install to a link | **Test attribution** ([Testing](/sdk/testing/)) |
+| Send a first event | **Send events** ([Events](/sdk/events/)) |
 
 An account with no app sees **Register your app** instead. With several apps, the banner checks the first five in the order the Apps screen lists them and shows the first one with a step left. The optional webhook step is never shown.
 
