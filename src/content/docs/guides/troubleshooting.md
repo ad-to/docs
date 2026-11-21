@@ -87,7 +87,7 @@ Until verification succeeds, taps from a Chrome-engine browser (user agent conta
 
 ## Universal Links do not open the app (iOS)
 
-Start with the [AASA validator](https://adto.app/tools/aasa-validator). It checks the file your link host serves, and whether Apple's CDN, where iPhones read it, holds the same copy.
+Start with the [AASA validator](https://adto.app/tools/aasa-validator). It checks the file your link host serves, whether Apple's CDN, where iPhones read it, holds the same copy, and, given a path, which app may open it. The [deep link tester](https://adto.app/tools/deep-link-tester) checks one whole link at once.
 
 | Symptom | Cause | Fix |
 |---|---|---|
