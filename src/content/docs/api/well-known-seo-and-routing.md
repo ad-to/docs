@@ -78,7 +78,31 @@ The site's [AASA validator](https://adto.app/tools/aasa-validator) and [assetlin
 
 These outside copies refresh on their own schedule, so they are shown but not scored. A file of `{}` is valid JSON but fails, because it names no app.
 
-The validators refuse an IP address, a port, credentials and private names. Each address may run 10 checks a minute, and the site asks for a Turnstile check. The API behind them, `POST /api/tools/universal-links` and `POST /api/tools/app-links`, is described in the [API contract](https://github.com/ad-to/adto/blob/main/docs/API_CONTRACT.md), with `POST /api/tools/social-preview`, which is behind the [social preview checker](/links/social-previews-and-qr/#for-any-page).
+The AASA validator also takes a **path to test** and says which app may open it, judged on the copy iPhones read (Apple's CDN copy, else the host's file). It matches the way iOS matches:
+- **Order:** patterns are tried in order, and the first match decides, an exclude included. A `NOT /admin/*` placed after `/*` never applies.
+- **Each app's entry:** an app is judged only by the first `details` entry that names it.
+- **Wildcards:** `*` matches zero or more characters, `?` exactly one, and `?*` one or more. `/buy/*` also matches `/buy`.
+- **Paths:** repeated slashes and a trailing slash are ignored.
+- **Case and encoding:** matching is case-sensitive and on the encoded URL, unless `caseSensitive` or `percentEncoded` says otherwise.
+- **Substitution variables:** built-in ones like `$(digit)` and the file's own work. `$(lang)` and `$(region)` stand for Apple's ISO lists, so a path that only those could decide is answered "can't tell".
+- **Older formats:** signed (PKCS #7) files and the older dictionary form of `details` are read, since Apple still reads them.
+
+Where Apple's documentation is silent, the rules come from Apple's own matcher (`swcutil verify` on macOS). The test suite replays its answers for 166 cases.
+
+The [deep link tester](https://adto.app/tools/deep-link-tester) scores one link from 0 to 100, using what can be checked without the app:
+
+| Check | Weight |
+|---|---|
+| The link is https | 10 |
+| It answers a phone's browser | 10 |
+| The Universal Links file passes | 20 |
+| The file iPhones read lets an app open this path (checked once the file passes) | 15 |
+| The App Links file passes | 20 |
+| Facebook's crawler finds a title, a description and an image | 10, 5, 10 |
+
+Android's path filters live in the app's manifest, so the path is not judged there. Where an iPhone's and an Android phone's browser request ends without the app (the App Store, Google Play or a web page) is shown but not scored. Each address may run 4 tests a minute.
+
+The validators refuse an IP address, a port, credentials and private names. Each address may run 10 checks a minute, and the site asks for a Turnstile check. The API behind them, `POST /api/tools/universal-links`, `POST /api/tools/app-links` and `POST /api/tools/deep-link`, is described in the [API contract](https://github.com/ad-to/adto/blob/main/docs/API_CONTRACT.md), with `POST /api/tools/social-preview`, which is behind the [social preview checker](/links/social-previews-and-qr/#for-any-page).
 
 ## robots.txt and sitemap.xml
 
