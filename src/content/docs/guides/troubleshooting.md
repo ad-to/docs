@@ -72,6 +72,8 @@ Call `FlutterAdto().diagnostics()` from a debug build. It reads the app's record
 
 ## App Links do not verify (Android)
 
+Start with the [assetlinks.json validator](https://adto.app/tools/assetlinks-validator). It checks the file your link host serves and shows what Google's Digital Asset Links API returns for it.
+
 | Symptom | Cause | Fix |
 |---|---|---|
 | Taps open Chrome or the store although the app is installed | The domain is not verified for the installed build | `adb shell pm get-app-links <package>` must list `{username}.adto.app` as `verified`. Reinstall after changing the manifest or the fingerprints; Android verifies at install and update. |
@@ -84,6 +86,8 @@ Call `FlutterAdto().diagnostics()` from a debug build. It reads the app's record
 Until verification succeeds, taps from a Chrome-engine browser (user agent contains `Chrome/`) still reach the app through an `intent://` bounce, provided the app has both a scheme and a package. In-app browsers never get the bounce. See [Platform setup](/sdk/platform-setup/).
 
 ## Universal Links do not open the app (iOS)
+
+Start with the [AASA validator](https://adto.app/tools/aasa-validator). It checks the file your link host serves, and whether Apple's CDN, where iPhones read it, holds the same copy.
 
 | Symptom | Cause | Fix |
 |---|---|---|
