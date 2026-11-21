@@ -184,6 +184,29 @@ Each row says what the visitor sees (a straight redirect, the [tap-to-store page
 - It shows the browser's path. A phone that already has the app opens it from the link itself, through Universal Links or App Links, without reaching AdTo; see [Entry points](#entry-points).
 - An A/B rule picks its variant from the visitor's address, and the check is one visitor, so it shows one variant.
 
+## Link health
+
+**Link health**, at the top of the link drawer (`GET /api/admin/links/:slug/health`, or the `link_health` [agent tool](/guides/automation-and-agents/)), scores the saved link from 0 to 100 and lists what is wrong first, each with a link to where it is fixed. Every check reads what AdTo actually answers for the link: the association files from the link's own host (your custom domain while it is live, else your AdTo subdomain), the routes from [Check where a link goes](#check-where-a-link-goes), and the preview as Facebook's crawler sees it, image fetched. Nothing is counted.
+
+| Check | Weight | Passes when |
+|---|---|---|
+| Custom domain | 10 | Your custom domain is the one links use. Only scored when you have one that is not being removed. |
+| iOS identifiers | 15 | The app has a Team ID and a bundle ID in the shapes Apple accepts. |
+| Universal Links file | 15 | The link's host serves `apple-app-site-association` as Apple reads it: answered 200 as JSON, under 128 KB, listing the app, every path covered. Checked once the iOS identifiers pass, since the file is built from them. |
+| iPhone without the app | 10 | The app has an App Store URL, or the link sends phones without the app somewhere of its own. |
+| Android identifiers | 15 | The app has a package and at least one SHA-256 signing fingerprint. |
+| App Links file | 15 | The link's host serves `assetlinks.json` granting `handle_all_urls` to the package with every saved fingerprint. Checked once the Android identifiers pass. |
+| Android without the app | 10 | The app has a Google Play URL, or the link sends phones without the app somewhere of its own. |
+| Title | 10 | The shared link has a title of its own (the link's or the app's), not "Open in the app". |
+| Description | 5 | The link or the app has a description. |
+| Image | 10 | The image answers as an image to Facebook's crawler, 8 MB or less. |
+
+The score is the weight of the passing checks over the weight of those that apply. A platform the app has no field for is left out; an app set up for neither platform fails both. A paused, expired or deleted link scores 0 and says so, since nobody is routed.
+
+Below the checks, a table says what a tap does on an iPhone, an Android phone and a computer, with and without the app. Without the app is the route check's answer. With the app depends on half AdTo cannot see: the app's build must still list the link's host in Associated Domains (iOS) or verify it in an intent filter (Android). So the table says the app opens *when the build declares the host*, and shows the last time the app reported opening the link. That shows the app handles the link, though not which way it arrived: the SDK reports an open by Universal Link, App Link or scheme alike.
+
+DNS records and the certificate of a custom domain are not scored here: the custom domain card in Settings checks them (see [Custom domains](/links/custom-domains/)).
+
 ## When the click is recorded
 
 | Path | Click |

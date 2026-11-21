@@ -60,6 +60,7 @@ The AdTo plugin for Claude Code bundles the same server with four skills: links 
 | `list_apps` | Your apps with their store and platform identifiers, without secrets. Account key only. |
 | `create_app`, `update_app` | Register an app, or change some of its fields (bundle ids, store links, signing fingerprints, social preview), through [`/api/v1/apps`](/api/apps/); its well-known files are served at once. Account key only. |
 | `setup_status` | The [setup checklist](/dashboard/apps/) of one app, including the Apple and Google rules for the well-known files. Account key only. |
+| `link_health` | One link's [health score](/links/how-a-tap-is-routed/#link-health), 0 to 100: the app's identifiers and association files on the link's host, where a phone without the app goes, and the shared preview, each failing check with what to fix. Counts no tap. Account key only. |
 | `get_flutter_snippet` | The `pubspec.yaml` line and the `initialize()` call, filled with one of your SDK keys and your base URL. Account key only. |
 
 The link and attribution tools call the matching `/api/v1` route with your key, so validation, scopes and rate limits are the same as for curl. A failed call comes back as a tool error whose text starts with the API's error code, for example `conflict: Slug already exists`, and carries the full API error body.
