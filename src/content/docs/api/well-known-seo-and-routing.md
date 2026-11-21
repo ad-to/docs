@@ -78,7 +78,7 @@ The site's [AASA validator](https://adto.app/tools/aasa-validator) and [assetlin
 
 These outside copies refresh on their own schedule, so they are shown but not scored. A file of `{}` is valid JSON but fails, because it names no app.
 
-The validators refuse an IP address, a port, credentials and private names. Each address may run 10 checks a minute, and the site asks for a Turnstile check. The API behind them, `POST /api/tools/universal-links` and `POST /api/tools/app-links`, is described in the [API contract](https://github.com/ad-to/adto/blob/main/docs/API_CONTRACT.md).
+The validators refuse an IP address, a port, credentials and private names. Each address may run 10 checks a minute, and the site asks for a Turnstile check. The API behind them, `POST /api/tools/universal-links` and `POST /api/tools/app-links`, is described in the [API contract](https://github.com/ad-to/adto/blob/main/docs/API_CONTRACT.md), with `POST /api/tools/social-preview`, which is behind the [social preview checker](/links/social-previews-and-qr/#for-any-page).
 
 ## robots.txt and sitemap.xml
 
