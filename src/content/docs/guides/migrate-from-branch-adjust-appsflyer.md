@@ -26,7 +26,8 @@ Every install report returns one `AdtoAppInstallResponse`. This table places the
 | Identity (Branch `setIdentity`, AppsFlyer `setCustomerUserId`) | `adto.identify(customerId: ..., name: ..., email: ..., phone: ...)`; `adto.logout()` forgets it |
 | Events (Branch `BranchEvent`, Adjust event tokens, AppsFlyer `logEvent` with `af_revenue`) | `adto.trackConversion(revenue: ..., currency: ...)` and `adto.trackEvent(name)`. The first `identify` of a new customer on a fresh install records the signup lead. See [Events](/sdk/events/). |
 | Attribution read-back (AppsFlyer `onConversionDataSuccess`, Adjust attribution callback) | `onAppInstalled`, `currentAppInstall`, and `getAttributionData()`, which re-pulls `GET /api/v1/attribution` after a restart |
-| Server postback (Branch webhooks, Adjust callbacks, AppsFlyer Push API) | [Webhooks](/api/webhooks/): `app.installed`, `app.install_updated`, `event.conversion`, `event.lead`, `app.opened`, `referral.converted`, link changes and, opt-in, `click.recorded`. HMAC-SHA256 signed, logged, retried for about a day. |
+| Server postback (Branch webhooks, Adjust callbacks, AppsFlyer Push API) | [Webhooks](/api/webhooks/): `app.installed`, `app.install_updated`, `customer.identified`, `event.conversion`, `event.lead`, `app.opened`, `referral.converted`, link changes and, opt-in, `click.recorded`. HMAC-SHA256 signed, logged, retried for about a day. **Only attributed** keeps only what a link earned, as a postback limited to non-organic installs. |
+| A sign-up or sign-in postback with the user id and the tracker (an Adjust `sign_up` or `login` callback with `app_user_id` and `tracker`) | [`customer.identified`](/api/webhooks/#the-customer-event): the `identify` customer id and the install with its link, once per user and install. Tag each partner's link with `external_id` and read `install.link.external_id` where you read the tracker. |
 | Request signing (AppsFlyer `af_sig`) | Every SDK call carries `x-adto-timestamp` and `x-adto-signature`. Unsigned requests get 401. |
 
 ## Branch
@@ -63,7 +64,7 @@ Adjust's tracker URL parameters keep their names in AdTo with a `adto_` prefix.
 | Install referrer with retries | Up to three connection attempts, 3 seconds apart, for transient Play errors. The first-launch registration waits up to `installReferrerTimeout` (default 5 seconds); a referrer that arrives later is sent as a late claim and `onAppInstalled` emits again. |
 | `retry_in` | The SDK honors `Retry-After`: up to 10 seconds in-process, longer waits defer to the next launch |
 | Apple Search Ads through AdServices | `AdtoCollection.appleSearchAdsToken` in `collect` (off by default). The result is on `install.appleSearchAds`, on `getAttributionData()`, on the webhook and on the Overview card. |
-| Server callbacks | Webhooks |
+| Server callbacks | Webhooks; `sign_up` / `login` callbacks with `app_user_id` and `tracker`: `customer.identified` with **Only attributed** |
 | Reattribution | No equivalent for installs: a late deterministic signal can upgrade an organic or fingerprint verdict; a credited install never changes link. Events within the re-engagement window after a link opens the installed app (7 days by default, per app) count for that link; see [Events](/sdk/events/#how-events-reach-a-link). |
 | SKAdNetwork, ad-network integrations | None |
 
