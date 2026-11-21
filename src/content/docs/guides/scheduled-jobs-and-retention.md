@@ -84,6 +84,7 @@ Then `anonymiseExpiredDeviceData` runs one `db.batch`, so every statement commit
 | Table | Action | Condition | Columns affected |
 |---|---|---|---|
 | `ad_identifiers` | DELETE rows | `created_at < cutoff` | whole row |
+| `customer_installs` | DELETE rows | `created_at < cutoff` | whole row |
 | `breakdown_daily` | DELETE rows | `day` before the cutoff's day, for every account | whole row |
 | `device_days` | DELETE rows | `day` before the cutoff's day, or `DEVICE_DAY_RETENTION_DAYS` ago when shorter | whole row |
 | `app_sessions` | DELETE rows | `started_at < cutoff`, or `SESSION_RETENTION_DAYS` ago when shorter | whole row |
