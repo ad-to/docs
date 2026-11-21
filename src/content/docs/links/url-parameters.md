@@ -110,9 +110,21 @@ So `https://shop.example.com/sale` behind a link with `utm_source=newsletter` op
 
 ## Your own parameters
 
-Keys without the `adto_` or `utm_` prefix are not read. A browser tap stores only its `adto_*` and `utm_*` values, so after a deferred install those are all that come back on the verdict: `?productId=42` on a shared link does not survive the trip through the store. On a warm open the SDK gives the app the whole opened URL, so `click.queryParameters['productId']` (`AdtoLinkClickX`) works there, but only there, and the SDK reports none of those keys to the server.
+Keys without the `adto_` or `utm_` prefix, such as a share-time `ref` or an `item`, never change routing. They still reach the app and, when the link asks, the website.
 
-To send a route that works on both paths, put it in `adto_deeplink`: `?adto_deeplink=products/42`. The prefix also keeps AdTo's keys apart from your website's own parameters. The reasons are in [Design decisions](/start/design-decisions/).
+**The app.** A warm open gives the app the whole opened URL (`click.queryParameters['productId']`). After a deferred install the verdict carries them as `click_params.query`, `{"productId": "42"}`. The rules for that copy:
+- **Included:** the first value of each key, at most 20 keys and 2 KB.
+- **Dropped:** a key over 64 characters or a value over 256, `utm_*` keys (they are on the click already), and AdTo's [reserved parameters](#reserved-parameters).
+
+**The website.** Turn on **Pass the link's query parameters to website destinations** in the link drawer, under Template and tracking. Over the API, set `forward_query: true` on the link, or on a [template](/api/links/#templates). The tap's own parameters are then copied onto every web destination that `utm_*` values reach (see above):
+
+- **What is copied:** the same keys the app gets, plus the tap's `utm_*`.
+- **Precedence:** a tapped key wins over the destination URL's own value for it, and over the link's `utm_*`.
+- **Never copied:** onto store URLs or scheme and `intent://` URLs. `adto_*` keys and the reserved parameters are never copied.
+
+So a link to `https://shop.example.com/sale?campaign=summer`, tapped as `…/spring-sale?ref=anna&campaign=instagram`, opens `https://shop.example.com/sale?campaign=instagram&ref=anna`.
+
+A route meant for the app belongs in `adto_deeplink` (`?adto_deeplink=products/42`), which the app gets on both paths as `deep_link` and which routes the intent and the "Open in app" buttons too. The prefix also keeps AdTo's keys apart from your website's own parameters. The reasons are in [Design decisions](/start/design-decisions/).
 
 ## Reserved parameters
 
@@ -125,4 +137,8 @@ To send a route that works on both paths, put it in `adto_deeplink`: `?adto_deep
 
 ## Validation and what reaches the destination
 
-Each invalid parameter is dropped on its own; the rest still apply, and routing continues as if the dropped one were absent. Parameters are never forwarded: the visitor is sent to the destination URL as configured, and the only additions AdTo makes are the store tags (`ct` on the App Store, `referrer` on Google Play and the OEM stores), `adto_click` on scheme and intent URLs, and the link's own UTM values on web destinations, plus `adto_click` on web destinations for a link with **Add the click id to website destinations** on (see [Web pixel](/sdk/web/)). Social-preview bots and the QR code ignore parameters entirely; see [Social previews and the QR page](/links/social-previews-and-qr/).
+Each invalid parameter is dropped on its own; the rest still apply, and routing continues as if the dropped one were absent. The visitor is sent to the destination URL as configured. AdTo adds only these:
+- **Store tags:** `ct` on the App Store, `referrer` on Google Play and the OEM stores.
+- **The click id:** `adto_click` on scheme and intent URLs. Web destinations get it too on a link with **Add the click id to website destinations** on (see [Web pixel](/sdk/web/)).
+- **The link's own UTM values,** on web destinations.
+- **The tap's own parameters,** on web destinations, for a link with **Pass the link's query parameters to website destinations** on (see [Your own parameters](#your-own-parameters)). Social-preview bots and the QR code ignore parameters entirely; see [Social previews and the QR page](/links/social-previews-and-qr/).
