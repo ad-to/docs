@@ -24,6 +24,8 @@ Above the list:
 
 Clicking a row opens the install detail, described below.
 
+When filters match nothing, the list says "No install matches these filters." An account with no install yet sees "No installs yet. The SDK records one the first time the app starts." above three made-up rows in the list's columns, marked **Example**, to show what an install row looks like.
+
 ## Watch
 
 **Watch** is for testing on a phone. While it is on, and the browser tab is in view, the screen fetches the newest installs and the latest taps again every 5 seconds. A pulsing dot reads "Watching · updated 3 s ago". **Stop watching** turns it off.

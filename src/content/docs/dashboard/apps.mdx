@@ -49,7 +49,7 @@ Editing a saved app opens with a checklist the server computes on every visit; n
 | First event received | The account received an `identify`, lead, conversion or custom event |
 | Webhook configured (optional) | An active webhook takes this app's events (its own, or an account-wide one); not counted in the total |
 
-A platform you have not set up is greyed out and not counted. Each step that is not done says what to do next. On a local deployment (`http://localhost`) both file steps stay open, because Universal Links and App Links only work over https.
+A platform you have not set up is greyed out and not counted. Each step that is not done says what to do next, with a link to where it is done: the identifier and file steps jump to the **iOS** or **Android** section below with the cursor in its first empty field, the first-tap step opens Links, the webhook step jumps to **Webhooks**, and the SDK steps open the matching SDK page in a new tab. The Overview shows the next step as a [banner](/dashboard/overview/#setup-banner). On a local deployment (`http://localhost`) both file steps stay open, because Universal Links and App Links only work over https.
 
 On the hosted service, or any deployment on a real domain, **Check `<username>.<root>`** fetches both files from your live link host in your browser, without following redirects. It reports a redirect, a 404, the wrong content type, or a host that does not answer at all, which usually means the DNS records for the apex and `*` are missing or not proxied.
 
