@@ -81,6 +81,16 @@ The link is rendered through the redirect engine itself with each user agent, so
 | X shows the picture as a small square | `twitter:card` is not `summary_large_image`. The link page sets it whenever there is an image. |
 | Pinterest saves this as a plain Pin, not a Rich Pin | The page is not an article with a title and a description. Give the link, or its app, both. |
 
+### For any page
+
+The site's free [social preview checker](https://adto.app/tools/social-preview) runs the same nine crawlers against any page or link, with no account. It differs from the drawer's check in three ways:
+
+- **Redirects:** it follows them one hop at a time, up to five. Every hop must be a public http or https address on the default port, and so must the image. The card shows where each crawler ended up.
+- **Your own links:** a hop onto one of your AdTo links, such as a shortener in front of it, is answered by the redirect engine for that crawler, and nothing is counted.
+- **Refusals:** a site that answers 401, 403 or 429 is reported as refusing *a request in that crawler's name*. Bot protection often checks the crawler's address too, so the platform's own crawler may still get a preview.
+
+Each address may run 4 checks a minute, since each check is up to 18 requests to the page's site.
+
 ## Auto-fill from a web page
 
 On the Apps page, **Auto-fill from fallback URL** reads the Open Graph tags of the app's Fallback URL and fills the empty preview fields; existing values are kept. It appears once the Fallback URL is a valid http(s) address and at least one preview field is empty, and reports "Filled from your fallback URL" on success, with a reminder to review and save.
