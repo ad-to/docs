@@ -124,6 +124,8 @@ Keys without the `adto_` or `utm_` prefix, such as a share-time `ref` or an `ite
 
 So a link to `https://shop.example.com/sale?campaign=summer`, tapped as `…/spring-sale?ref=anna&campaign=instagram`, opens `https://shop.example.com/sale?campaign=instagram&ref=anna`.
 
+Anyone who shares a link with this on can put parameters on your site's URL, `utm_*` included, so your site should treat them as untrusted input. An AppsFlyer, Adjust or Singular link never takes a tap's `clickid` or `pid`.
+
 A route meant for the app belongs in `adto_deeplink` (`?adto_deeplink=products/42`), which the app gets on both paths as `deep_link` and which routes the intent and the "Open in app" buttons too. The prefix also keeps AdTo's keys apart from your website's own parameters. The reasons are in [Design decisions](/start/design-decisions/).
 
 ## Reserved parameters
