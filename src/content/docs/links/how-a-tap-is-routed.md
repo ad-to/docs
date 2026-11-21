@@ -155,10 +155,11 @@ Both pages carry `noindex`, a status chip, a **Go to AdTo** button pointing at `
 
 ## The link pages
 
-The QR page, the interstitial, the tap-to-store page and the error pages share three things.
+The QR page, the interstitial, the tap-to-store page and the error pages share these things.
 
 - **Language.** English, German, French, Spanish or Italian, the first of them in the browser's `Accept-Language` by weight; English when none matches. `<html lang>` says which.
 - **Content-Security-Policy.** Each response has its own random nonce, and only the page's own script and style blocks carrying it run: `default-src 'none'; script-src 'nonce-…'; style-src 'nonce-…'` (plus `font-src 'self'` on the pages that use Outfit, served by the same host at `/_/fonts/`), `img-src data:`, `connect-src 'self'` for the beacon, `base-uri 'none'`, `form-action 'none'`, `frame-ancestors 'none'`. Nothing on the page can be framed, and nothing injected into it can run.
+- **The app's icon.** The interstitial, the tap-to-store page and the in-app browser page show the app's icon from its store listing above its name. The server fetches it, never the visitor's browser: within an hour of an app being added or its identifiers changing, AdTo looks the app up on the App Store by its bundle ID (or the App Store URL's id, when the bundle ID matches), else on Google Play by its package (through unavatar.io when Google's listing page gives none), and keeps a small copy. It is refreshed weekly. An app with neither listing shows its name alone.
 - **Which way out.** A tap on a store badge or the **Get** button, an **Open in app** button, or the QR page's website link sends `/_/collect` `{c: <click id>, a: "cta_ios" | "cta_android" | "cta_open" | "cta_web"}` with `sendBeacon`, which survives the navigation the tap starts. The first one is kept on the click as `cta` with `cta_at`, from the same network within an hour of the tap. The Overview's Breakdown shows it as **Page button**, the analytics query as the `cta` dimension: how many QR-page visitors went to a store, to the app or to the website.
 
 
