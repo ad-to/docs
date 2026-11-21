@@ -26,7 +26,7 @@ A customer exists as soon as the SDK sends an `identify` event with a customer I
 | **Attributed link** | `/{slug}` of the link credited with the customer's install, or **Organic** (also when a blocked [fraud rule](/start/fraud-rules/) withheld the credit). **Unknown** when the customer's device data was deleted (see **Country**). |
 | **Country** | A flag and the name of the country the customer's install request came from, by the geolocation of its network address, for attributed and organic customers alike. **Device data deleted** when erasing the customer's device took its install and events, so neither the country nor the link is known any more; its tooltip gives the date and time. **Unknown** when no install is linked yet or its request had no country. |
 
-Empty states: "No customers yet — call `AdTo.identify(customerId: …)` in your app after sign-in." and "No customers match your search."
+Empty states: "No customers match your search." for a search, "Every customer has an install." for the without-install filter, and for an account with no customer yet "No customers yet — call `AdTo.identify(customerId: …)` in your app after sign-in." above three made-up rows in the list's columns, marked **Example**, to show what a customer row looks like.
 
 ### How a customer is tied to an install
 
