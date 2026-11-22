@@ -197,7 +197,7 @@ The routes behind Apps → Webhooks; see [Webhooks](/api/webhooks/) for the enve
 
 | Method and path | Auth | Purpose | Response |
 |---|---|---|---|
-| `GET /api/admin/apps` | session | All apps, oldest first. The first one is the account's default app. | `200` bare array with every column; `android_sha256_fingerprints` and `fraud_block_rules` parsed into arrays. |
+| `GET /api/admin/apps` | session | All apps, oldest first. The first one is the account's default app. | `200` bare array with every column; `android_sha256_fingerprints` and `fraud_block_rules` parsed into arrays; `private_relay_checked`, whether this server checks taps for iCloud Private Relay (it then shows relay iPhone taps the tap-to-store page even with the switch off). |
 | `GET /api/admin/fraud-rules` | session | Every [fraud rule](/start/fraud-rules/), in order, as the dashboard labels and explains it. | `200 {rules: [{name, label, summary, strength, applies_to, basis, block_effect}]}`: `strength` `strong`, `moderate` or `weak`; `applies_to` `install` or `referral`; `block_effect` `withhold_credit`, `no_routing`, `reject` or `null` (cannot be blocked). |
 | `POST /api/admin/apps` | session | Create. `name` is the only required field. | `201 {id, name}`; `400 App name is required` or a field message |
 | `PUT /api/admin/apps/:id` | session | Partial update: absent keeps, a blank `name` keeps the old name, `""` or `null` clears other fields. | `200 {ok: true}`; `404 App not found` |
