@@ -347,7 +347,7 @@ Any other field is a `400`.
 | `view` | The query |
 |---|---|
 | `table` (default) | One row per link, every metric (`group_by=link`) |
-| `chart` | The chart metric by hour for `today` and `yesterday`, else by day, for the 10 links with the most of it (`group_by=timeseries,link`) |
+| `chart` | The chart metric by hour for `today` and `yesterday`, else by day, for the 10 links with the most of it over the whole period (for `ltv`, the period's revenue per install). The links are ranked first and only those 10 are read by day, so a year of 100 links is drawn in full. The answer adds `links`, the ranking |
 | `breakdown` | The links split by the breakdown dimension (`group_by=link,<dimension>`) |
 | `totals` | One row: the metrics over all the report's links (`group_by=none`) |
 
