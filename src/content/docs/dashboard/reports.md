@@ -26,8 +26,7 @@ The list shows each saved report you may see:
 ### What it compares
 
 **Links (n of 100).** **Choose links** opens a list of the account's links with a search by slug, label or campaign, and three shortcuts:
-- **Top 10 by installs**, by all-time installs;
-- **Top 10 by clicks**;
+- **Top 10 by installs** and **Top 10 by clicks**, over the last year, temporary links included;
 - **Every link of a campaign…**.
 
 Temporary links are listed too. **Show deleted links** adds deleted ones, which keep their numbers. A chosen link shows as a chip with its colour on the chart; × removes it.
@@ -58,7 +57,7 @@ A filter keeps only the values chosen. Click its chip to change it; × removes i
 
 - **Totals:** each metric over all the report's links, and **Conversion** (first installs ÷ clicks) when both are shown.
 - **The chart:** one line per link for one metric; the tabs above it switch the metric. It draws the 10 links with the most of that metric; the others are grey on the chips and the table, and a note gives their sum.
-- **The table:** one row per link with each metric, **Conv.** and **Share** (the link's part of the first metric).
+- **The table:** one row per link with each metric, **Conv.** and **Share** (the link's part of the first metric that adds up across links; LTV, an average per install, has none, so a report of LTV alone has no Share).
   - A column header sorts by it.
   - Shading marks the larger numbers in each column.
   - The last row totals every link.
