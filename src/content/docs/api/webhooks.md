@@ -1,15 +1,17 @@
 ---
 title: Webhooks
-description: The signed POSTs AdTo sends to your backend for installs, conversions, leads, opens, referrals, clicks and link changes, how deliveries are logged and retried, and how to verify them in Node, Python and PHP.
+description: The signed POSTs AdTo sends to your backend for installs, signed-in users, conversions, leads, opens, referrals, clicks and link changes, how to keep only what a link earned, how deliveries are logged and retried, and how to verify them in Node, Python and PHP.
 sidebar:
   order: 5
 ---
 
-AdTo POSTs events to your own backend: every install verdict, conversions and leads, app opens, referrals, link changes and, if you ask, every tap. Add webhooks in [Dashboard: Apps](/dashboard/apps/), under an app's **Webhooks**. A webhook receives either that app's events or every app's, and the events you tick. Deleting an app deletes the webhooks limited to it. Every delivery is logged for 30 days and retried for about a day when your endpoint does not answer 2xx.
+AdTo POSTs events to your own backend: every install verdict, your users signing in on an install, conversions and leads, app opens, referrals, link changes and, if you ask, every tap. Add webhooks in [Dashboard: Apps](/dashboard/apps/), under an app's **Webhooks**. A webhook receives either that app's events or every app's, and the events you tick. Deleting an app deletes the webhooks limited to it. Every delivery is logged for 30 days and retried for about a day when your endpoint does not answer 2xx.
 
 ## Adding a webhook
 
-**Add webhook** asks for the URL (http or https), whether it takes this app's events or every app's, and the events (all but `click.recorded` are ticked at first). The response shows the signing secret, `whsec_` and 64 hex characters, **once**: copy it then. **Rotate secret** replaces it and shows the new one once; the old one stops working at once. The server keeps the secret encrypted and never returns it again.
+**Add webhook** asks for the URL (http or https), whether it takes this app's events or every app's, whether it takes **only attributed** events, and the events (all but `click.recorded` are ticked at first). **Edit** changes all of these later and keeps the secret. The response to an add shows the signing secret, `whsec_` and 64 hex characters, **once**: copy it then. **Rotate secret** replaces it and shows the new one once; the old one stops working at once. The server keeps the secret encrypted and never returns it again.
+
+**Only attributed** skips what no link earned: an organic install (`app.installed`, `app.install_updated`), a `customer.identified` on an organic install, and an `event.conversion` or `event.lead` without a `slug`. `app.opened`, `referral.converted` and `click.recorded` always come from a link and always pass; link changes and the test event are never filtered.
 
 Which app an event concerns: for installs, the credited or routed link's app, else the install's own app (the one whose Android package or iOS bundle ID equals the `package_name` the SDK sends), else the oldest app; for events, opens, referrals, clicks and links, the link's app, else the oldest app.
 
@@ -43,6 +45,7 @@ Every delivery is a POST of the same envelope:
 |---|---|---|
 | `app.installed` | A first-launch report (`POST /api/v1/app-installs`) produced a verdict. Organic installs fire too. Replays (`"replayed": true`) do not. | the install, [below](#the-install-events) |
 | `app.install_updated` | A late claim upgraded the verdict (`"claim": "upgraded"`), or Apple Search Ads resolved with `attribution: true`. | the same |
+| `customer.identified` | Your user signed in on an install for the first time: a sign-up, or a sign-in on another phone (the SDK's `identify`). Once per user and install. | the user and the install, [below](#the-customer-event) |
 | `event.conversion`, `event.lead` | The SDK's event batch, or [`adto.js`](/sdk/web/) on your website, stored a conversion or a lead (the automatic signup lead included); duplicates are not sent again. `source` is `web` for the website's, `store` for a store notification's, `null` for the app's. | `{username, event: {id, type, event_name, revenue, currency, revenue_base, transaction_type, transaction_id, original_transaction_id, product_id, store, source, customer_id, install_id, slug, open_slug, client_timestamp, metadata, created_at}}` |
 | `app.opened` | A link opened the installed app (`POST /api/v1/app-opens`). | `{username, open: {id, slug, click_id, install_id, device_id, app_version, os, created_at}}` |
 | `referral.converted` | A referred user signed up. | `{username, referral: {…}}`, see [Referral programs](/guides/referral-programs/#4-reward-from-the-webhook) |
@@ -75,7 +78,9 @@ The `data` of `app.installed` and `app.install_updated`:
     "slug": "spring-sale",
     "target": "https://shop.example.com/sale",
     "url": "https://acme.adto.app/spring-sale",
-    "created_at": "2026-10-01T09:00:00.000Z"
+    "created_at": "2026-10-01T09:00:00.000Z",
+    "external_id": "partner-42",
+    "metadata": { "partner_id": 42 }
   },
   "device": {
     "device_id": "4b1d8c3e9f2a",
@@ -113,7 +118,7 @@ The `data` of `app.installed` and `app.install_updated`:
 | `blocked_by` | string array | The flags a rule the app blocks acted on: the credit was withheld (`matched` is false) or a stale link was not routed. Empty when none. |
 | `username` | string | Your username. |
 | `slug` | string or null | The matched link's slug; `null` whenever `matched` is false, including an install whose credit a blocked fraud rule withheld (its `fraud_flags`, `blocked_by`, `referrer_source` and `match_confidence` still show what was found). |
-| `link` | object or null | `slug`, `target`, `url`, `created_at` of the matched **permanent** link. `null` for organic installs, temporary-link matches and installs whose credit was withheld. There is no `metadata` here, unlike the install verdict. |
+| `link` | object or null | `slug`, `target`, `url`, `created_at`, `external_id` and `metadata` of the matched **permanent** link: `external_id` and `metadata` are your own tags on it (see [Links](/api/links/)), `null` when unset. `null` for organic installs, temporary-link matches and installs whose credit was withheld. |
 | `device` | object | `device_id`, `device_model`, `device_manufacturer`, `os`, `os_version`, `connectivity_type`, `carrier_mcc`, `carrier_mnc`; each `null` when the SDK did not send it. |
 | `country` | string or null | Where the install request came from: a two-letter country code (`XX` unknown), for organic and credited installs alike. |
 | `ip_hash` | string or null | The salted SHA-256 of the install request's IP (IPv6 cut to /64). |
@@ -124,6 +129,33 @@ The `data` of `app.installed` and `app.install_updated`:
 | `processed_at` | string | When the payload was built. |
 
 The payload has no `routing` object and no `install_attempt_id`.
+
+## The customer event
+
+`customer.identified` tells your backend which user is on which install and where that install came from, in one delivery: what an MMP's sign-up and sign-in callbacks carry with their tracker. The app needs nothing beyond the SDK's `identify` after sign-up and sign-in.
+
+```json title="data of customer.identified"
+{
+  "username": "acme",
+  "customer_id": "user-1234",
+  "new_customer": true,
+  "identified_at": "2026-10-12T09:05:11.000Z",
+  "reason": "identify",
+  "install": { "install_id": "3d2b6c1e-…", "matched": true, "slug": "spring-sale", "link": { "external_id": "partner-42", "metadata": { "partner_id": 42 }, "…": "…" }, "…": "…" }
+}
+```
+
+| Field | Type | Meaning |
+|---|---|---|
+| `customer_id` | string | The id your app passed to `identify`. Name, email and phone are never sent. |
+| `new_customer` | boolean | `true` when this was the first time AdTo saw the user: a sign-up. `false` for a known user on another install. |
+| `identified_at` | string | When the user was first identified on this install. |
+| `reason` | string | `identify`: the identify itself. `install_registered`: the identify came before its install reached AdTo (the phone was offline at first launch), so it is sent when the install arrives, up to 7 days later. `install_updated`: the install's verdict changed after a late claim or Apple Search Ads, and the user is sent again with the new one. |
+| `install` | object | The install the user signed in on, the same object as [`app.installed`](#the-install-events). Its `matched`, `slug` and `link.external_id` / `link.metadata` say which link earned it. |
+
+The install is the one the SDK names, else the phone's latest credited install, else its latest. Each user and install is sent once with `identify` or `install_registered`; `install_updated` repeats it only when the verdict changes. With **Only attributed**, a user on an organic install is skipped, and is sent if a late claim credits the install. A user and install are recorded whether or not a webhook takes the event, so subscribe before you rely on it: a webhook added later hears only of the users identified after that. Users identified before this event existed are sent at their next identify on an install (the SDK sends one again after a sign-out, or when the name, email or phone changes), with `new_customer: false`.
+
+To give your own partners credit, tag each partner's link with `external_id` (or `metadata`) when you create it, subscribe a webhook to `customer.identified` with **Only attributed**, and read `install.link.external_id`.
 
 ## Delivery and retries
 
@@ -136,7 +168,7 @@ The payload has no `routing` object and no `install_attempt_id`.
   - **Any successful delivery** ends the streak.
   - **Turn on** ends it too, and the retries still pending go out with the next minute's run.
   - **A test, or a Resend that fails,** neither starts nor extends a streak. A failed Resend leaves the delivery's next retry where it was, and does not use up one of its 13 attempts.
-- Deliveries are not ordered. An `app.install_updated` can arrive before the `app.installed` of the same install when the first delivery was retried.
+- Deliveries are not ordered. An `app.install_updated` or a `customer.identified` can arrive before the `app.installed` of the same install when the first delivery was retried.
 - Changes to a webhook can take up to 30 seconds to reach every server.
 
 ## The delivery log
@@ -153,9 +185,9 @@ The dashboard uses these session routes; see [Admin API](/api/admin-api/#webhook
 
 | Route | Purpose |
 |---|---|
-| `GET /api/admin/webhooks` | `{data: [Webhook], events, default_events}`; a Webhook is `{id, app_id, url, events, active, consecutive_failures, failing_since, disabled_at, disabled_reason, created_at, updated_at}` |
-| `POST /api/admin/webhooks` | `{url, app_id?, events?}` → `201` Webhook plus `secret` |
-| `PUT /api/admin/webhooks/:id` | any of `url`, `app_id`, `events`, `active` |
+| `GET /api/admin/webhooks` | `{data: [Webhook], events, default_events}`; a Webhook is `{id, app_id, url, events, only_attributed, active, consecutive_failures, failing_since, disabled_at, disabled_reason, created_at, updated_at}` |
+| `POST /api/admin/webhooks` | `{url, app_id?, events?, only_attributed?}` → `201` Webhook plus `secret` |
+| `PUT /api/admin/webhooks/:id` | any of `url`, `app_id`, `events`, `only_attributed`, `active` |
 | `DELETE /api/admin/webhooks/:id` | deletes the webhook and its log |
 | `POST /api/admin/webhooks/:id/rotate-secret` | Webhook plus the new `secret` |
 | `POST /api/admin/webhooks/:id/test` | the logged `webhook.test` delivery |
