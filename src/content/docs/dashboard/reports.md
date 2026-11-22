@@ -39,7 +39,7 @@ Temporary links are listed too. **Show deleted links** adds deleted ones, which 
 
 A preset is counted from the day the report runs, so a saved **Last 30 days** always shows the latest 30 days. The days follow the report's time zone, which is the zone of the person who made it (shown under its name), so everyone on the team sees the same numbers.
 
-**Metrics:** **Clicks**, **Installs** (first installs), **Reinstalls**, **App opens**, **Leads**, **Revenue** and **LTV** (net revenue to date per first install of the period). Click one to show or hide it; at least one stays on.
+**Metrics:** **Clicks**, **Installs** (first installs), **Reinstalls**, **App opens**, **Leads**, **Purchases** (a refund comes off the revenue, not the count), **Revenue** and **LTV** (net revenue to date per first install of the period). Click one to show or hide it; at least one stays on.
 
 **Filters:** **Add filter** picks a dimension, **is** or **is not**, and the values:
 - **Platform** offers iOS, Android, Desktop and Other.
