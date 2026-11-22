@@ -177,6 +177,8 @@ The panel counts every install in the window, including reinstalls and app updat
 | **Fingerprint accuracy** | Among installs matched by a deterministic signal, the share where the fingerprint, run in the background, would have picked the same click with high confidence. | `shadow match agreed on {a} of {n} referrer installs`, or `needs referrer-matched installs to measure`. | Green at 90% or above. |
 | **Click → install** | `{median} median`: the median time between the server-side click time and the install report, over up to the 5,000 most recent matched installs in the window. | `p90 {x} · {n} matched installs`, or `no matched installs yet`. | None. |
 
+**iCloud Private Relay**, above the tiles whenever the window has iOS link taps, installs or not: the share of checked iOS link taps that came through Apple's relay, such as `7% of iOS link taps (20 of 283 checked) came through Apple's relay`. Safari sends an iCloud+ user's taps through the relay when Private Relay is on, while their apps use the phone's own address, so the fingerprint cannot match those taps; the tap-to-store page's copied link still can. Taps are checked against Apple's published list of relay addresses, which the server downloads when it is built. The line says instead when the server has no copy of the list, when no tap in the window was checked yet (right after the check was turned on, every tap is older), and when the list is over 30 days old, since taps through newer relay addresses then count as not through the relay. A team member with the viewer role does not see whether a single tap came through the relay.
+
 Durations are formatted as `45s`, `2m 10s`, `1h 5m` or `3d 2h`. A `—` means there is nothing to measure.
 
 ### Confidence per platform
