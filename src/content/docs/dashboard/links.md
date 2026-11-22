@@ -81,7 +81,7 @@ Three tabs, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, sit abov
 
 All per-link numbers are all-time totals, which is why they do not match the Overview's 7-, 30- or 90-day figures.
 
-Each row ends with **Edit** (a pencil; the label reads "Edit (custom social preview)" and the icon carries a dot when the link has its own preview), **Clone** (a copy icon with a plus), **Screens after open** (a numbered list), **Pause** or **Resume**, **Archive** or **Unarchive**, and **Delete** (a trash can). On the **Deleted** view the row offers **Restore** and **Delete permanently** instead. See [Pausing, archiving and deleting](#pausing-archiving-and-deleting).
+Each row ends with **Edit** (a pencil; the label reads "Edit (custom social preview)" and the icon carries a dot when the link has its own preview), **Clone** (a copy icon with a plus), **Over time** (a line chart: opens the link alone in an unsaved [report](/dashboard/reports/)), **Screens after open** (a numbered list), **Pause** or **Resume**, **Archive** or **Unarchive**, and **Delete** (a trash can). On the **Deleted** view the row offers **Restore** and **Delete permanently** instead. See [Pausing, archiving and deleting](#pausing-archiving-and-deleting).
 
 **Clone** asks for the copy's slug, suggesting `{slug}-copy`; left blank, it is generated. A slug cannot be changed later. It then makes the new link from that one and opens it in the link drawer, where you can change the rest before sharing it. The copy keeps:
 - the destination, app and template;
@@ -90,6 +90,10 @@ Each row ends with **Edit** (a pencil; the label reads "Edit (custom social prev
 - the two switches, **Add the click id** and **Pass the link's query parameters**.
 
 It starts with no clicks, no external id, no expiry and is not paused. See [Clone](/api/links/#clone).
+
+### Compare
+
+A box at the start of each permanent link's row chooses it; the box in the header chooses every link shown. With one or more chosen, a bar reads `{n} links chosen` with **Compare** and **Clear**. **Compare** opens the chosen links, up to 100, in an unsaved [report](/dashboard/reports/) over the last 30 days, ready to filter and save.
 
 ### Screens after open
 
