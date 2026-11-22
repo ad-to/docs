@@ -197,7 +197,7 @@ The routes behind Apps → Webhooks; see [Webhooks](/api/webhooks/) for the enve
 
 | Method and path | Auth | Purpose | Response |
 |---|---|---|---|
-| `GET /api/admin/apps` | session | All apps, oldest first. The first one is the account's default app. | `200` bare array with every column; `android_sha256_fingerprints` and `fraud_block_rules` parsed into arrays. |
+| `GET /api/admin/apps?icons=` | session | All apps, oldest first. The first one is the account's default app. `icons=1` adds each app's store icon. | `200` bare array with every column; `android_sha256_fingerprints` and `fraud_block_rules` parsed into arrays. With `icons=1`, also `store_icon`: the icon from the app's App Store or Google Play listing as a `data:image/…;base64` URL, or `null` until it has been looked up with the app's current identifiers, or when no store has one. |
 | `GET /api/admin/fraud-rules` | session | Every [fraud rule](/start/fraud-rules/), in order, as the dashboard labels and explains it. | `200 {rules: [{name, label, summary, strength, applies_to, basis, block_effect}]}`: `strength` `strong`, `moderate` or `weak`; `applies_to` `install` or `referral`; `block_effect` `withhold_credit`, `no_routing`, `reject` or `null` (cannot be blocked). |
 | `POST /api/admin/apps` | session | Create. `name` is the only required field. | `201 {id, name}`; `400 App name is required` or a field message |
 | `PUT /api/admin/apps/:id` | session | Partial update: absent keeps, a blank `name` keeps the old name, `""` or `null` clears other fields. | `200 {ok: true}`; `404 App not found` |
