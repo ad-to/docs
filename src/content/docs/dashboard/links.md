@@ -64,7 +64,7 @@ The complete decision order for a tap is in [How a tap is routed](/links/how-a-t
 
 ## The list
 
-Three tabs, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, sit above a table. Next to them, **Active**, **Archived** and **Deleted** pick which links the tabs show: active links (paused and expired ones included), archived links, or deleted links, with a count once there is one. The **Search links** box filters the current tab in the browser, case-insensitively: slug, destination, campaign and label on the Permanent tab; slug and destination on the Temporary tab; slug, customer and campaign on the Referrals tab. There is no pagination; the screen loads every permanent and temporary link, and the referral links when their tab opens.
+Three tabs, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, sit above a table. Next to them, **Active**, **Archived** and **Deleted** pick which links the tabs show: active links (paused and expired ones included), archived links, or deleted links, with a count once there is one. On the Permanent tab, **Made with: any** narrows the list to links made with the **Dashboard**, the **API**, an **SDK** key or **MCP**, or to **Unknown** links: those made before AdTo recorded it, whose creation the audit log no longer holds. The **Search links** box filters the current tab in the browser, case-insensitively: slug, destination, campaign and label on the Permanent tab; slug and destination on the Temporary tab; slug, customer and campaign on the Referrals tab. There is no pagination; the screen loads every permanent and temporary link, and the referral links when their tab opens.
 
 ### Permanent links
 
@@ -81,7 +81,15 @@ Three tabs, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, sit abov
 
 All per-link numbers are all-time totals, which is why they do not match the Overview's 7-, 30- or 90-day figures.
 
-Each row ends with **Edit** (a pencil; the label reads "Edit (custom social preview)" and the icon carries a dot when the link has its own preview), **Screens after open** (a numbered list), **Pause** or **Resume**, **Archive** or **Unarchive**, and **Delete** (a trash can). On the **Deleted** view the row offers **Restore** and **Delete permanently** instead. See [Pausing, archiving and deleting](#pausing-archiving-and-deleting).
+Each row ends with **Edit** (a pencil; the label reads "Edit (custom social preview)" and the icon carries a dot when the link has its own preview), **Clone** (a copy icon with a plus), **Screens after open** (a numbered list), **Pause** or **Resume**, **Archive** or **Unarchive**, and **Delete** (a trash can). On the **Deleted** view the row offers **Restore** and **Delete permanently** instead. See [Pausing, archiving and deleting](#pausing-archiving-and-deleting).
+
+**Clone** asks for the copy's slug, suggesting `{slug}-copy`; left blank, it is generated. A slug cannot be changed later. It then makes the new link from that one and opens it in the link drawer, where you can change the rest before sharing it. The copy keeps:
+- the destination, app and template;
+- the preview, routing and routing rules;
+- the tracking values and UTMs;
+- the two switches, **Add the click id** and **Pass the link's query parameters**.
+
+It starts with no clicks, no external id, no expiry and is not paused. See [Clone](/api/links/#clone).
 
 ### Screens after open
 
