@@ -123,7 +123,7 @@ Without the app, the in-app browser loads the link again. `adto_b=1` never goes 
 
 ### The iOS tap-to-store page
 
-Turned on per app with **iOS tap-to-store**, and on or off for a single link under **Mobile landing pages** in the link drawer (`ios_tap_to_store: true | false`; `null` follows the app), so a paid campaign link can show it while a support link opens the store directly. iOS has no install referrer and Safari only writes the pasteboard from a user gesture, so this page replaces the automatic redirect with one button. It is titled "Get {app name}" and shows **Get {app name}** plus, when the app has an iOS scheme, a secondary **Open in app** button. Inside the Facebook, Instagram, Messenger, LINE, WeChat, Snapchat, TikTok and X in-app browsers, and only when a scheme exists, the heading becomes "Continue in the app" and **Open in app** comes first. The Get tap shows a "Link saved" notice, writes `https://acme.adto.app/welcome?adto_click=<id>` to the pasteboard and opens the tagged store URL; a 600 ms safety timer opens the store even if the write never settles. **Open in app** only navigates to the scheme URL. There are no timers before the tap, and the same beacon as the interstitial fires on load. Without JavaScript the page shows an **Open the App Store** link.
+Turned on per app with **iOS tap-to-store**, and on or off for a single link under **Mobile landing pages** in the link drawer (`ios_tap_to_store: true | false`; `null` follows the app), so a paid campaign link can show it while a support link opens the store directly. On the hosted service a tap through iCloud Private Relay gets the page even with the app's switch off, when the link leads to the app's App Store page; only a link's (or template's) `false` keeps it from those taps too. iOS has no install referrer and Safari only writes the pasteboard from a user gesture, so this page replaces the automatic redirect with one button. It is titled "Get {app name}" and shows **Get {app name}** plus, when the app has an iOS scheme, a secondary **Open in app** button. Inside the Facebook, Instagram, Messenger, LINE, WeChat, Snapchat, TikTok and X in-app browsers, and only when a scheme exists, the heading becomes "Continue in the app" and **Open in app** comes first. The Get tap shows a "Link saved" notice, writes `https://acme.adto.app/welcome?adto_click=<id>` to the pasteboard and opens the tagged store URL; a 600 ms safety timer opens the store even if the write never settles. **Open in app** only navigates to the scheme URL. There are no timers before the tap, and the same beacon as the interstitial fires on load. Without JavaScript the page shows an **Open the App Store** link.
 
 ### Client hints and hint-less Chromium
 
@@ -165,11 +165,12 @@ The QR page, the interstitial, the tap-to-store page and the error pages share t
 
 ## Check where a link goes
 
-The link drawer's **See where this link goes** (`GET /api/admin/links/:slug/route-check`) runs the saved link through this page's decision once for each of five devices and lists what each visitor gets:
+The link drawer's **See where this link goes** (`GET /api/admin/links/:slug/route-check`) runs the saved link through this page's decision once for each of five devices (six on the hosted service) and lists what each visitor gets:
 
 | Device | What it stands for |
 |---|---|
 | iPhone, Safari | An iPhone in its own browser |
+| iPhone, Safari through iCloud Private Relay | The same iPhone with Private Relay on (iCloud+); listed only on a server that checks taps against Apple's list (the hosted service). With iOS tap-to-store off it still gets the tap-to-store page when the link leads to the app's App Store page |
 | iPhone, inside Instagram | An iPhone in an app's built-in browser |
 | Android, Chrome | An Android phone in Chrome |
 | Android, inside Facebook | An Android phone in Facebook's or Instagram's built-in browser |
