@@ -127,10 +127,15 @@ The payload has no `routing` object and no `install_attempt_id`.
 
 ## Delivery and retries
 
-- The first attempt is sent right after the work that caused it; it never delays the response to the app or the API call. A request that produces more than 25 deliveries (a large event batch or bulk create) sends the first 25 at once and the rest with the next hourly run.
+- The first attempt is sent right after the work that caused it; it never delays the response to the app or the API call. A request that produces more than 25 deliveries (a large event batch or bulk create) sends the first 25 at once and the rest with the next run of the minute job.
 - A delivery succeeds on any 2xx answer. A non-2xx answer, a network error or no answer within 10 seconds is a failure, logged with the status and the first 500 characters of the response.
-- Failures are retried by the hourly job (at :07 each hour) 5 minutes, 30 minutes, 2 hours, 6 hours and 24 hours after the previous attempt, so the shortest gaps can stretch to the next hour. After the sixth attempt the delivery is marked failed.
-- Each webhook counts its failed attempts in a row, across deliveries. The account owner is emailed at 5, 10 and 15; at 20 the webhook is turned off and stops receiving events. Any successful delivery resets the count. **Turn on** resets it too, and the retries still pending go out with the next hourly run.
+- Failures are retried by a job that runs every minute: 1 minute, 5 minutes, 30 minutes, 2 hours, 5 hours, 10 hours and 12 hours after the previous attempt, then daily. After the 13th attempt, about 6 days in, the delivery is marked failed. A receiver that is down for days loses nothing.
+- Each webhook keeps a failure streak, from its first failed attempt since its last delivery. The streak works by time, not by count, so a busy receiver that is down for a minute stays on:
+  - **After an hour** of the streak, the account owner is emailed once.
+  - **After 5 days**, the webhook is turned off and stops receiving events. Its status reads **Off: No delivery for 5 days**, and the owner gets a second email.
+  - **Any successful delivery** ends the streak.
+  - **Turn on** ends it too, and the retries still pending go out with the next minute's run.
+  - **A test, or a Resend that fails,** neither starts nor extends a streak. A failed Resend leaves the delivery's next retry where it was, and does not use up one of its 13 attempts.
 - Deliveries are not ordered. An `app.install_updated` can arrive before the `app.installed` of the same install when the first delivery was retried.
 - Changes to a webhook can take up to 30 seconds to reach every server.
 
@@ -148,7 +153,7 @@ The dashboard uses these session routes; see [Admin API](/api/admin-api/#webhook
 
 | Route | Purpose |
 |---|---|
-| `GET /api/admin/webhooks` | `{data: [Webhook], events, default_events}`; a Webhook is `{id, app_id, url, events, active, consecutive_failures, disabled_at, disabled_reason, created_at, updated_at}` |
+| `GET /api/admin/webhooks` | `{data: [Webhook], events, default_events}`; a Webhook is `{id, app_id, url, events, active, consecutive_failures, failing_since, disabled_at, disabled_reason, created_at, updated_at}` |
 | `POST /api/admin/webhooks` | `{url, app_id?, events?}` → `201` Webhook plus `secret` |
 | `PUT /api/admin/webhooks/:id` | any of `url`, `app_id`, `events`, `active` |
 | `DELETE /api/admin/webhooks/:id` | deletes the webhook and its log |
