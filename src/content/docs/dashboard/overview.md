@@ -21,6 +21,25 @@ Under the title, the line "Live · refreshes every minute · the last {N} days (
 
 The page shows "Loading analytics…" on first load. If the overview request fails, the whole page is replaced by a red alert with the server's error message. If only the attribution-quality request fails, that panel says so and the rest of the page still renders. If the recent-events request fails, the Recent events card shows its empty state.
 
+## Setup banner
+
+While an app still has setup steps left, a banner above the title names the next one from the app's [Are we live yet?](/dashboard/apps/#are-we-live-yet) checklist, for example "Next step for My App: Save the app’s identifiers.", with the step's hint, how many steps are done, a link to the rest, and a button to where the step is done:
+
+| Step | Button |
+|---|---|
+| Save the app's identifiers, Fix the Universal Links file, Fix the App Links file | **Open iOS settings** or **Open Android settings**: the app's editor opens at that section with the cursor in its first empty field |
+| Install the SDK | **Install the SDK** ([Installation](/sdk/installation/), in a new tab) |
+| Tap a link | **Open your links** |
+| Register a first install | **Initialize the SDK** ([Initialize and handle links](/sdk/initialize-and-handle-links/)) |
+| Attribute a first install to a link | **Test attribution** ([Testing](/sdk/testing/)) |
+| Send a first event | **Send events** ([Events](/sdk/events/)) |
+
+An account with no app sees **Register your app** instead. With several apps, the banner checks the first five in the order the Apps screen lists them and shows the first one with a step left. The optional webhook step is never shown.
+
+**Later** hides the step for three days. Once the app has an install, the SDK, attributed-install and event steps show **Hide** instead, which hides that step for that app for good and moves on to the next one: a live app may never do them (an older SDK build that does not report its version, no install from a link yet, no events sent). Identifier and file steps always come back after three days, because links do not open the app until they pass. Hidden steps are remembered in this browser only.
+
+Viewers do not see the banner. If loading it fails, the Overview shows without it.
+
 ## How deltas work
 
 Each KPI card carries a chip that compares the current window with the previous window of the same length: for **7d**, the 7 days before the current 7 days.
