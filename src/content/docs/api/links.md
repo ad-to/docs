@@ -288,12 +288,13 @@ Deleting is a soft delete. The link leaves the list (unless `include_deleted=tru
 
 `POST /api/v1/links/:slug/clone`, with an optional body `{"slug": "summer-sale"}`, makes a new permanent link from an existing one. Left out, the slug is generated. Answers:
 - **`201` with the copy.** Its `created_via` is where the clone was made.
+- **`400`** when the body is not a JSON object (an empty body is fine).
 - **`404`** when the source is unknown or deleted.
 - **`409`** when the slug is taken.
 
 The copy is checked like a create.
 
-**Copied:** the target, app, template, metadata, social preview, deep-link paths, redirect and fallback URLs, label, campaign, adgroup and creative, UTMs, the page settings, `append_click_id`, `forward_query` and the routing rules.
+**Copied:** the target, the app (exactly as the source has it, so a link with none gets none, whatever its template names), template, metadata, social preview, deep-link paths, redirect and fallback URLs, label, campaign, adgroup and creative, UTMs, the page settings, `append_click_id`, `forward_query` and the routing rules.
 
 **Not copied:**
 - the history and counters;
