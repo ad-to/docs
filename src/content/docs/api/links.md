@@ -38,6 +38,7 @@ Every permanent-link route returns the full object, including fields you never s
   "ios_tap_to_store": null,
   "mobile_interstitial": null,
   "append_click_id": null,
+  "forward_query": null,
   "routing_rules": null,
   "template_id": null,
   "utm_source": null,
@@ -73,6 +74,7 @@ Every permanent-link route returns the full object, including fields you never s
 | `label`, `campaign`, `adgroup`, `creative` | string or null | Tracking defaults copied onto every click of this link. A `adto_<field>` query parameter on the tapped URL wins for that tap. See [URL parameters](/links/url-parameters/). |
 | `ios_tap_to_store`, `mobile_interstitial` | boolean or null | This link's iOS tap-to-store page and mobile interstitial. `null` follows the app's setting. See [How a tap is routed](/links/how-a-tap-is-routed/#mobile-delivering-it). |
 | `append_click_id` | boolean or null | Whether the link adds `adto_click` to its web destinations, for [`adto.js`](/sdk/web/). `null` is off, or the template's value. |
+| `forward_query` | boolean or null | Whether the link copies the tapped URL's own query parameters onto its web destinations. See [Your own parameters](/links/url-parameters/#your-own-parameters). `null` is off, or the template's value. |
 | `routing_rules` | array or null | Geo and language rules, first match wins. See [Geo and language rules](#geo-and-language-rules). |
 | `template_id` | string or null | The [template](#templates) whose values fill every field this link leaves empty. The fields above are the link's own. |
 | `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content` | string or null | Added to the link's web destinations and stored on clicks whose URL has none. See [Link-level UTM values](/links/url-parameters/#link-level-utm-values). |
@@ -110,6 +112,7 @@ Every permanent-link route returns the full object, including fields you never s
 | `label`, `campaign`, `adgroup`, `creative` | string | no | Trimmed; at most 255 characters; no control characters. `""` stores `null`. |
 | `ios_tap_to_store`, `mobile_interstitial` | boolean or null | no | `true` or `false` overrides the app's setting for this link; `null` or absent follows it. Anything else answers `400 Invalid ios_tap_to_store: must be true, false or null (follow the app)`. |
 | `append_click_id` | boolean or null | no | `true` adds `adto_click=<click id>` to the link's web destinations (never stores, MMP links or schemes); `false` or `null` does not. A template can set it. Anything else answers `400 Invalid append_click_id: must be true, false or null`. |
+| `forward_query` | boolean or null | no | `true` copies the tapped URL's own parameters (not `adto_*` or AdTo's markers; `utm_*` included) onto the link's web destinations, over the destination's own value and the link's `utm_*`. It never copies them onto stores or schemes. `false` or `null` does not. A template can set it. Anything else answers `400 Invalid forward_query: must be true, false or null`. |
 | `routing_rules` | array or null | no | Up to 20 rules; `null` or `[]` stores none. See below. |
 | `template_id` | string | no | One of your templates; anything else answers `400 Unknown template_id`. When `app_id` is absent, the template's app applies. |
 | `utm_source` … `utm_content` | string | no | Trimmed; at most 255 characters; no control characters. `""` stores `null`. |
