@@ -318,7 +318,7 @@ The dashboard's **Reports** tab: a named comparison of chosen links, run by the 
 | Method and path | Who | Purpose | Response |
 |---|---|---|---|
 | `GET /api/admin/reports` | any role | The reports the person may see, most recently changed first | `200 {data: [Report], limit: {max, used}}`. `max` is the plan's cap, null for any number |
-| `POST /api/admin/reports` | member | Save one: `{name, visibility?, definition}` | `201` Report. `400` for a bad definition or an unknown link. `402 plan_required` (with `limit`) past the plan's cap |
+| `POST /api/admin/reports` | member | Save one: `{name, visibility?, definition, from?}`. `from`, the id of a report you can see, marks a copy of it: its links are not checked again, so a link deleted since does not block the copy | `201` Report. `400` for a bad definition or an unknown link. `402 plan_required` (with `limit`) past the plan's cap |
 | `GET /api/admin/reports/:id` | any role | One report | `200` Report. `404` for someone else's private report |
 | `PUT /api/admin/reports/:id` | member | Change any of `name`, `visibility`, `definition` | `200` Report. `403` when changing who sees another person's report, or editing another person's private one as the owner |
 | `DELETE /api/admin/reports/:id` | member | Delete it: its creator, or the owner | `200 {success: true}`. `403` for another person's report |
