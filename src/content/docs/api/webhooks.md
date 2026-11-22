@@ -135,7 +135,7 @@ The payload has no `routing` object and no `install_attempt_id`.
   - **After 5 days**, the webhook is turned off and stops receiving events. Its status reads **Off: No delivery for 5 days**, and the owner gets a second email.
   - **Any successful delivery** ends the streak.
   - **Turn on** ends it too, and the retries still pending go out with the next minute's run.
-  - **A test, or a Resend that fails,** neither starts nor extends a streak. A failed Resend leaves the delivery's next retry where it was.
+  - **A test, or a Resend that fails,** neither starts nor extends a streak. A failed Resend leaves the delivery's next retry where it was, and does not use up one of its 13 attempts.
 - Deliveries are not ordered. An `app.install_updated` can arrive before the `app.installed` of the same install when the first delivery was retried.
 - Changes to a webhook can take up to 30 seconds to reach every server.
 
