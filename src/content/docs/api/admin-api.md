@@ -311,6 +311,62 @@ Each row has the group values, then the metrics; `conversion` (first installs pe
 curl -sS -b jar.txt 'https://dashboard.adto.app/api/admin/analytics?event=installs,revenue&group_by=campaign,country&interval=30d&tz=Europe/Berlin&country=-US'
 ```
 
+## Saved reports
+
+The dashboard's **Reports** tab: a named comparison of chosen links, run by the [analytics query](#the-analytics-query) on the server. Cookie session only; an account key has the MCP `analytics` tool instead.
+
+| Method and path | Who | Purpose | Response |
+|---|---|---|---|
+| `GET /api/admin/reports` | any role | The reports the person may see, most recently changed first | `200 {data: [Report], limit: {max, used}}`. `max` is the plan's cap, null for any number |
+| `POST /api/admin/reports` | member | Save one: `{name, visibility?, definition, from?}`. `from`, the id of a report you can see, marks a copy of it: its links are not checked again, so a link deleted since does not block the copy | `201` Report. `400` for a bad definition or an unknown link. `402 plan_required` (with `limit`) past the plan's cap |
+| `GET /api/admin/reports/:id` | any role | One report | `200` Report. `404` for someone else's private report |
+| `PUT /api/admin/reports/:id` | member | Change any of `name`, `visibility`, `definition` | `200` Report. `403` when changing who sees another person's report, or editing another person's private one as the owner |
+| `DELETE /api/admin/reports/:id` | member | Delete it: its creator, or the owner | `200 {success: true}`. `403` for another person's report |
+| `POST /api/admin/reports/:id/duplicate` | member | The person's own copy, named "<name> (copy)": `{visibility?}` | `201` Report. `402 plan_required` past the cap |
+| `GET /api/admin/reports/:id/run?view=&tz=&chart_metric=&breakdown=` | any role | Run a saved report | `200` the [analytics answer](#the-analytics-query) plus `view` |
+| `POST /api/admin/reports/run?view=&tz=…` | any role | Run one not saved yet: `{definition}` | The same. Nothing is saved or audited |
+
+**A Report** is `{id, name, visibility, definition, created_by: {id, email}, mine, created_at, updated_at}`. `visibility` is `team` (the default; the whole account sees it) or `private` (its creator only; the owner sees it listed and may delete it).
+
+**The definition:**
+
+| Field | What it holds |
+|---|---|
+| `links` | 1 to 100 link slugs of the account, permanent or temporary, deleted ones included. Only slugs new to a saved report are checked, so a link deleted since never blocks a rename. |
+| `metrics` | Any of the analytics metrics. Default: `clicks`, `installs`, `reinstalls`, `opens`, `leads`, `revenue`. |
+| `filters` | `[{dimension, values, exclude?}]`: any analytics dimension but `link`, each once, 1 to 100 values. `exclude: true` drops those values. |
+| `period` | `{preset}`, one of `today`, `yesterday`, `7d`, `30d` (the default), `90d`, `this_month`, `last_month`, `365d`, counted from the day the report runs. Or `{start, end}`: fixed local days, at most 366. |
+| `tz` | An IANA time zone: the report's days are counted in it whoever runs it, so a team sees the same numbers. Null: the viewer's (the run's `tz`). |
+| `chart_metric` | One of `metrics`, for the chart (default the first). |
+| `breakdown` | A dimension to split the links by, or null. |
+
+Any other field is a `400`.
+
+**The views a run returns:**
+
+| `view` | The query |
+|---|---|
+| `table` (default) | One row per link, every metric (`group_by=link`) |
+| `chart` | The chart metric by hour for `today` and `yesterday`, else by day, for the 10 links with the most of it over the whole period (for `ltv`, the period's revenue per install). The links are ranked first and only those 10 are read by day, so a year of 100 links is drawn in full. The answer adds `links`, the ranking |
+| `breakdown` | The links split by the breakdown dimension (`group_by=link,<dimension>`) |
+| `totals` | One row: the metrics over all the report's links (`group_by=none`) |
+
+The links go into the query as values, never through the URL, so a slug that starts with `-` is still a link, not an exclusion.
+
+**How many reports an account keeps:**
+
+| Plan | Saved reports |
+|---|---|
+| Free | 3 |
+| Starter | 10 |
+| Growth and Scale | Any number |
+
+A self-hosted deployment without billing keeps any number. Past the cap, the reports already saved still open, run and change; only a new one or a duplicate is refused.
+
+**Support sessions** read and run reports, and never create, change, duplicate or delete one.
+
+**Audit log:** `report.created` (a duplicate too), `report.updated`, `report.deleted`.
+
 ## Blog, messages and contact
 
 Owner-only CMS routes under `/api/admin/blog` and the public site routes under `/api`. See [Blog and messages](/dashboard/blog-and-messages/).
