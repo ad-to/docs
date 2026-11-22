@@ -19,7 +19,7 @@ Each rule is a plain comparison with a name, so every flag can be explained. The
 | `installer_mismatch` | Not installed by Play | strong | Android: a Google Play install referrer names a tap, but the app was installed by something other than Google Play. Never flagged when the installer is unknown, or for Play Instant. |
 | `signing_cert_mismatch` | Unknown signing key | strong | Android: the app on the device is signed with a certificate that is none of the app's **SHA-256 fingerprints** on the Apps page: a modified or re-signed build. |
 | `install_velocity_ip` | Many installs, one network | moderate | At least 5 other installs (25 on cellular data) came from the same network in the 24 hours before this one. |
-| `click_storm_ip` | Tap flood | moderate | The matched tap's network sent more than 100 taps in the hour before it. |
+| `click_storm_ip` | Tap flood | moderate | The matched tap's network sent more than 100 taps in the hour before it. Never for a tap through iCloud Private Relay, whose addresses many people share. |
 | `stale_referrer` | Old store referrer | weak | The store referrer names a tap more than 30 days older than the first launch. |
 | `stale_clipboard` | Old pasted link | weak | A pasted link names a tap older than the app's [pasted-link and Meta window](/dashboard/apps/) (7 days by default). It routes the user but earns no credit. |
 | `stale_meta` | Old Meta referrer | weak | The same for Meta's install referrer. |

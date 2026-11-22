@@ -15,6 +15,7 @@ A tap on `https://acme.adto.app/welcome` records a click with a 16-character id 
 |---|---|
 | Android, to Google Play or an OEM store | The store URL's `referrer` parameter: `adto_click=<id>&adto_l=acme/welcome`. The store hands the string back to the app after the install. |
 | iOS, with **iOS tap-to-store** on | The "Get the app" tap copies `https://acme.adto.app/welcome?adto_click=<id>` to the pasteboard, then opens the App Store. |
+| iOS, a tap through iCloud Private Relay | The same page and copy as with tap-to-store on, even with the switch off, when the link leads to the app's App Store page: Safari sends the tap from Apple's relay while the app uses the phone's own address, so the fingerprint can never match it. Not when the link turns the page off, has a custom redirect, or the app's pasteboard read is Off. |
 | iOS, without tap-to-store | Nothing. Apple's `ct` tag is set on the store URL for App Store Connect, but it never reaches AdTo. |
 | Any mobile tap, through the interstitial or tap-to-store page | The page also beacons the screen profile onto the click, which sharpens the fingerprint, and a few device settings, which are recorded for no points (see [Signals recorded for no points](#signals-recorded-for-no-points)). |
 
