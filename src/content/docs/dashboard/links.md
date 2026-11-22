@@ -149,7 +149,15 @@ Permanent links only (the block is titled **Routing rules**). **Add rule** adds 
 
 ### Preview
 
-A card that mimics a social unfurl: the image (or "No image configured"), the title (or "Open in the app"), the link's domain and the description, with the note "Actual results, including image size, may vary across platforms."
+One tab per platform: Facebook, X, LinkedIn, Pinterest, Slack, Discord, WhatsApp, iMessage and Telegram. The selected one's card is drawn as that platform draws it, in the reader's system font. It updates as you edit the fields below, before you save.
+
+The card uses the tags the link's preview page would serve:
+- **Title, description and image:** the link's own, or the app preview's. A missing title shows as "Open in the app".
+- **X's card type:** a large card when there is an image.
+- **Pinterest's article type:** when both a title and a description are written.
+- **Site name:** the app's name, which Telegram, Slack and Discord show.
+
+The note under it reads "Drawn from the fields below as you edit. After you save, "Check the preview on each platform" fetches the link as each crawler does." That check (below) is the one that sees a blocked image or a host that refuses a crawler.
 
 Under the card, **Which social preview should this link use?** offers:
 
