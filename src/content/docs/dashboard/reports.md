@@ -41,14 +41,18 @@ A preset is counted from the day the report runs, so a saved **Last 30 days** al
 
 **Metrics:** **Clicks**, **Installs** (first installs), **Reinstalls**, **App opens**, **Leads**, **Purchases** (a refund comes off the revenue, not the count), **Revenue** and **LTV** (net revenue to date per first install of the period). Click one to show or hide it; at least one stays on.
 
-**Filters:** **Add filter** picks a dimension, **is** or **is not**, and the values:
-- **Platform** offers iOS, Android, Desktop and Other.
-- **Country** takes names or two-letter codes, such as `Egypt, SA`. An unknown name is refused.
-- Any other dimension takes values separated by commas: campaign, the UTMs, city, OS version, channel, install store and the rest of [the analytics dimensions](/api/admin-api/#the-analytics-query).
+**Filters:** **Add filter** opens two pickers.
+- **The first picks what to filter:** platform, country, campaign, a UTM, city, OS version, channel, install store, or any other of [the analytics dimensions](/api/admin-api/#the-analytics-query). Type to search.
+- **The second picks its values,** several at once. It lists the values seen in the last year, most taps first:
+  - countries by name with their codes;
+  - platforms as iOS, Android, Desktop and Other;
+  - **Not set** for links that carried no value.
 
-The **is**/**is not** word on a filter's chip switches it.
+  For a value not seen yet, such as a campaign about to start, type it in. **Done** closes the list; **Add** applies the filter.
 
-**Split the links by** adds a table of each link split by one dimension, such as platform or country.
+A filter keeps only the values chosen. Click its chip to change it; × removes it. A filter made through the API can leave values out instead; its chip then reads "not".
+
+**Split the links by**, a picker of the same dimensions, adds a table of each link split by one dimension, such as platform or country.
 
 ### What it shows
 
