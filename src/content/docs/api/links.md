@@ -17,6 +17,8 @@ Every permanent-link route returns the full object, including fields you never s
 {
   "id": "6f1c2a0e-3b7d-4c8e-9a11-2f5d8c0b4e77",
   "slug": "spring-sale",
+  "name": "Instagram bio, spring",
+  "group_ids": ["5a7e0c12-…"],
   "target": "https://shop.example.com/sale",
   "url": "https://acme.adto.app/spring-sale",
   "app_id": "0d4e5f66-7a8b-4c9d-8e0f-1a2b3c4d5e6f",
@@ -61,6 +63,8 @@ Every permanent-link route returns the full object, including fields you never s
 |---|---|---|
 | `id` | string | UUID, assigned by the server. |
 | `slug` | string | The path segment of the link. |
+| `name` | string or null | Your own name for the link, so a generated slug stays recognisable. Never used in routing or attribution. |
+| `group_ids` | array of strings | The [link groups](#link-groups) the link is in, in group-name order; `[]` when none. |
 | `target` | string or null | The web destination. `null` means "inherit the app's fallback URL at tap time". |
 | `url` | string | The public link URL, `https://<username>.adto.app/<slug>`. |
 | `app_id` | string or null | The app whose store URLs, schemes and fallback apply to this link. `null` means the account's default app (its oldest app). |
@@ -102,6 +106,8 @@ Every permanent-link route returns the full object, including fields you never s
 | Field | Type | Required | Meaning |
 |---|---|---|---|
 | `slug` | string | no | See the slug rules above. Absent, `null` or `""`: a generated slug, 5 random letters and digits. |
+| `name` | string | no | Trimmed; at most 200 characters; no control characters. `""` stores `null`. |
+| `group_ids` | array of strings | no | Up to 50 of your [link group](#link-groups) ids. An id that is not one of yours answers `400 Unknown group_id: …`. On update it replaces the link's groups; `[]` or `null` takes the link out of every group, and leaving it out keeps them. |
 | `target` | string or null | no | An http(s) URL. `null`, `""` or absent stores `null` (inherit the app's fallback URL). |
 | `app_id` | string | no | The id of one of your apps. Default: your oldest app, or `null` when the account has no app yet. |
 | `metadata` | JSON object | no | Your own key-value data. `null` or `""` stores `null`; any other non-object value (a string, number, boolean or array) answers `400 {"error": {"code": "invalid_request", "message": "metadata must be a JSON object"}}`. |
@@ -209,11 +215,35 @@ A template holds defaults for link fields. A link with `template_id` takes the t
 
 `defaults` may hold `target`, `redirect_url`, `fallback_url`, `ios_deep_link_path`, `android_deep_link_path`, `og_title`, `og_description`, `og_image_url`, `label`, `campaign`, `adgroup`, `creative`, the five `utm_*` fields, `ios_tap_to_store` and `mobile_interstitial`, each validated like the link field; any other key answers `400`. `name` is 1 to 100 characters; `app_id`, when set, is the app new links get when they name none. Templates use the links scopes: reading needs `links:read`, changing `links:write`. Responses to `GET /api/v1/links/:slug` show the link's own fields, not the inherited ones; `resolve`, the redirect and the install verdict use the inherited values.
 
+## Link groups
+
+A group is a named set of your permanent links: a campaign, a partner, a channel. A link can be in any number of groups; set them with the link's `group_ids`. Groups never change how a tap is routed or credited.
+
+| Route | Response |
+|---|---|
+| `GET /api/v1/link-groups` | `200 {"data": [Group, …], "next_cursor": null}`, by name |
+| `POST /api/v1/link-groups` | `{name}` → `201` Group; a name already in use answers `409` |
+| `GET /api/v1/link-groups/:id` | `200` Group or `404 Group not found` |
+| `PUT /api/v1/link-groups/:id` | `{name}` → `200` Group, renamed |
+| `DELETE /api/v1/link-groups/:id` | `200 {"success": true}`; its links stay, in their other groups |
+
+```json title="Group"
+{
+  "id": "5a7e0c12-…",
+  "name": "Influencers",
+  "link_count": 8,
+  "created_at": "2026-11-23T09:00:00.000Z",
+  "updated_at": null
+}
+```
+
+`name` is 1 to 100 characters. `link_count` counts the group's links that are not deleted. Groups use the links scopes: reading needs `links:read`, changing `links:write`. A deleted link keeps its groups for a restore; a link deleted permanently leaves them.
+
 ## List and read links
 
 | Route | Response |
 |---|---|
-| `GET /api/v1/links?limit=&cursor=&include_deleted=` | `200 {"data": [Link, …], "next_cursor": "…" \| null}`, newest first. `limit` is 1 to 200 (default 50); pass `next_cursor` back as `cursor` for the next page until it is `null`. A `limit` out of range, or a `cursor` this API did not return, answers `400`. Paused, expired and archived links are listed; deleted ones only with `include_deleted=true`. |
+| `GET /api/v1/links?limit=&cursor=&include_deleted=&group=` | `200 {"data": [Link, …], "next_cursor": "…" \| null}`, newest first. `group` (a group id) lists only that group's links. `limit` is 1 to 200 (default 50); pass `next_cursor` back as `cursor` for the next page until it is `null`. A `limit` out of range, or a `cursor` this API did not return, answers `400`. Paused, expired and archived links are listed; deleted ones only with `include_deleted=true`. |
 | `GET /api/v1/links/:slug` | `200` with the Link, or `404 {"error": {"code": "not_found", "message": "Link not found"}}`. A temporary link's slug and a deleted link also answer 404 here. |
 
 ## Update a link
@@ -297,9 +327,10 @@ Deleting is a soft delete. The link leaves the list (unless `include_deleted=tru
 
 The copy is checked like a create.
 
-**Copied:** the target, the app (exactly as the source has it, so a link with none gets none, whatever its template names), template, metadata, social preview, deep-link paths, redirect and fallback URLs, label, campaign, adgroup and creative, UTMs, the page settings, `append_click_id`, `forward_query` and the routing rules.
+**Copied:** the target, the app (exactly as the source has it, so a link with none gets none, whatever its template names), template, metadata, social preview, deep-link paths, redirect and fallback URLs, label, campaign, adgroup and creative, UTMs, the page settings, `append_click_id`, `forward_query`, the routing rules and the link groups.
 
 **Not copied:**
+- the name;
 - the history and counters;
 - `external_id`, which is unique;
 - the expiry, the pause and the archive;
