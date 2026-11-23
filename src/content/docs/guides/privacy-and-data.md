@@ -85,6 +85,10 @@ The dashboard masks the email in the Customers list (`e****@domain`) but shows i
 
 When a `/api/v1` call is refused as malformed, the server stores the account, the route, the error code and message, the SDK build, and the SHA-256 and size of the body, never the body. The rows are deleted after 30 days.
 
+## Inspector
+
+A deployment that runs with `INSPECTOR=1` stores, for its site owner, every request with its headers and bodies, the server's own calls out and the emails it sends, for `INSPECTOR_RETENTION_DAYS` days (7 by default), then deletes them every hour. An SDK request's body holds the device id, its advertising identifier and the install's details. Passwords, tokens, secrets, keys, signatures and cookies are replaced before anything is stored, sign-in bodies are not kept, and an email's links lose their tokens. Erasing a device or a customer also deletes every entry that names it, with the rest of each request or scheduled run that did, and the erasure's own entry stores the path without the id. Only the site owner can read them. See [Inspector](/api/admin-api/#inspector).
+
 ## Store notifications
 
 `store_notifications` logs every App Store and Google Play notification an app's URL receives: store, notification id, type, subtype, environment, transaction id, outcome and time. No customer data. Rows are deleted after 90 days; the revenue rows they wrote stay like any other event. `app_store_endpoints` keeps each app's URL token and the Pub/Sub service account email until the app or its endpoint is deleted.

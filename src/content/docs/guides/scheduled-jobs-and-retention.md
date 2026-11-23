@@ -98,6 +98,7 @@ Then `anonymiseExpiredDeviceData` runs one `db.batch`, so every statement commit
 | `device_days` | DELETE rows | `day` before the cutoff's day, or `DEVICE_DAY_RETENTION_DAYS` ago when shorter | whole row |
 | `app_sessions` | DELETE rows | `started_at < cutoff`, or `SESSION_RETENTION_DAYS` ago when shorter | whole row |
 | `rejected_requests` | DELETE rows | `created_at` older than 30 days, whatever the retention setting | whole row |
+| `inspector_entries` | DELETE rows | `created_at` older than `INSPECTOR_RETENTION_DAYS` (7 by default), every hour, 2,000 rows at a time | whole row |
 | `events` | SET NULL | `created_at < cutoff` | `device_id`, `customer_id`, `metadata`, `ip_raw` |
 | `customers` | SET NULL | `updated_at < cutoff` (last identify, not creation) | `name`, `email`, `phone`, `first_install_id` |
 | `app_installs` | SET NULL | `created_at < cutoff` | `device_id`, `device_model`, `device_manufacturer`, `device_kind`, `cpu_type`, `os_build`, `screen_width`, `screen_height`, `screen_density`, `text_size`, `dark_mode`, `high_contrast`, `reduce_motion`, `utc_offset_min`, `connectivity_type`, `carrier_mcc`, `carrier_mnc`, `ip_raw`, `ip_hash`, `web_user_agent`, `meta_referrer`, `asa_token` |
