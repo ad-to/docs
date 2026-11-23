@@ -189,7 +189,7 @@ chain with a verify route: whoever can rewrite the database can recompute the
 chain too, so without an outside anchor it adds a column, not a guarantee.
 
 **25. A test environment is a sibling account.** Account
-`acme` gets `t-acme`, with copies of its apps and templates and its own keys,
+`acme` gets `t-acme`, with copies of its apps and its own keys,
 links, installs, events, webhooks and audit log. *Rejected:* an `is_test` flag
 on every row, which needed a filter in every query and could leak test data into
 live totals.

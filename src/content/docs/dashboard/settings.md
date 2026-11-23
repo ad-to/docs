@@ -101,7 +101,7 @@ The people who work in this account: the account itself (always an owner), then 
 
 ## Test environment
 
-A second account, `t-<username>`, for debug builds. **Create test environment** makes it with copies of your apps and link templates and shows its first SDK key; the key is also listed under **SDK keys** in the test environment. Put that key in debug builds: their installs, events, customers and links stay out of your live numbers, and test links carry `t-<username>` where yours carry your username (`https://t-acme.adto.app/<slug>` on the hosted service), so add that host to the debug build's associated domains.
+A second account, `t-<username>`, for debug builds. **Create test environment** makes it with copies of your apps and shows its first SDK key; the key is also listed under **SDK keys** in the test environment. Put that key in debug builds: their installs, events, customers and links stay out of your live numbers, and test links carry `t-<username>` where yours carry your username (`https://t-acme.adto.app/<slug>` on the hosted service), so add that host to the debug build's associated domains.
 
 Once it exists, a **Live** / **Test** switch sits at the top of the sidebar. In the test environment every page shows the test account, an amber banner says so, and **Back to live** returns. Keys you create there are test keys; the custom domain stays with the live account. Changes made there are recorded in the test environment's own audit log, under your email, except team changes: the team is the live account's, so an invite or a role change made while in Test is in the live account's log. The test environment is never signed in to on its own: it has no password.
 
@@ -109,7 +109,7 @@ Once it exists, a **Live** / **Test** switch sits at the top of the sidebar. In 
 
 Every change to the account, newest first, 25 at a time (**Show older** loads more):
 
-- links, temporary links, link templates, apps, webhooks, SDK keys, site keys, the account key, the custom domain and the revenue currency, whether changed in the dashboard or through the API;
+- links, temporary links, apps, webhooks, SDK keys, site keys, the account key, the custom domain and the revenue currency, whether changed in the dashboard or through the API;
 - a plan checkout or plan switch started, and every change to the subscription that follows (bought, plan changed, payment failing, cancelled, ended);
 - the warning for being over the plan's limit, its reminder, the pause and the resumption of SDK traffic, and a custom limit set by AdTo;
 - every sign-in, wrong password, sign-out and password reset;

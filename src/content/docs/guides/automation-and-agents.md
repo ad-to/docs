@@ -42,7 +42,6 @@ The AdTo plugin for Claude Code bundles the same server with four skills: links 
 | Tool | What it does |
 |---|---|
 | `list_links` | One page of links, newest first, with click counts. Takes `limit` (1 to 200) and the `cursor` from the previous page. |
-| `list_link_templates` | List the account's templates with ids, app ids, defaults and link counts; use an id as `template_id` when creating links. Requires `links:read`. |
 | `list_link_groups` | List the account's link groups with ids and link counts; put ids in a link's `group_ids`, or pass one to `list_links` as `group`. Requires `links:read`. |
 | `get_link` | One link by slug. |
 | `create_link` | One link. Takes the fields of [`POST /api/v1/links`](/api/links/); without a slug it gets a generated one. |
@@ -51,7 +50,7 @@ The AdTo plugin for Claude Code bundles the same server with four skills: links 
 | `upsert_link` | Updates the link with this `external_id` (else this `slug`), or creates it; one of the two is required, and a link created by `external_id` alone gets a generated slug. For syncing links from your own system. |
 | `delete_link` | Deletes a link: it answers 404 and its history stays. With `permanent: true` its clicks, attributed installs, events and opens go too. |
 | `restore_link` | Brings back a link deleted without `permanent`. |
-| `clone_link` | Makes a new link from one by slug: its target, app, template, preview, routing, rules, tracking and switches, under `new_slug` or a generated one. See [Clone](/api/links/#clone). |
+| `clone_link` | Makes a new link from one by slug: its target, app, preview, routing, rules, tracking and switches, under `new_slug` or a generated one. See [Clone](/api/links/#clone). |
 | `create_temp_link` | A link that expires after `ttlSeconds`, 60 to 2,592,000, default 900. Without a slug it gets a generated one. |
 | `resolve_link` | What a link points to, as the public resolve route answers it. |
 | `get_attribution` | The verdict of one install, by `device_id` or `install_id`. |

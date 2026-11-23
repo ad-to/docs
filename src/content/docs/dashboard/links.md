@@ -22,7 +22,7 @@ The **New link** panel has four fields, and for a permanent link also **Name** a
 | **Groups** | Any number of your [groups](#groups): the box opens a checklist, and typing a name not in use offers **Create "…"**. Hidden for temporary links. | Optional, up to 50 per link. |
 | **Expires** | **Never** (default), **5 min**, **1 hour**, **1 day** or **7 days**. | Anything other than **Never** creates a temporary link. The dashboard offers only these four durations; the API accepts 60 seconds to 30 days. |
 
-When the account has [templates](#templates), a **Template** box next to **App** picks one for a permanent link. A permanent link is sent to `POST /api/admin/links`; a temporary one to `POST /api/admin/temp-links` with the chosen `ttlSeconds`. Temporary links always route through the default app and have no click counter, no deep-link paths, no tracking fields and no routing overrides. See [Temporary links](/links/temporary-links/).
+A permanent link is sent to `POST /api/admin/links`; a temporary one to `POST /api/admin/temp-links` with the chosen `ttlSeconds`. Temporary links always route through the default app and have no click counter, no deep-link paths, no tracking fields and no routing overrides. See [Temporary links](/links/temporary-links/).
 
 ### Advanced options
 
@@ -86,7 +86,7 @@ All per-link numbers are all-time totals, which is why they do not match the Ove
 Each row ends with **Edit** (a pencil; the label reads "Edit (custom social preview)" and the icon carries a dot when the link has its own preview), **Clone** (a copy icon with a plus), **Over time** (a line chart: opens the link alone in an unsaved [report](/dashboard/reports/)), **Screens after open** (a numbered list), **Pause** or **Resume**, **Archive** or **Unarchive**, and **Delete** (a trash can). On the **Deleted** view the row offers **Restore** and **Delete permanently** instead. See [Pausing, archiving and deleting](#pausing-archiving-and-deleting).
 
 **Clone** asks for the copy's slug, suggesting `{slug}-copy`; left blank, it is generated. A slug cannot be changed later. It then makes the new link from that one and opens it in the link drawer, where you can change the rest before sharing it. The copy keeps:
-- the destination, app and template;
+- the destination and app;
 - the preview, routing and routing rules;
 - the tracking values and UTMs;
 - the two switches, **Add the click id** and **Pass the link's query parameters**.
@@ -133,10 +133,6 @@ Empty states: "No permanent links yet.", "No temporary links. Pick an expiry whe
 
 **Groups** opens a panel listing your groups with how many links each holds (deleted links not counted). Type a name and press **Create** to add one; names are unique, up to 100 characters. **Rename** edits a name in place; **Delete** asks first, and the group's links stay, in any other groups they are in. A link joins groups from the create form or under **Name and groups** in the link drawer. See [Link groups](/api/links/#link-groups).
 
-## Templates
-
-Templates are managed through the API: see [Templates](/api/links/#templates). The dashboard no longer has a Templates panel, but the create form and the link drawer still pick a template under **Template** when the account has any. A link that uses a template takes its value for every field the link leaves empty, at tap time, so editing a template changes all its links.
-
 ## Importing links
 
 **Import CSV** opens a panel with two column presets: **AdTo columns** (headers named like the API fields, such as `slug`, `target`, `campaign`, `utm_source`, `external_id`) and **Firebase Dynamic Links export** (see [Importing an FDL export](/guides/migrate-from-firebase-dynamic-links/#importing-an-fdl-export)). After you pick a file, the panel shows how many links it found, the first ten with notes (a row without a slug, which gets a generated one; `afl` and `ifl` that differ), and **Import {n} links**. Links are created 100 per request; the result reads "{n} created, {m} failed." with a table of the failed rows by line number and error. Nothing is created until you press the button.
@@ -151,9 +147,9 @@ Templates are managed through the API: see [Templates](/api/links/#templates). T
 
 Permanent links only, at the top of the drawer. **Name** (up to 200 characters, only you see it) and **Groups**, the same checklist as the create form, where a new group can be created on the spot. Clearing the name and unticking every group both save. A drawer title shows the name above the slug when the link has one.
 
-### Template and tracking
+### Tracking
 
-Permanent links only. **Template** (when the account has templates) picks the link's template or **None**; an empty field below then shows the template's value as its placeholder, followed by "(template)". Below it, the label, campaign, adgroup and creative from the create form, and the link's **UTM source**, **UTM medium**, **UTM campaign**, **UTM term** and **UTM content** (added to its web destinations; see [Link-level UTM values](/links/url-parameters/#link-level-utm-values)), each up to 255 characters, then **Add the click id to website destinations**, which adds `adto_click` to the link's web URLs (never a store or an app scheme) for [`adto.js`](/sdk/web/) on that site, and **Pass the link's query parameters to website destinations**, which copies a tap's own parameters (such as `?ref=anna`) onto those URLs, over their own values and the link's UTMs (see [Your own parameters](/links/url-parameters/#your-own-parameters)). Each of the two offers the template's setting (shown as on or off; **Off (default)** without a template), **On** or **Off**. **Off** stays off even when the template turns it on. **Save template and tracking** sends them all; an emptied field clears the stored value. The button is followed by "Saved" or the server's error.
+Permanent links only. The label, campaign, adgroup and creative from the create form, and the link's **UTM source**, **UTM medium**, **UTM campaign**, **UTM term** and **UTM content** (added to its web destinations; see [Link-level UTM values](/links/url-parameters/#link-level-utm-values)), each up to 255 characters, then two checkboxes, both off by default: **Add the click id to website destinations**, which adds `adto_click` to the link's web URLs (never a store or an app scheme) for [`adto.js`](/sdk/web/) on that site, and **Pass the link's query parameters to website destinations**, which copies a tap's own parameters (such as `?ref=anna`) onto those URLs, over their own values and the link's UTMs (see [Your own parameters](/links/url-parameters/#your-own-parameters)). **Save changes** at the foot of the drawer saves them with the drawer's other changes; an emptied field clears the stored value.
 
 ### Expiry
 

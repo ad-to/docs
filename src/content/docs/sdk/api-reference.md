@@ -121,7 +121,7 @@ const AdtoConfig({
 
 ### Environments
 
-`enum AdtoEnvironment { live, test }`: which of an account's two environments a key belongs to. A test environment is a second account, `t-<username>`, with the same apps and link templates (dashboard Settings → Test environment). Put its SDK key in debug builds: their installs, events and links stay out of the live numbers, and its links live on `t-<username>.<root>`, so add that host to the debug build's associated domains. The SDK learns a key's environment from the server (`AdtoSdkConfig.environment`).
+`enum AdtoEnvironment { live, test }`: which of an account's two environments a key belongs to. A test environment is a second account, `t-<username>`, with the same apps (dashboard Settings → Test environment). Put its SDK key in debug builds: their installs, events and links stay out of the live numbers, and its links live on `t-<username>.<root>`, so add that host to the debug build's associated domains. The SDK learns a key's environment from the server (`AdtoSdkConfig.environment`).
 
 ### Collection
 
@@ -165,7 +165,7 @@ A permanent link as the API returns it. All fields are `final`; `AdtoLink.fromJs
 | `iosTapToStore`, `mobileInterstitial` | `bool?` | This link's iOS tap-to-store page and mobile interstitial; `null` follows the app's setting |
 | `appendClickId` | `bool?` | Whether the link adds `adto_click` to its web destinations for `adto.js`; `null` is off |
 | `routingRules` | `List<AdtoRoutingRule>?` | Geo and language routing, first match wins; `null` when the link has none |
-| `templateId` | `String?` | The template whose defaults fill the fields the link leaves empty |
+| `templateId` | `String?` | Always `null`: link templates were removed |
 | `utmSource`, `utmMedium`, `utmCampaign`, `utmTerm`, `utmContent` | `String?` | Added to the link's web destinations, and to clicks whose URL has none |
 | `externalId` | `String?` | Your own id for the link, unique in the account |
 | `expiresAt`, `expiredUrl` | `DateTime?`, `String?` | When the link expires; past it taps go to `expiredUrl`, or get a 410 page |
