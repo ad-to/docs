@@ -5,19 +5,21 @@ sidebar:
   order: 2
 ---
 
-The Links screen, at https://dashboard.adto.app/dashboard/links, is where you create the links people tap. Its header reads "Deep links that open your app, track installs and expire when you want." Next to it, **Templates** manages [link templates](#templates), **Import CSV** creates many links from a file ([Importing links](#importing-links)), and **New link** opens the create panel; the panel is always open while the account has no links.
+The Links screen, at https://dashboard.adto.app/dashboard/links, is where you create the links people tap. Its header reads "Deep links that open your app, track installs and expire when you want." Next to it, **Groups** manages [link groups](#groups), **Import CSV** creates many links from a file ([Importing links](#importing-links)), and **New link** opens the create panel; the panel is always open while the account has no links.
 
 On load the screen fetches your links, your apps (an account with exactly one app gets it preselected) and your username, which the deep-link previews use.
 
 ## Creating a link
 
-The **New link** panel has four fields. Submit with **Create link**, or **Create temporary link** when an expiry is set. The button reads "Creating…" while the request runs. Errors appear in red next to the button, verbatim from the server. On success the form resets, the panel closes and the list switches to the matching tab.
+The **New link** panel has four fields, and for a permanent link also **Name** and **Groups**. Submit with **Create link**, or **Create temporary link** when an expiry is set. The button reads "Creating…" while the request runs. Errors appear in red next to the button, verbatim from the server. On success the form resets, the panel closes and the list switches to the matching tab.
 
 | Field | What to enter | Rules |
 |---|---|---|
 | **Fallback URL** | Either **App fallback URL (default)**, which inherits the Fallback URL of the selected app, or **Custom URL** with an address (placeholder `https://destination.com`). For temporary links the first option reads **Default app fallback**. Hint: "Where this link points when the app can't serve it (desktop continue button, last mobile fallback). The default inherits the app's Fallback URL from the Apps page." | The app option is disabled, with the tooltip "Set a Fallback URL on the Apps page to enable", while the app has no Fallback URL; **Custom URL** is then the only choice. A custom URL must be http(s), otherwise the server replies `Invalid target: must be a valid http(s) URL`. |
 | **Link URL** | The slug after your link domain (placeholder `auto`). The prefix shows the host of your existing links, or `/` until you have one. | Optional for every link: leave it blank for a generated slug of 5 random letters and digits, such as `Xk3pQ`. The hint reads "Optional — leave blank for an auto-generated slug.", followed for temporary links by "Temporary links use your default app's routing and fallback." A slug you type has letters, digits, `_` and `-` only, up to 128 characters (`Invalid slug: only letters, numbers, hyphens and underscores are allowed`). Slugs starting with `r-` are kept for referral links (`Slugs starting with 'r-' are reserved for referral links`). A slug must be unique across your permanent **and** temporary links, otherwise `Slug already exists`; a generated one is drawn again until it is. Taps match a slug's exact case. |
 | **App** | **Default app** or one of your apps. Tooltip: "App used for platform routing". Hidden for temporary links and when you have no apps. | **Default app** means your oldest app. The app decides store URLs, schemes, interstitial pages and the social preview for this link. |
+| **Name** | Your own words for where the link is used (placeholder "e.g. Instagram bio, spring sale"). Hidden for temporary links. | Optional, up to 200 characters. Only you see it: it is never part of routing or attribution. The list shows it above the slug, and search finds it. |
+| **Groups** | Any number of your [groups](#groups): the box opens a checklist, and typing a name not in use offers **Create "…"**. Hidden for temporary links. | Optional, up to 50 per link. |
 | **Expires** | **Never** (default), **5 min**, **1 hour**, **1 day** or **7 days**. | Anything other than **Never** creates a temporary link. The dashboard offers only these four durations; the API accepts 60 seconds to 30 days. |
 
 When the account has [templates](#templates), a **Template** box next to **App** picks one for a permanent link. A permanent link is sent to `POST /api/admin/links`; a temporary one to `POST /api/admin/temp-links` with the chosen `ttlSeconds`. Temporary links always route through the default app and have no click counter, no deep-link paths, no tracking fields and no routing overrides. See [Temporary links](/links/temporary-links/).
@@ -64,13 +66,13 @@ The complete decision order for a tap is in [How a tap is routed](/links/how-a-t
 
 ## The list
 
-Three tabs, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, sit above a table. Next to them, **Active**, **Archived** and **Deleted** pick which links the tabs show: active links (paused and expired ones included), archived links, or deleted links, with a count once there is one. On the Permanent tab, **Made with: any** narrows the list to links made with the **Dashboard**, the **API**, an **SDK** key or **MCP**, or to **Unknown** links: those made before AdTo recorded it, whose creation the audit log no longer holds. The **Search links** box filters the current tab in the browser, case-insensitively: slug, destination, campaign and label on the Permanent tab; slug and destination on the Temporary tab; slug, customer and campaign on the Referrals tab. There is no pagination; the screen loads every permanent and temporary link, and the referral links when their tab opens.
+Three tabs, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, sit above a table. Next to them, **Active**, **Archived** and **Deleted** pick which links the tabs show: active links (paused and expired ones included), archived links, or deleted links, with a count once there is one. On the Permanent tab, **Group: any** (once you have groups) shows only the links in one group, or **In no group**; a group chip on a row picks that group too. **Made with: any** narrows the list to links made with the **Dashboard**, the **API**, an **SDK** key or **MCP**, or to **Unknown** links: those made before AdTo recorded it, whose creation the audit log no longer holds. The **Search links** box filters the current tab in the browser, case-insensitively: slug, name, destination, campaign, label and group names on the Permanent tab; slug and destination on the Temporary tab; slug, customer and campaign on the Referrals tab. There is no pagination; the screen loads every permanent and temporary link, and the referral links when their tab opens.
 
 ### Permanent links
 
 | Column | What it shows | Period |
 |---|---|---|
-| **Link** | `/slug`, which opens the live link in a new tab; a copy icon that turns into a check mark for 1.5 seconds; chips for the campaign and the label when set, and **Paused** (amber; hover for your reason), **Expired** (red; hover for where taps go) or **Archived**; underneath, the destination host and path, or `App fallback` when the link inherits the app's Fallback URL, then `· expires in 3d 4h` when an expiry is set. | |
+| **Link** | The link's name, when it has one; then `/slug`, which opens the live link in a new tab; a copy icon that turns into a check mark for 1.5 seconds; chips for the campaign and the label when set, and **Paused** (amber; hover for your reason), **Expired** (red; hover for where taps go) or **Archived**; underneath, the destination host and path, or `App fallback` when the link inherits the app's Fallback URL, then `· expires in 3d 4h` when an expiry is set. Between them, a chip for each group the link is in. | |
 | **Clicks** | The link's click counter. It increases on every web tap, every click reported by the SDK and every click the server reconstructs from an install referrer, and it never decreases. A green `+{n} 7d` underneath counts the clicks of the last 7 days. | Lifetime; the `7d` line covers a rolling 7 days |
 | **Installs** | First installs matched to one of this link's clicks. Underneath, `+{n} reinstalls` counts the reinstalls a new tap on this link won (a reinstall routed back to its first install's click stays organic), and `{n}% conv.` is first installs ÷ the click counter, rounded to a whole percent, shown only when both are above 0, and `{n} flagged` counts the first installs from a tap on this link that tripped a [fraud rule](/start/fraud-rules/), credited or not: a link whose installs a blocked rule withheld still shows them. | Lifetime Click the number to list those installs; each opens the install detail described on [Overview](/dashboard/overview/#recent-installs), and **Open in Installs, to filter or watch →** opens the [Installs](/dashboard/installs/) screen searched for the link. |
 | **Opens** | Times this link opened the already installed app. | Lifetime |
@@ -127,9 +129,13 @@ A referral link has no **Edit**: the server made it for one customer. Each row o
 
 Empty states: "No permanent links yet.", "No temporary links. Pick an expiry when creating a link to make one." and "No links match your search."
 
+## Groups
+
+**Groups** opens a panel listing your groups with how many links each holds (deleted links not counted). Type a name and press **Create** to add one; names are unique, up to 100 characters. **Rename** edits a name in place; **Delete** asks first, and the group's links stay, in any other groups they are in. A link joins groups from the create form or under **Name and groups** in the link drawer. See [Link groups](/api/links/#link-groups).
+
 ## Templates
 
-**Templates** opens a panel listing your templates with the fields each sets and how many links use it. **New template** and **Edit** show **Name**, **App for new links**, and the fields a template can fill: **Desktop destination**, **Mobile without the app**, the iOS and Android deep link paths, **Campaign**, **Label**, **Adgroup**, **Creative** and the UTM source, medium and campaign. A link that uses a template takes its value for every field the link leaves empty, at tap time: editing a template changes all its links. **Delete** asks first and names how many links use it; they keep their own fields and stop inheriting. The create form and the link drawer pick a template under **Template**. Fields only the API sets (the target, the social preview, the page settings) are kept when you edit a template here. See [Templates](/api/links/#templates).
+Templates are managed through the API: see [Templates](/api/links/#templates). The dashboard no longer has a Templates panel, but the create form and the link drawer still pick a template under **Template** when the account has any. A link that uses a template takes its value for every field the link leaves empty, at tap time, so editing a template changes all its links.
 
 ## Importing links
 
@@ -137,9 +143,13 @@ Empty states: "No permanent links yet.", "No temporary links. Pick an expiry whe
 
 ## Editing a link
 
-**Edit** opens a side drawer titled **Edit link** `/slug`. Permanent links get five blocks; temporary links get the expiry and the social preview.
+**Edit** opens a side drawer titled **Edit link** `/slug`. Permanent links get six blocks; temporary links get the expiry and the social preview.
 
 **Link health**, at the top of the drawer (below the QR code on a permanent link), checks the saved link when the drawer opens: a score from 0 to 100, the checks that fail with a link to where each is fixed (the app's iOS or Android settings, the custom domain, the preview below), the passing ones folded away, and what a tap does with and without the app on an iPhone, an Android phone and a computer. **Check again** reruns it after you save. See [Link health](/links/how-a-tap-is-routed/#link-health).
+
+### Name and groups
+
+Permanent links only, at the top of the drawer. **Name** (up to 200 characters, only you see it) and **Groups**, the same checklist as the create form, where a new group can be created on the spot. Clearing the name and unticking every group both save. A drawer title shows the name above the slug when the link has one.
 
 ### Template and tracking
 
