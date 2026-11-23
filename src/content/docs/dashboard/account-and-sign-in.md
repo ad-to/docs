@@ -85,7 +85,7 @@ The person who owns an account is always its owner, and cannot be removed or dem
 
 ### Joining by invite
 
-An invite email links to `{WEB_URL}/invite?token=…`. The link works for 7 days, once, and only for the invited address. The **Join a team** page names the account, your role and the address, then offers what fits:
+An invite email links to `{WEB_URL}/invite?token=…`; an owner can also copy the same link from Settings → [Team](/dashboard/settings/#team) and send it another way. The link works for 7 days, once, and only for the invited address. The **Join a team** page names the account, your role and the address, then offers what fits:
 
 | Situation | The page shows |
 |---|---|
