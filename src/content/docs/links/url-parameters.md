@@ -97,11 +97,11 @@ The Overview's **Installs by campaign** and **Installs by source** charts group 
 
 ## `utm_*` parameters
 
-`utm_source`, `utm_medium`, `utm_campaign`, `utm_term` and `utm_content` are stored on the click verbatim. A key the tapped URL does not carry is taken from the link's own UTM values, or its template's, when it has them (see below). They are kept as long as the click (the retention window) and drive two Overview charts: installs grouped by the matched click's `utm_campaign` (`(direct)` when the click had none, `Organic` when the install matched nothing) and by its `utm_source`. The SDK sends the same five keys when it reports a click from an opened URL.
+`utm_source`, `utm_medium`, `utm_campaign`, `utm_term` and `utm_content` are stored on the click verbatim. A key the tapped URL does not carry is taken from the link's own UTM values, when it has them (see below). They are kept as long as the click (the retention window) and drive two Overview charts: installs grouped by the matched click's `utm_campaign` (`(direct)` when the click had none, `Organic` when the install matched nothing) and by its `utm_source`. The SDK sends the same five keys when it reports a click from an opened URL.
 
 ### Link-level UTM values
 
-A link can carry its own `utm_source`, `utm_medium`, `utm_campaign`, `utm_term` and `utm_content` (API fields of the same names; **Tracking** in the link drawer), directly or from its [template](/api/links/#templates). They do two things:
+A link can carry its own `utm_source`, `utm_medium`, `utm_campaign`, `utm_term` and `utm_content` (API fields of the same names; **Tracking** in the link drawer). They do two things:
 
 - A click whose URL has no value for a key stores the link's.
 - Every web destination of a tap gets the link's values added as query parameters, each only when the destination URL has none of its own: the desktop fallback, the custom redirect, the app's Fallback URL, the link's target, and a `adto_redirect` or `adto_fallback` URL. Store URLs never get them, and neither do scheme and `intent://` URLs.
@@ -116,7 +116,7 @@ Keys without the `adto_` or `utm_` prefix, such as a share-time `ref` or an `ite
 - **Included:** the first value of each key, at most 20 keys and 2 KB.
 - **Dropped:** a key over 64 characters or a value over 256, `utm_*` keys (they are on the click already), and AdTo's [reserved parameters](#reserved-parameters).
 
-**The website.** Turn on **Pass the link's query parameters to website destinations** in the link drawer, under Template and tracking. Over the API, set `forward_query: true` on the link, or on a [template](/api/links/#templates). The tap's own parameters are then copied onto every web destination that `utm_*` values reach (see above):
+**The website.** Turn on **Pass the link's query parameters to website destinations** in the link drawer, under Tracking. Over the API, set `forward_query: true` on the link. The tap's own parameters are then copied onto every web destination that `utm_*` values reach (see above):
 
 - **What is copied:** the same keys the app gets, plus the tap's `utm_*`.
 - **Precedence:** a tapped key wins over the destination URL's own value for it, and over the link's `utm_*`.

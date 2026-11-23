@@ -110,11 +110,11 @@ See [Settings: Plan](/dashboard/settings/#plan).
 
 ## Test environment
 
-An account's test environment is a second account, `t-<username>`, with the same apps and link templates; see [Settings: Test environment](/dashboard/settings/#test-environment).
+An account's test environment is a second account, `t-<username>`, with the same apps; see [Settings: Test environment](/dashboard/settings/#test-environment).
 
 | Method and path | Auth | Purpose | Response |
 |---|---|---|---|
-| `POST /api/admin/test-environment` | session (live) | Creates the test environment: the apps and link templates are copied, and it gets an account key and an SDK key whose `environment` is `test`. It has no password and an unroutable email, so it is reached only from its live account. | `201 {username, apps, templates, sdk_key, sdk_key_prefix}`; `409 test_environment_exists` the second time, `is_test_environment` from the test environment itself |
+| `POST /api/admin/test-environment` | session (live) | Creates the test environment: the apps are copied, and it gets an account key and an SDK key whose `environment` is `test`. It has no password and an unroutable email, so it is reached only from its live account. | `201 {username, apps, sdk_key, sdk_key_prefix}`; `409 test_environment_exists` the second time, `is_test_environment` from the test environment itself |
 | `PUT /api/admin/environment` | session | `{environment: "live" \| "test"}`: which account the dashboard shows from now on, by the `adto_env` cookie (30 days). Every other session route then acts on that account; the audit log records the person. | `200 {environment, username?}`; `404 no_test_environment` |
 
 In the test environment, `POST /api/admin/custom-domain` answers `409 is_test_environment`: its links stay on `t-<username>.<root>`. Keys created there (SDK and site keys) are test keys. `GET /api/v1/sdk-config` answers `environment: "test"` for them.
@@ -148,7 +148,7 @@ An entry is `{seq, action, actor, target, changes, ip_hash, user_agent, request_
 
 | Area | Actions |
 |---|---|
-| Links | `link.created`, `link.updated`, `link.deleted`, `link.restored`, `link.bulk_created` (with the slugs), `temp_link.created`, `temp_link.updated`, `temp_link.deleted`, `temp_link.restored`, `temp_link.expired_deleted`, `template.created`, `template.updated`, `template.deleted` |
+| Links | `link.created`, `link.updated`, `link.deleted`, `link.restored`, `link.bulk_created` (with the slugs), `temp_link.created`, `temp_link.updated`, `temp_link.deleted`, `temp_link.restored`, `temp_link.expired_deleted` |
 | Apps | `app.created`, `app.updated`, `app.deleted`, `app.store_notifications_enabled`, `app.store_notifications_rotated`, `app.store_notifications_updated`, `app.store_notifications_disabled` |
 | Webhooks | `webhook.created`, `webhook.updated`, `webhook.deleted`, `webhook.secret_rotated`, `webhook.tested`, `webhook.delivery_resent`, `webhook.disabled` (by AdTo) |
 | Custom domain | `custom_domain.added`, `custom_domain.removed` (also by AdTo, when the plan no longer includes a domain), `custom_domain.restored`, `custom_domain.status_changed` and `custom_domain.deleted` (by AdTo) |

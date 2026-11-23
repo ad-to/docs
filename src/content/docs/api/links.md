@@ -42,7 +42,6 @@ Every permanent-link route returns the full object, including fields you never s
   "append_click_id": null,
   "forward_query": null,
   "routing_rules": null,
-  "template_id": null,
   "utm_source": null,
   "utm_medium": null,
   "utm_campaign": null,
@@ -77,10 +76,9 @@ Every permanent-link route returns the full object, including fields you never s
 | `fallback_url` | string or null | Where desktop visitors go instead of the QR page, and the last mobile fallback. |
 | `label`, `campaign`, `adgroup`, `creative` | string or null | Tracking defaults copied onto every click of this link. A `adto_<field>` query parameter on the tapped URL wins for that tap. See [URL parameters](/links/url-parameters/). |
 | `ios_tap_to_store`, `mobile_interstitial` | boolean or null | This link's iOS tap-to-store page and mobile interstitial. `null` follows the app's setting, and on the hosted service still shows the tap-to-store page to iCloud Private Relay taps when the app's switch is off; `ios_tap_to_store: false` keeps it from those taps too. See [How a tap is routed](/links/how-a-tap-is-routed/#mobile-delivering-it). |
-| `append_click_id` | boolean or null | Whether the link adds `adto_click` to its web destinations, for [`adto.js`](/sdk/web/). `null` is off, or the template's value. |
-| `forward_query` | boolean or null | Whether the link copies the tapped URL's own query parameters onto its web destinations. See [Your own parameters](/links/url-parameters/#your-own-parameters). `null` is off, or the template's value. |
+| `append_click_id` | boolean or null | Whether the link adds `adto_click` to its web destinations, for [`adto.js`](/sdk/web/). `null` is off. |
+| `forward_query` | boolean or null | Whether the link copies the tapped URL's own query parameters onto its web destinations. See [Your own parameters](/links/url-parameters/#your-own-parameters). `null` is off. |
 | `routing_rules` | array or null | Geo and language rules, first match wins. See [Geo and language rules](#geo-and-language-rules). |
-| `template_id` | string or null | The [template](#templates) whose values fill every field this link leaves empty. The fields above are the link's own. |
 | `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content` | string or null | Added to the link's web destinations and stored on clicks whose URL has none. See [Link-level UTM values](/links/url-parameters/#link-level-utm-values). |
 | `external_id` | string or null | Your own id for the link (a product or CMS row id), unique in the account. See [Upsert and external ids](#upsert-and-external-ids). |
 | `referrer_customer_id` | string or null | Set on a customer's referral link. See [Referral programs](/guides/referral-programs/). |
@@ -117,10 +115,10 @@ Every permanent-link route returns the full object, including fields you never s
 | `redirect_url`, `fallback_url` | string | no | http(s) URLs. `""` stores `null`. |
 | `label`, `campaign`, `adgroup`, `creative` | string | no | Trimmed; at most 255 characters; no control characters. `""` stores `null`. |
 | `ios_tap_to_store`, `mobile_interstitial` | boolean or null | no | `true` or `false` overrides the app's setting for this link; `null` or absent follows it. Anything else answers `400 Invalid ios_tap_to_store: must be true, false or null (follow the app)`. |
-| `append_click_id` | boolean or null | no | `true` adds `adto_click=<click id>` to the link's web destinations (never stores, MMP links or schemes); `false` or `null` does not. A template can set it. Anything else answers `400 Invalid append_click_id: must be true, false or null`. |
-| `forward_query` | boolean or null | no | `true` copies the tapped URL's own parameters (not `adto_*` or AdTo's markers; `utm_*` included) onto the link's web destinations, over the destination's own value and the link's `utm_*`. It never copies them onto stores or schemes. `false` or `null` does not. A template can set it. Anything else answers `400 Invalid forward_query: must be true, false or null`. |
+| `append_click_id` | boolean or null | no | `true` adds `adto_click=<click id>` to the link's web destinations (never stores, MMP links or schemes); `false` or `null` does not. Anything else answers `400 Invalid append_click_id: must be true, false or null`. |
+| `forward_query` | boolean or null | no | `true` copies the tapped URL's own parameters (not `adto_*` or AdTo's markers; `utm_*` included) onto the link's web destinations, over the destination's own value and the link's `utm_*`. It never copies them onto stores or schemes. `false` or `null` does not. Anything else answers `400 Invalid forward_query: must be true, false or null`. |
 | `routing_rules` | array or null | no | Up to 20 rules; `null` or `[]` stores none. See below. |
-| `template_id` | string | no | One of your templates; anything else answers `400 Unknown template_id`. When `app_id` is absent, the template's app applies. |
+| `template_id` | | | No longer accepted: link templates were removed. A non-empty value answers `400 Link templates were removed: set the fields on the link itself`; `null` and `""` are ignored. |
 | `utm_source` … `utm_content` | string | no | Trimmed; at most 255 characters; no control characters. `""` stores `null`. |
 | `external_id` | string | no | 1 to 255 characters, no control characters. Taken by another link: `409 {"error": {"code": "conflict", "message": "external_id belongs to another link", …}}`. |
 | `expires_at` | string | no | An ISO 8601 time such as `2026-12-31T23:59:00Z`, stored in UTC. A time in the past creates an already-expired link. |
@@ -188,32 +186,6 @@ A body with neither `external_id` nor `slug` answers `400 {"error": {"code": "in
 ```bash title="Sync one product's link"
 adto PUT /api/v1/links/upsert '{"external_id": "product-42", "slug": "p42", "target": "https://shop.example.com/p/42", "campaign": "catalog"}'
 ```
-
-## Templates
-
-A template holds defaults for link fields. A link with `template_id` takes the template's value for every field it leaves empty, at tap time, so editing a template changes all its links at once. The link's own values always win; see [the precedence](/links/how-a-tap-is-routed/#which-value-applies).
-
-| Route | Response |
-|---|---|
-| `GET /api/v1/link-templates` | `200 {"data": [Template, …], "next_cursor": null}`, by name |
-| `POST /api/v1/link-templates` | `{name, app_id?, defaults}` → `201` Template; a name already in use answers `409` |
-| `GET /api/v1/link-templates/:id` | `200` Template or `404 Template not found` |
-| `PUT /api/v1/link-templates/:id` | any of `name`, `app_id`, `defaults` (which replaces the whole set) → `200` Template |
-| `DELETE /api/v1/link-templates/:id` | `200 {"success": true}`; its links keep their own fields and stop inheriting |
-
-```json title="Template"
-{
-  "id": "1b2c…",
-  "name": "Spring campaign",
-  "app_id": null,
-  "defaults": { "fallback_url": "https://shop.example.com/spring", "campaign": "spring", "utm_source": "newsletter" },
-  "link_count": 12,
-  "created_at": "2026-10-14T09:00:00.000Z",
-  "updated_at": null
-}
-```
-
-`defaults` may hold `target`, `redirect_url`, `fallback_url`, `ios_deep_link_path`, `android_deep_link_path`, `og_title`, `og_description`, `og_image_url`, `label`, `campaign`, `adgroup`, `creative`, the five `utm_*` fields, `ios_tap_to_store` and `mobile_interstitial`, each validated like the link field; any other key answers `400`. `name` is 1 to 100 characters; `app_id`, when set, is the app new links get when they name none. Templates use the links scopes: reading needs `links:read`, changing `links:write`. Responses to `GET /api/v1/links/:slug` show the link's own fields, not the inherited ones; `resolve`, the redirect and the install verdict use the inherited values.
 
 ## Link groups
 
@@ -327,7 +299,7 @@ Deleting is a soft delete. The link leaves the list (unless `include_deleted=tru
 
 The copy is checked like a create.
 
-**Copied:** the target, the app (exactly as the source has it, so a link with none gets none, whatever its template names), template, metadata, social preview, deep-link paths, redirect and fallback URLs, label, campaign, adgroup and creative, UTMs, the page settings, `append_click_id`, `forward_query`, the routing rules and the link groups.
+**Copied:** the target, the app (exactly as the source has it, so a link with none gets none), metadata, social preview, deep-link paths, redirect and fallback URLs, label, campaign, adgroup and creative, UTMs, the page settings, `append_click_id`, `forward_query`, the routing rules and the link groups.
 
 **Not copied:**
 - the name;

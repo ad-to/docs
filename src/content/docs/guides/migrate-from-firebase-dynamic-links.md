@@ -165,7 +165,7 @@ Per-link numbers on the Links page are lifetime totals. See [Links](/dashboard/l
 | `utm_source` … `utm_content` | the link's UTM values |
 | `apn`, `ibi` | not imported: the link uses your app from the Apps page |
 
-The **AdTo columns** preset takes headers named like the [create fields](/api/links/#create-a-link) instead (`slug`, `target`, `campaign`, `external_id`, `template_id` and so on). If your app reads the whole FDL `link` URL rather than a path, set the deep-link paths yourself after the import, or keep the URL in `metadata`.
+The **AdTo columns** preset takes headers named like the [create fields](/api/links/#create-a-link) instead (`slug`, `target`, `campaign`, `external_id` and so on). If your app reads the whole FDL `link` URL rather than a path, set the deep-link paths yourself after the import, or keep the URL in `metadata`.
 
 ## Migration checklist
 

@@ -249,7 +249,7 @@ The route pages quote errors as `{"error": {"code", "message"}}` and leave out `
 - Timestamps are ISO 8601 in UTC with milliseconds, `2026-10-12T09:00:00.000Z`. Epoch fields in install payloads are milliseconds.
 - Ids are UUIDs, except click ids, which are 16 hexadecimal characters.
 - Nullable fields are always present in responses and come back as `null`, never omitted. Fields that exist only in some situations (for example the attribution fields of a matched install) are omitted when they do not apply; the route pages say which.
-- `GET /api/v1/links` and the [raw export routes](/api/export/) return one page at a time, `{data, next_cursor}`: pass `next_cursor` back as `cursor` until it is `null`. The export routes also filter by time with `since` and `until`, and the links list takes `include_deleted`. `GET /api/v1/link-templates` returns every template in one page.
+- `GET /api/v1/links` and the [raw export routes](/api/export/) return one page at a time, `{data, next_cursor}`: pass `next_cursor` back as `cursor` until it is `null`. The export routes also filter by time with `since` and `until`, and the links list takes `include_deleted`.
 - Routes do not use trailing slashes.
 
 ## Health check
