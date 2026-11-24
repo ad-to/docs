@@ -209,7 +209,7 @@ A group is a named set of your permanent links: a campaign, a partner, a channel
 }
 ```
 
-`name` is 1 to 100 characters. `link_count` counts the group's links that are not deleted. Groups use the links scopes, reading needs `links:read` and changing `links:write`, and need an account key: names and groups are your private notes, so an SDK key (`adto_pub_…`, which ships inside your app) gets `name: null` and `group_ids: []` on every link, and `403 account_key_required` when it sends either field, filters with `group` or calls a link-groups route. A deleted link keeps its groups for a restore; a link deleted permanently leaves them.
+`name` is 1 to 100 characters. `link_count` counts the group's links that are not deleted. Groups use the links scopes, reading needs `links:read` and changing `links:write`, and need an account key: names and groups are your private notes, so an SDK key (`adto_pub_…`, which ships inside your app) gets `name: null` and `group_ids: []` on every link. Filtering with `group` or reading a group answers `403 account_key_required`. An SDK key's changes are checked for scope first: without `links:write`, changing a group answers `403 insufficient_scope`, as any `/api/v1/links` change does. With `links:write`, changing a group, or sending either field to a create, change or upsert, answers `403 account_key_required`; in a bulk create only the links that send them fail, each with an `errors` entry whose `code` is `account_key_required`, and the call still answers `200`. A deleted link keeps its groups for a restore; a link deleted permanently leaves them.
 
 ## List and read links
 
