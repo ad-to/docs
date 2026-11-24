@@ -386,10 +386,11 @@ Owner-only CMS routes under `/api/admin/blog` and the public site routes under `
 | `DELETE /api/admin/blog/messages/:id` | owner | | `200 {ok: true}`; `404 Message not found` |
 | `GET /api/blog/posts?search=&category=&limit=&offset=` | public | Published posts, newest first; `limit` default 12, max 50; `search` matches title or excerpt; `category` is a category slug. | `200 {posts, total, limit, offset}` |
 | `GET /api/blog/posts/:slug` | public | A published post. | `200 {post}`; `404 Post not found` |
+| `GET /api/blog/posts/:slug/related` | public | Up to three other published posts for the post's read-next links: its own category first, then the newest. The post page's HTML carries the same links. | `200 {posts: [{slug, title}]}`; `404 Post not found` |
 | `GET /api/blog/categories` | public | Categories with at least one published post. | `200 {categories}` |
 | `POST /api/contact` | public | `{name (1-100), email (valid, ≤200), subject (1-150), message (10-2000), turnstile_token?}`. Stored only; no email is sent. | `201 {ok: true}`; `400 Name must be 1-100 characters`, `A valid email is required`, `Subject must be 1-150 characters`, `Message must be 10-2000 characters`; `429 Too many messages — try again later`; `403 turnstile_failed` (`Verification failed. Please try again.`, or `Verification is unavailable right now. Please try again.` when siteverify cannot be reached) where the deployment runs [Turnstile](#turnstile) and the token is missing, spent or not for this form |
 
-The three public `GET /api/blog/…` routes answer with `X-Robots-Tag: noindex`: `robots.txt` lets crawlers fetch them, since the blog pages load their posts from them, but the JSON is not a page to index. See [robots.txt and sitemap.xml](/api/well-known-seo-and-routing/#robotstxt-and-sitemapxml).
+The public `GET /api/blog/…` routes answer with `X-Robots-Tag: noindex`: `robots.txt` lets crawlers fetch them, since the blog pages load their posts from them, but the JSON is not a page to index. See [robots.txt and sitemap.xml](/api/well-known-seo-and-routing/#robotstxt-and-sitemapxml).
 
 ## Rate limits
 
