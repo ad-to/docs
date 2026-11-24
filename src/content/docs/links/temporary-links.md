@@ -73,7 +73,7 @@ The daily cron at 03:17 UTC deletes temporary links whose `expires_at` is more t
 | Action | Removes the link | Removes its data |
 |---|---|---|
 | Trash icon on a row, `DELETE /api/v1/temp-links/{slug}`, `deleteTempLink` | Hides it (404 on tap), restorable from the **Deleted** view or with `POST /api/v1/temp-links/{slug}/restore` | No |
-| **Delete permanently** on the **Deleted** view, `?permanent=true`, `deleteTempLink(slug, permanently: true)` | Yes | Yes: its clicks, and the installs, events and app opens attributed to it, which then disappear from the Overview |
+| **Delete permanently** on the **Deleted** view, `?permanent=true`, `deleteTempLink(slug, permanently: true)` (an owner in the dashboard, or the account key) | Yes | Yes: its clicks, and the installs, events and app opens attributed to it, which then disappear from the Overview |
 | **Delete expired** (confirm "Delete all expired temporary links? They leave this list. Their clicks, installs and revenue stay in your stats, and you can restore them from Deleted.") | Hides every link whose `expires_at` has passed, restorable from **Deleted** | No: clicks and attributed installs stay in the analytics |
 | Daily delete | Hides links expired more than 24 hours ago, restorable | No |
 

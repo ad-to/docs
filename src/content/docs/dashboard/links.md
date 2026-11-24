@@ -83,7 +83,7 @@ Three tabs, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, sit abov
 
 All per-link numbers are all-time totals, which is why they do not match the Overview's 7-, 30- or 90-day figures.
 
-Each row ends with **Edit** (a pencil; the label reads "Edit (custom social preview)" and the icon carries a dot when the link has its own preview), **Clone** (a copy icon with a plus), **Over time** (a line chart: opens the link alone in an unsaved [report](/dashboard/reports/)), **Screens after open** (a numbered list), **Pause** or **Resume**, **Archive** or **Unarchive**, and **Delete** (a trash can). On the **Deleted** view the row offers **Restore** and **Delete permanently** instead. See [Pausing, archiving and deleting](#pausing-archiving-and-deleting).
+Each row ends with **Edit** (a pencil; the label reads "Edit (custom social preview)" and the icon carries a dot when the link has its own preview), **Clone** (a copy icon with a plus), **Over time** (a line chart: opens the link alone in an unsaved [report](/dashboard/reports/)), **Screens after open** (a numbered list), **Pause** or **Resume**, **Archive** or **Unarchive**, and **Delete** (a trash can). On the **Deleted** view the row offers **Restore** and, for owners, **Delete permanently** instead. See [Pausing, archiving and deleting](#pausing-archiving-and-deleting).
 
 **Clone** asks for the copy's slug, suggesting `{slug}-copy`; left blank, it is generated. A slug cannot be changed later. It then makes the new link from that one and opens it in the link drawer, where you can change the rest before sharing it. The copy keeps:
 - the destination and app;
@@ -211,7 +211,7 @@ The last row sets the same `fallback_url` field, with the same labels, as the cr
 | **Archive** | Moves the link to the **Archived** view. It keeps working and counting; archiving only tidies the list. **Unarchive** moves it back. |
 | **Delete** | Asks "Delete link "{slug}"? It stops working and leaves this list. Its clicks, installs and revenue stay in your stats, and you can restore it from Deleted." The link answers 404, moves to the **Deleted** view, and keeps its slug: creating a link with that slug fails until you restore it or delete it permanently. Thirty days after the delete, its clicks and app opens lose their device data (IP hash, device id, user agent), the same anonymisation retention applies after `RETENTION_DAYS`; the counts stay. |
 | **Restore** | On the **Deleted** view: the link works again, with its history. |
-| **Delete permanently** | On the **Deleted** view; see below. |
+| **Delete permanently** | On the **Deleted** view, for owners only: it takes the link's history. See below. |
 
 ### Delete permanently
 

@@ -56,7 +56,7 @@ final one = await adto.getLink('spring-sale');
 await adto.deleteLink('spring-sale');
 ```
 
-`deleteLink` stops the link and hides it: it answers 404 and leaves the lists, while its clicks and the installs, events and app opens attributed to it stay, and the dashboard can restore it. `deleteLink(slug, permanently: true)` also deletes that history, so the dashboard totals drop with it; that cannot be undone. An unknown or deleted slug answers 404 (`Link not found`) for `getLink`, `updateLink` and `deleteLink`. Pausing, expiring and archiving are done from the dashboard, the REST API or the MCP server; `AdtoLink` reports them in `disabledAt`, `expiresAt`, `expiredUrl` and `archivedAt`.
+`deleteLink` stops the link and hides it: it answers 404 and leaves the lists, while its clicks and the installs, events and app opens attributed to it stay, and the dashboard can restore it. `deleteLink(slug, permanently: true)` also deletes that history, so the dashboard totals drop with it; that cannot be undone, and it needs the account key: with an SDK key the server refuses it (`403 account_key_required`), since an app ships its SDK key. An unknown or deleted slug answers 404 (`Link not found`) for `getLink`, `updateLink` and `deleteLink`. Pausing, expiring and archiving are done from the dashboard, the REST API or the MCP server; `AdtoLink` reports them in `disabledAt`, `expiresAt`, `expiredUrl` and `archivedAt`.
 
 ## Temporary links
 
