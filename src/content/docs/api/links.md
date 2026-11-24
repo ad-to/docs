@@ -310,10 +310,10 @@ The copy is checked like a create.
 
 The dashboard's **Clone** on a link's row and the MCP `clone_link` tool use the same route.
 
-`DELETE /api/v1/links/:slug?permanent=true` deletes the link and its history in one atomic batch, on a live or a deleted link: the events of installs it attributed and events denormalized to its slug, its app opens and referrals, the installs attributed through its clicks (customers that pointed at those installs keep their identity but lose `first_install_id`), its clicks, then the link. The dashboard's totals drop accordingly, and the slug is free again. This cannot be undone; see [Dashboard: Links](/dashboard/links/).
+`DELETE /api/v1/links/:slug?permanent=true` deletes the link and its history in one atomic batch, on a live or a deleted link: the events of installs it attributed and events denormalized to its slug, its app opens and referrals, the installs attributed through its clicks (customers that pointed at those installs keep their identity but lose `first_install_id`), its clicks, then the link. The dashboard's totals drop accordingly, and the slug is free again. This cannot be undone; see [Dashboard: Links](/dashboard/links/). Only an owner deletes permanently: `?permanent=true` needs the account key: an SDK key is refused with `403 account_key_required`, since team members can read SDK keys in Settings. An SDK key still soft deletes.
 
 :::note
-The dashboard's cookie-session route `DELETE /api/admin/links/:slug` (with `?permanent=1` for the hard delete) answers `{"deleted": true}` even for a slug that does not exist. Only the v1 route returns 404.
+The dashboard's cookie-session route `DELETE /api/admin/links/:slug` (with `?permanent=1` for the hard delete, which answers `403 insufficient_role` to a member or viewer) answers `{"deleted": true}` even for a slug that does not exist. Only the v1 route returns 404.
 :::
 
 ## Temporary links
@@ -371,7 +371,7 @@ adto POST /api/v1/temp-links '{"target": "https://example.com/build/1234", "ttlS
 |---|---|
 | `GET /api/v1/temp-links/:slug` | `200` TempLink, or `404 {"error": {"code": "not_found", "message": "Temporary link not found"}}`. |
 | `PUT /api/v1/temp-links/:slug` | Partial update of `target`, the three `og_*` fields and the lifecycle fields; absent keeps, `null` or `""` clears. Returns `200` TempLink, or `404 {"error": {"code": "not_found", "message": "Temporary link not found"}}`. The TTL and `expires_at` cannot be changed. |
-| `DELETE /api/v1/temp-links/:slug` | `200 {"success": true}` after a soft delete, as for a permanent link; `?permanent=true` deletes the link with the same history cascade. `404 {"error": {"code": "not_found", "message": "Temporary link not found"}}` for a slug that is not yours. |
+| `DELETE /api/v1/temp-links/:slug` | `200 {"success": true}` after a soft delete, as for a permanent link; `?permanent=true` deletes the link with the same history cascade, and needs the account key: an SDK key is refused with `403 account_key_required`, since team members can read SDK keys in Settings. `404 {"error": {"code": "not_found", "message": "Temporary link not found"}}` for a slug that is not yours. |
 | `POST /api/v1/temp-links/:slug/restore` | `200` TempLink after restoring a deleted temporary link, or `404`. |
 
 There is no list route for temporary links in the v1 API. The dashboard's `GET /api/admin/links` returns them under `temp_links`.

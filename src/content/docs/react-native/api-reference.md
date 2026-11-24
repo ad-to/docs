@@ -91,7 +91,7 @@ Link URLs the SDK recognises: `https://{username}.{root}/{slug}`, `{baseHost}/r/
 | `updateLink` | `updateLink(slug: string, fields: AdtoLinkFields): Promise<AdtoLink>` | An omitted field keeps its value; `''` clears it. |
 | `getLinks` | `getLinks(options?: { limit?: number; cursor?: string }): Promise<AdtoLinkPage>` | One page, newest first. |
 | `getLink` | `getLink(slug: string): Promise<AdtoLink>` | |
-| `deleteLink` | `deleteLink(slug: string, options?: { permanently?: boolean }): Promise<void>` | The link's history stays unless `permanently`. |
+| `deleteLink` | `deleteLink(slug: string, options?: { permanently?: boolean }): Promise<void>` | The link's history stays unless `permanently`, which needs the account key (`403 account_key_required` with an SDK key). |
 | `createTempLink` | `createTempLink(input?: { target?: string; slug?: string; ttlSeconds?: number; ogTitle?: string; ogDescription?: string; ogImageUrl?: string }): Promise<AdtoTempLink>` | `ttlSeconds` defaults to 900. |
 | `updateTempLink` | `updateTempLink(slug: string, fields: { target?: string; ogTitle?: string; ogDescription?: string; ogImageUrl?: string }): Promise<AdtoTempLink>` | |
 | `getTempLink` | `getTempLink(slug: string): Promise<AdtoTempLink>` | |

@@ -48,7 +48,7 @@ The AdTo plugin for Claude Code bundles the same server with four skills: links 
 | `create_links` | Up to 100 links in one call; those without a slug get generated ones. Each succeeds or fails on its own; the result lists `created` and `errors`, with the index, slug and error code of each failure. |
 | `update_link` | Changes the given fields of a link. A missing field keeps its value; `null` or `""` clears it. |
 | `upsert_link` | Updates the link with this `external_id` (else this `slug`), or creates it; one of the two is required, and a link created by `external_id` alone gets a generated slug. For syncing links from your own system. |
-| `delete_link` | Deletes a link: it answers 404 and its history stays. With `permanent: true` its clicks, attributed installs, events and opens go too. |
+| `delete_link` | Deletes a link: it answers 404 and its history stays. With `permanent: true` its clicks, attributed installs, events and opens go too; that needs the account key, not an SDK key. |
 | `restore_link` | Brings back a link deleted without `permanent`. |
 | `clone_link` | Makes a new link from one by slug: its target, app, preview, routing, rules, tracking and switches, under `new_slug` or a generated one. See [Clone](/api/links/#clone). |
 | `create_temp_link` | A link that expires after `ttlSeconds`, 60 to 2,592,000, default 900. Without a slug it gets a generated one. |
