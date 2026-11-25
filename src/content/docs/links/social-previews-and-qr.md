@@ -26,9 +26,16 @@ Search engines are bots too: Google, Bing and the other crawlers on the list may
 | `og:type` | `article` when the title and the description both come from the link, the temporary link or the app; `website` when either one is the generic copy |
 | `og:site_name` | The app's name. Omitted for an account without an app. |
 | `twitter:card` | `summary_large_image` when an image exists, else `summary` |
+| `al:ios:url`, `al:android:url` | [App Links](#app-links-on-facebook): the app's custom URL scheme opening the link's in-app route, `myapp://products/42?adto_l=acme/welcome` (a route on the shared URL, `adto_deeplink`, wins over the link's), or `myapp://acme/welcome?adto_l=acme/welcome` without one. Omitted when the app has no scheme for that platform. |
+| `al:ios:app_store_id`, `al:android:package`, `al:ios:app_name`, `al:android:app_name` | The App Store id from the app's App Store URL, its Android package, and its name. |
+| `fb:app_id` | The app's **Facebook App ID**, when it is a number. |
 | `robots` | `noindex`, for every crawler except the platforms' link-preview fetchers: Facebook, X, LinkedIn, Pinterest, Slack, Discord, WhatsApp, iMessage, Telegram, Reddit, Bluesky, Mastodon, Embedly, Iframely, Teams and any agent that says `preview` |
 
 Each field falls back on its own, so a link with only a custom title still takes the app's image. The body holds a plain link to the target ("Redirecting to {target}") or, without one, "Open this link on your phone to continue in the app."; there is no meta refresh. The app used for the fallbacks is the link's app, or the account's default app for links without one and for temporary links.
+
+## App Links on Facebook
+
+The page carries [App Links](https://developers.facebook.com/docs/applinks) tags, which Facebook and Messenger read to open the installed app straight from a post or a message instead of the link's web page. They use the same custom URL scheme a tap would: set the **iOS app scheme** and **Android app scheme** on the [Apps page](/dashboard/apps/), and the link's deep-link paths decide the screen. The URL carries `adto_l`, so the SDK knows which link opened the app. Such an open never reaches AdTo's servers, so it records no tap of its own; where the app is not installed, Facebook follows the link as usual and the tap is counted. Each tag is left out when its value is missing or cannot be trusted: a scheme the browser handles itself, an App Store URL without an id, a Facebook App ID that is not a number.
 
 ## Pinterest Rich Pins
 
