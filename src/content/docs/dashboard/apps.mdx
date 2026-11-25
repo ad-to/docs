@@ -62,6 +62,19 @@ Section text: "The app's name and the web page links fall back to when the app c
 | **App name** | Placeholder `My App`. | Required when creating: `App name is required`. When editing, an emptied name keeps the old one. |
 | **Fallback URL (optional)** | Placeholder `https://myapp.com`. The web page a tap lands on when nothing else applies: desktop visitors (instead of the QR page) and phones with no store URL to go to. Links created with **App fallback URL (default)** inherit it. | http(s), or `fallback_url must be a valid http(s) URL`. |
 
+### Desktop
+
+Section text: "Where a click on a computer goes. Each link can choose for itself in its Advanced options."
+
+Two choices, each a card with a radio button:
+
+| Choice | What a desktop click does |
+|---|---|
+| **Fallback URL** (default) | Opens the **Fallback URL** from General. Until one is set, the click gets the QR page. |
+| **QR page** | Shows [the QR page](/links/social-previews-and-qr/#the-qr-page): a code to scan with a phone, with the App Store and Google Play badges, so a desktop click can still become an install. The Fallback URL becomes its link on to the website. |
+
+Stored as `desktop_qr`. Phones are never affected. A link's own **Desktop visitors see** setting wins over the app's.
+
 ### iOS
 
 Section text: "Bundle ID and Team ID generate your Universal Links file, and let a tap inside Instagram, TikTok and other in-app browsers open the app (through an “Open in app” page). The store URL and scheme route taps." With both saved, iPhone taps inside in-app browsers get [the in-app browser page](/links/how-a-tap-is-routed/#the-in-app-browser-page-ios); there is no switch for it.

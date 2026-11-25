@@ -28,6 +28,7 @@ Deleting an app is not in the API: it unbinds the app's links and drops its webh
 | `android_sha256_fingerprints` | Signing certificate SHA-256s, `AA:BB:…` (32 pairs): the Play App Signing one, plus your upload and debug keys for testing. On `PUT` the list replaces the old one. |
 | `android_store_url` | A `play.google.com` URL. |
 | `fallback_url` | Where desktop visitors and links without a target go. |
+| `desktop_qr` | `true`: desktop visitors get [the QR page](/links/social-previews-and-qr/#the-qr-page) even with a `fallback_url`, which becomes the page's link on to the website. `false` (default): the `fallback_url` first. |
 | `ios_app_scheme`, `android_app_scheme` | A custom URL scheme without `://`. |
 | `og_title`, `og_description`, `og_image_url` | The default social preview of the app's links. |
 | `mobile_interstitial`, `ios_tap_to_store`, `fb_app_id`, OEM store links, attribution windows, `mmp_handoff`, `mmp_pid`, `fraud_block_rules` | As in the [Apps editor](/dashboard/apps/). |

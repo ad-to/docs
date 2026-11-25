@@ -151,7 +151,7 @@ Owners can customize the account's link QR previews and downloads:
 - **Logo (PNG or JPG):** upload a file up to 2 MB. AdTo resizes it to fit the center without stretching. **Remove logo** clears it.
 
 The live preview uses a sample link. Choose **Save QR style** to apply the design to
-new previews and SVG/PNG downloads across the account. **Reset to default** prepares
+new previews, SVG/PNG downloads and the code on the desktop QR page across the account. **Reset to default** prepares
 black on white, square shapes and no logo; save to apply the reset. Members and
 viewers can view the style, but only owners can change it.
 

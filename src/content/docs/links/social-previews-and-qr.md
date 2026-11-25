@@ -127,22 +127,24 @@ pause or expiry settings. Deleted and unknown links return 404. Downloads curren
 support permanent links with a four-module margin. In
 [Settings → QR code style](/dashboard/settings/#qr-code-style), owners can change the
 pattern, corner borders and centers, colors, and PNG/JPG logo. The saved style applies
-to both downloads and the link drawer preview. Already downloaded images retain
+to downloads, the link drawer preview and [the QR page](#the-qr-page). Already downloaded images retain
 their design. Temporary links and bulk downloads are not supported.
 
 ## The QR page
 
-Desktop visitors land on the QR page when no other destination applies: no `adto_redirect` or `adto_fallback` on the URL, no custom desktop fallback on the link, no Fallback URL on the app. Mobile visitors see it only when they have no destination at all (no store URL, no custom redirect, no app fallback, no target). The visit records a click.
+Desktop visitors land on the QR page when the link or its app chooses it (**QR page** under **Desktop**, the `desktop_qr` field), or when no other destination applies: no `adto_redirect` or `adto_fallback` on the URL, no custom desktop fallback on the link, no Fallback URL on the app. A URL's `adto_redirect` or `adto_fallback` still wins over the QR page. Mobile visitors see it only when they have no destination at all (no store URL, no custom redirect, no app fallback, no target). The visit records a click.
+
+The page has two columns, which stack on screens narrower than 720 px. On the left, a phone-shaped card shows what the link opens; on the right, the code and the stores.
 
 | Element | Content |
 |---|---|
-| Brand line | The app's name, else "AdTo" |
-| QR code | An SVG (220 px) of the canonical link URL, `https://acme.adto.app/welcome`, without any query string. Scanning it is a fresh mobile tap with its own click and store tag. |
-| Heading | "Scan to open on your phone", then "Point your camera at the code to continue to {host} in the app." when a target exists |
-| Store badges | Apple's **Download on the App Store** badge (the US/UK one in every language) and Google's **Get it on Google Play** badge in the page's language, linking to the plain store URLs without an attribution tag |
+| Card | The app's store icon (else the app's initial on a dark tile), the app's name (else "AdTo"), and the link's social preview title and description (else the app's). The preview image stays in the page's Open Graph tags: the page loads no image from another host. |
+| QR code | An SVG in the account's [QR code style](/dashboard/settings/#qr-code-style) (shapes, colors and logo, as in downloads), of the link URL, `https://acme.adto.app/welcome`, with the tapped URL's parameters: `adto_*` (the in-app route, overrides, tracking values), `utm_*` and your own (a share-time `ref`). When they come to more than 100 characters, the code holds a short handoff instead (`?adto_qr=` and the desktop click), and the scan picks up every parameter from that click for 24 hours. AdTo's internal markers, `adto_nt`, `adto_click` and `adto_b` are left out. Scanning it opens the same screen with the same campaign and referral values, as a fresh mobile tap with its own click and store tag. The code is drawn larger as it gets denser, so a phone can read it off the screen. |
+| Heading | "Scan to download the app" |
+| Store badges | Under an "or" rule: Apple's **Download on the App Store** badge (the US/UK one in every language) and Google's **Get it on Google Play** badge in the page's language, linking to the plain store URLs without an attribution tag |
 | Scheme buttons | **Open in the iOS app** and **Open in the Android app**, one per configured scheme, or a single **Open in app** when both platforms share a scheme (the Android deep-link path is preferred). These carry no `adto_click`. |
-| Continue link | "Continue to {host} on desktop", only when the link has a target or inherits an app fallback |
+| Continue link | "Continue to {host} on desktop": where the redirect would have gone, the link's fallback URL, else the app's Fallback URL, else the link's target; left out when there is none |
 | Footer | "Powered by AdTo" when the page is branded with an app name |
 | Search engines | The page says `noindex`, like every page a link shows people |
 
-The texts are in the visitor's language (English, German, French, Spanish or Italian), and which button the visitor took is recorded on the click; see [The link pages](/links/how-a-tap-is-routed/#the-link-pages). The page's own Open Graph tags come from the app only (title, description, image and the canonical `og:url`); link-level previews do not apply here, because unfurlers never reach this page. The scheme buttons use the link's deep-link paths or a `adto_deeplink` from the URL; without a path they open `scheme://acme/welcome`.
+The texts are in the visitor's language (English, German, French, Spanish or Italian), and which button the visitor took is recorded on the click; see [The link pages](/links/how-a-tap-is-routed/#the-link-pages). The page's own Open Graph tags come from the link's social preview, else the app's (title, description, image and the canonical `og:url`); unfurlers never reach this page, so they only matter to a browser that saves or shares it. The scheme buttons use the link's deep-link paths or a `adto_deeplink` from the URL; without a path they open `scheme://acme/welcome`.
