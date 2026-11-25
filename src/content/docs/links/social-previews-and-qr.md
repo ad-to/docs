@@ -127,7 +127,7 @@ pause or expiry settings. Deleted and unknown links return 404. Downloads curren
 support permanent links with a four-module margin. In
 [Settings → QR code style](/dashboard/settings/#qr-code-style), owners can change the
 pattern, corner borders and centers, colors, and PNG/JPG logo. The saved style applies
-to both downloads and the link drawer preview. Already downloaded images retain
+to downloads, the link drawer preview and [the QR page](#the-qr-page). Already downloaded images retain
 their design. Temporary links and bulk downloads are not supported.
 
 ## The QR page
@@ -139,7 +139,7 @@ The page has two columns, which stack on screens narrower than 720 px. On the le
 | Element | Content |
 |---|---|
 | Card | The app's store icon (else the app's initial on a dark tile), the app's name (else "AdTo"), and the link's social preview title and description (else the app's). The preview image stays in the page's Open Graph tags: the page loads no image from another host. |
-| QR code | An SVG of the link URL, `https://acme.adto.app/welcome`, with the tapped URL's parameters: `adto_*` (the in-app route, tracking values, overrides), `utm_*` and your own (a share-time `ref`), up to 1,024 characters. AdTo's internal markers, `adto_nt`, `adto_click` and `adto_b` are left out. Scanning it opens the same screen with the same campaign and referral values, as a fresh mobile tap with its own click and store tag. |
+| QR code | An SVG in the account's [QR code style](/dashboard/settings/#qr-code-style) (shapes, colors and logo, as in downloads), of the link URL, `https://acme.adto.app/welcome`, with the tapped URL's parameters: `adto_*` (the in-app route, tracking values, overrides), `utm_*` and your own (a share-time `ref`), up to 1,024 characters. AdTo's internal markers, `adto_nt`, `adto_click` and `adto_b` are left out. Scanning it opens the same screen with the same campaign and referral values, as a fresh mobile tap with its own click and store tag. |
 | Heading | "Scan to download the app" |
 | Store badges | Under an "or" rule: Apple's **Download on the App Store** badge (the US/UK one in every language) and Google's **Get it on Google Play** badge in the page's language, linking to the plain store URLs without an attribution tag |
 | Scheme buttons | **Open in the iOS app** and **Open in the Android app**, one per configured scheme, or a single **Open in app** when both platforms share a scheme (the Android deep-link path is preferred). These carry no `adto_click`. |
