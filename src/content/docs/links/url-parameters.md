@@ -112,9 +112,20 @@ So `https://shop.example.com/sale` behind a link with `utm_source=newsletter` op
 
 Keys without the `adto_` or `utm_` prefix, such as a share-time `ref` or an `item`, never change routing. They still reach the app and, when the link asks, the website.
 
-**The app.** A warm open gives the app the whole opened URL (`click.queryParameters['productId']`). After a deferred install the verdict carries them as `click_params.query`, `{"productId": "42"}`. The rules for that copy:
-- **Included:** the first value of each key, at most 20 keys and 2 KB.
+**The app.** After a deferred install the verdict carries them as `click_params.query`, `{"productId": "42"}`. The SDKs expose that as `clickParams.query` (flutter_adto 1.2 and later, react-native-adto 1.0). On a `medium`-confidence install, which routes the user without crediting the link (`matched: false`), they are on `routing.clickParams.query` instead. On a warm open the SDKs fill the same field from the opened URL with the server's rules, so the app reads the same keys in both cases:
+
+```dart
+adto.onLinkClick.listen((click) => show(click.clickParams?.query)); // installed: {productId: 42}
+adto.onAppInstalled.listen((install) => show(
+  (install.clickParams ?? install.routing?.clickParams)?.query,     // after the install: the same
+));
+```
+
+The rules:
+- **Included:** each key at its first valid value, the pairs taken in URL order, at most 20 keys and 2 KB.
 - **Dropped:** a key over 64 characters or a value over 256, `utm_*` keys (they are on the click already), and AdTo's [reserved parameters](#reserved-parameters).
+
+A warm open still has the whole opened URL, unfiltered, in `click.queryParameters`.
 
 **The website.** Turn on **Pass the link's query parameters to website destinations** in the link drawer, under Tracking. Over the API, set `forward_query: true` on the link. The tap's own parameters are then copied onto every web destination that `utm_*` values reach (see above):
 
