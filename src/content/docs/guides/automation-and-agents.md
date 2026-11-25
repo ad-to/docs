@@ -21,10 +21,34 @@ Keep the key in an environment variable such as `ADTO_API_KEY`. Send it only to 
 AdTo runs a [Model Context Protocol](https://modelcontextprotocol.io) server at `https://api.adto.app/mcp`. Agents such as Claude Code, Claude Desktop, Cursor and VS Code connect to it and call AdTo tools directly, with no request signing.
 
 - **Transport:** Streamable HTTP. Every answer is plain JSON. There is no session and no event stream, so `GET /mcp` answers 405.
-- **Key:** send `Authorization: Bearer <account key>`. An SDK key also works, but only within its scopes and without the account tools marked below.
+- **Sign-in:** add the server with no key and your browser opens to sign in to AdTo and approve it (OAuth with PKCE). Or send `Authorization: Bearer <account key>`. An SDK key also works, but only within its scopes and without the account tools marked below.
 - **Limits:** each MCP message counts once against the account's 3000 requests a minute. Each link or attribution tool then makes one API call, which counts again, exactly as the same call from a script would.
 
 Connect Claude Code:
+
+```bash
+claude mcp add --transport http adto https://api.adto.app/mcp
+```
+
+The first time Claude Code uses the server, it opens AdTo in your browser. If it does not, run `/mcp`, pick `adto` and choose **Authenticate**. Sign in, pick the account, and choose **Allow**.
+
+Other clients take the same URL and sign in the same way the first time they use it:
+
+- **Codex:** `codex mcp add adto --url https://api.adto.app/mcp`, then `codex mcp login adto`.
+- **Cursor:** in `~/.cursor/mcp.json`, or `.cursor/mcp.json` in a project: `{"mcpServers": {"adto": {"url": "https://api.adto.app/mcp"}}}`.
+- **VS Code:** in `.vscode/mcp.json`: `{"servers": {"adto": {"type": "http", "url": "https://api.adto.app/mcp"}}}`.
+- **Claude (desktop and web):** **Settings → Connectors → Add custom connector**, with the URL.
+- **Any other MCP client:** add `https://api.adto.app/mcp` as a remote Streamable HTTP server with no headers.
+
+**Settings → Connected apps** also has a prompt to copy into any agent; the agent adds the server itself.
+
+The connection works with your role in that account. A viewer can only read. A member can change links and apps, but cannot delete a link permanently or erase personal data. It keeps working until one of these happens:
+
+- someone disconnects it in **Settings → Connected apps** (the owner can disconnect anyone's, everyone else only their own)
+- you leave the account
+- you sign out everywhere
+
+On a server or in CI, where no browser can open, send the account key instead:
 
 ```bash
 claude mcp add --transport http adto https://api.adto.app/mcp \
