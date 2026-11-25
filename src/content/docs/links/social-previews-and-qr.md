@@ -139,11 +139,11 @@ The page has two columns, which stack on screens narrower than 720 px. On the le
 | Element | Content |
 |---|---|
 | Card | The app's store icon (else the app's initial on a dark tile), the app's name (else "AdTo"), and the link's social preview title and description (else the app's). The preview image stays in the page's Open Graph tags: the page loads no image from another host. |
-| QR code | An SVG of the canonical link URL, `https://acme.adto.app/welcome`, without any query string. Scanning it is a fresh mobile tap with its own click and store tag. |
+| QR code | An SVG of the link URL, `https://acme.adto.app/welcome`, with the tapped URL's parameters: `adto_*` (the in-app route, tracking values, overrides), `utm_*` and your own (a share-time `ref`), up to 1,024 characters. AdTo's internal markers, `adto_nt`, `adto_click` and `adto_b` are left out. Scanning it opens the same screen with the same campaign and referral values, as a fresh mobile tap with its own click and store tag. |
 | Heading | "Scan to download the app" |
 | Store badges | Under an "or" rule: Apple's **Download on the App Store** badge (the US/UK one in every language) and Google's **Get it on Google Play** badge in the page's language, linking to the plain store URLs without an attribution tag |
 | Scheme buttons | **Open in the iOS app** and **Open in the Android app**, one per configured scheme, or a single **Open in app** when both platforms share a scheme (the Android deep-link path is preferred). These carry no `adto_click`. |
-| Continue link | "Continue to {host} on desktop": the link's fallback URL when the QR page replaced it, else the link's target, else the app's Fallback URL; left out when there is none |
+| Continue link | "Continue to {host} on desktop": where the redirect would have gone, the link's fallback URL, else the app's Fallback URL, else the link's target; left out when there is none |
 | Footer | "Powered by AdTo" when the page is branded with an app name |
 | Search engines | The page says `noindex`, like every page a link shows people |
 
