@@ -30,7 +30,17 @@ Connect Claude Code:
 claude mcp add --transport http adto https://api.adto.app/mcp
 ```
 
-The first time Claude Code uses the server, it opens AdTo in your browser. If it does not, run `/mcp`, pick `adto` and choose **Authenticate**. Sign in, pick the account, and choose **Allow**. Other clients that support MCP sign-in (Claude, Cursor, VS Code) only need the URL.
+The first time Claude Code uses the server, it opens AdTo in your browser. If it does not, run `/mcp`, pick `adto` and choose **Authenticate**. Sign in, pick the account, and choose **Allow**.
+
+Other clients take the same URL and sign in the same way the first time they use it:
+
+- **Codex:** `codex mcp add adto --url https://api.adto.app/mcp`, then `codex mcp login adto`.
+- **Cursor:** in `~/.cursor/mcp.json`, or `.cursor/mcp.json` in a project: `{"mcpServers": {"adto": {"url": "https://api.adto.app/mcp"}}}`.
+- **VS Code:** in `.vscode/mcp.json`: `{"servers": {"adto": {"type": "http", "url": "https://api.adto.app/mcp"}}}`.
+- **Claude (desktop and web):** **Settings → Connectors → Add custom connector**, with the URL.
+- **Any other MCP client:** add `https://api.adto.app/mcp` as a remote Streamable HTTP server with no headers.
+
+**Settings → Connected apps** also has a prompt to copy into any agent; the agent adds the server itself.
 
 The connection works with your role in that account. A viewer can only read. A member can change links and apps, but cannot delete a link permanently or erase personal data. It keeps working until one of these happens:
 
