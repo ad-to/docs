@@ -136,11 +136,13 @@ Desktop visitors, and mobile visitors with no destination, take this chain. The 
 |---|---|
 | 1 | `adto_redirect_macos`, `adto_redirect_windows` or `adto_redirect_linux` for the visitor's OS, else `adto_redirect` |
 | 2 | `adto_fallback` |
-| 3 | A matching rule's `fallback_url`, else the link's **If the app can't open the link (desktop) > Custom URL** (`fallback_url`) |
-| 4 | The app's Fallback URL |
+| 3 | A matching rule's `fallback_url`, else the link's **If the app can't open the link (desktop) > Custom URL** (`fallback_url`), unless the desktop page is the QR page |
+| 4 | The app's Fallback URL, unless the desktop page is the QR page |
 | 5 | The branded QR page |
 
-Desktop never redirects to the link's target automatically. The target only appears on the QR page as the "Continue to {host} on desktop" link, and only when a target exists. The QR page encodes the canonical link URL, lists the store buttons and the "Open in app" buttons, and is described in [Social previews and the QR page](/links/social-previews-and-qr/).
+**The desktop page.** On a computer, the link's **Desktop visitors see** setting (`desktop_qr`), else its app's **Desktop** setting, chooses between the website and the QR page. The app's setting is **Fallback URL** unless you change it. With **QR page**, rows 3 and 4 are skipped, so a desktop visitor gets the QR page even when a fallback URL is set, and that URL becomes the page's "Continue to {host} on desktop" link. A phone is never sent to the QR page by this setting: it sees the page only with no destination at all.
+
+Desktop never redirects to the link's target automatically. The target only appears on the QR page as the "Continue to {host} on desktop" link (after the link's own fallback URL, when the QR page replaced it), and only when a target exists. The QR page encodes the canonical link URL, lists the store buttons and the "Open in app" buttons, and is described in [Social previews and the QR page](/links/social-previews-and-qr/).
 
 ## Error pages
 

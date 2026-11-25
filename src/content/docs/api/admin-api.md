@@ -227,7 +227,7 @@ App fields and their validation messages (`400`). Every text field is trimmed be
 | `android_sha256_fingerprints` | Array; each upper-cased and matching `AA:BB:…` (32 pairs); blanks dropped: `SHA-256 fingerprints must be 32 hex byte pairs separated by colons (AA:BB:…)` |
 | `fallback_url` | http(s): `fallback_url must be a valid http(s) URL` |
 | `ios_app_scheme`, `android_app_scheme` | A trailing `://` is stripped; letters, digits, `+`, `-`, `.`; `http`, `https`, `ws`, `wss`, `javascript`, `file`, `data`, `blob`, `about` and `intent` are refused: `ios_app_scheme must be a URL scheme (letters, digits, +, -, .) without :// — e.g. myapp`, `ios_app_scheme must be a custom app scheme — the browser handles http/https/javascript itself, so it can never open the app` (same for Android) |
-| `mobile_interstitial`, `ios_tap_to_store` | Truthy stores 1, else 0 |
+| `mobile_interstitial`, `ios_tap_to_store`, `desktop_qr` | Truthy stores 1, else 0 |
 | `fraud_block_rules` | Array of [fraud rule](/start/fraud-rules/) names that act instead of only flagging; stored each once, in the rule list's order; `[]` by default. Anything else is a 400: `fraud_block_rules must be an array of rule names`, `fraud_block_rules: unknown rule "<name>"`, `fraud_block_rules: click_reuse never earns credit, so it cannot be blocked`. `GET /api/admin/apps` returns it as an array. |
 | `mmp_handoff` | `true` or `false` (anything else is a 400): add `clickid` (and `pid`) to AppsFlyer, Singular and Adjust tracking-link destinations |
 | `mmp_pid` | Optional media source for the handoff: 1 to 100 letters, digits, `.`, `-`, `_` |

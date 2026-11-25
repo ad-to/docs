@@ -60,7 +60,9 @@ These values are stored on every click of the link, can be overridden per tap wi
 
 #### If the app can't open the link (desktop)
 
-**Branded QR page (default)**, or **App fallback URL (default)** when the selected app has one, or **Custom URL** (placeholder `https://web.example.com/page`). Stored as `fallback_url`; must be http(s). This is the last stop for desktop visitors and for phones that have no destination at all. With no custom URL, the tap falls through to the app's Fallback URL and, if there is none, to the QR page.
+First, what a desktop visitor sees: **App setting (website)** or **App setting (QR page)** (the default, following the selected app's **Desktop** setting), **QR page** or **Website**. Stored as `desktop_qr` (`null`, `true`, `false`). The QR page shows a code to scan with a phone and the store badges, with a link on to the website below.
+
+Then **Website:** **No website: QR page (default)**, or **App fallback URL (default)** when the selected app has one, or **Custom URL** (placeholder `https://web.example.com/page`). Stored as `fallback_url`; must be http(s). This is where desktop visitors go (or, with the QR page, the page's link on to the website), and the last stop for phones that have no destination at all. With no custom URL, the tap falls through to the app's Fallback URL and, if there is none, to the QR page. The header chips are `desktop fallback` for a custom URL and `desktop QR page` or `desktop website` for a choice other than the app's.
 
 The complete decision order for a tap is in [How a tap is routed](/links/how-a-tap-is-routed/). In short, on a phone the chain is: custom redirect, then the tagged store, then the app's Fallback URL (which outranks this link's own Fallback URL), then the link's Fallback URL. Desktop visitors are never redirected to the link's Fallback URL automatically; they get a "Continue to {host} on desktop" button on the QR page.
 
@@ -195,7 +197,7 @@ Permanent links only.
 | **iOS deep link path**, **Android deep link path** | Free text, placeholder `products/42?color=black`, with the same server rules as the create form. Each box is disabled, with the placeholder `no scheme set`, while the link's own app has no scheme for that platform, because a path is only used in a scheme URL. The drawer's app preview and fallback default also come from the link's own app. |
 | **If the app isn't installed** | **App stores** (marked **Default**) or **Custom URL** (placeholder `https://promo.example.com/offer`). Sets `redirect_url`. |
 | **Mobile landing pages** | **iOS tap-to-store page** and **Interstitial page**, each **App setting (on)** or **App setting (off)** (the default, following the link's app), **On for this link** or **Off for this link**. See [How a tap is routed](/links/how-a-tap-is-routed/#mobile-delivering-it). |
-| **If the app can't open the link (desktop)** | **Branded QR page**, or **App fallback URL** when the link's app has one (marked **Default**), or **Custom URL** (placeholder `https://web.example.com/page`). Sets `fallback_url`. |
+| **If the app can't open the link (desktop)** | **Desktop visitors see**: **App setting (website)** or **App setting (QR page)** (the default, following the link's app), **QR page for this link** or **Website for this link**; sets `desktop_qr`. Below it, the website (labelled "The QR page's link to the website" while the QR page applies): **None (QR page only)**, or **App fallback URL** when the link's app has one (marked **Default**), or **Custom URL** (placeholder `https://web.example.com/page`); sets `fallback_url`. |
 
 **See where this link goes**, at the bottom of the drawer, routes one tap from an iPhone, an Android phone and a computer through the saved link and lists where each one ends up, without counting any of them. See [Check where a link goes](/links/how-a-tap-is-routed/#check-where-a-link-goes).
 

@@ -39,6 +39,7 @@ Every permanent-link route returns the full object, including fields you never s
   "creative": null,
   "ios_tap_to_store": null,
   "mobile_interstitial": null,
+  "desktop_qr": null,
   "append_click_id": null,
   "forward_query": null,
   "routing_rules": null,
@@ -76,6 +77,7 @@ Every permanent-link route returns the full object, including fields you never s
 | `fallback_url` | string or null | Where desktop visitors go instead of the QR page, and the last mobile fallback. |
 | `label`, `campaign`, `adgroup`, `creative` | string or null | Tracking defaults copied onto every click of this link. A `adto_<field>` query parameter on the tapped URL wins for that tap. See [URL parameters](/links/url-parameters/). |
 | `ios_tap_to_store`, `mobile_interstitial` | boolean or null | This link's iOS tap-to-store page and mobile interstitial. `null` follows the app's setting, and on the hosted service still shows the tap-to-store page to iCloud Private Relay taps when the app's switch is off; `ios_tap_to_store: false` keeps it from those taps too. See [How a tap is routed](/links/how-a-tap-is-routed/#mobile-delivering-it). |
+| `desktop_qr` | boolean or null | What desktop visitors get: `true` the QR page (even with a fallback URL, which becomes the page's link on to the website), `false` the fallback URL first. `null` follows the app's setting. See [How a tap is routed](/links/how-a-tap-is-routed/#desktop-and-the-shared-tail). |
 | `append_click_id` | boolean or null | Whether the link adds `adto_click` to its web destinations, for [`adto.js`](/sdk/web/). `null` is off. |
 | `forward_query` | boolean or null | Whether the link copies the tapped URL's own query parameters onto its web destinations. See [Your own parameters](/links/url-parameters/#your-own-parameters). `null` is off. |
 | `routing_rules` | array or null | Geo and language rules, first match wins. See [Geo and language rules](#geo-and-language-rules). |
@@ -115,6 +117,7 @@ Every permanent-link route returns the full object, including fields you never s
 | `redirect_url`, `fallback_url` | string | no | http(s) URLs. `""` stores `null`. |
 | `label`, `campaign`, `adgroup`, `creative` | string | no | Trimmed; at most 255 characters; no control characters. `""` stores `null`. |
 | `ios_tap_to_store`, `mobile_interstitial` | boolean or null | no | `true` or `false` overrides the app's setting for this link; `null` or absent follows it. Anything else answers `400 Invalid ios_tap_to_store: must be true, false or null (follow the app)`. |
+| `desktop_qr` | boolean or null | no | `true` or `false` overrides the app's desktop setting for this link; `null` or absent follows it. Anything else answers `400 Invalid desktop_qr: must be true, false or null (follow the app)`. |
 | `append_click_id` | boolean or null | no | `true` adds `adto_click=<click id>` to the link's web destinations (never stores, MMP links or schemes); `false` or `null` does not. Anything else answers `400 Invalid append_click_id: must be true, false or null`. |
 | `forward_query` | boolean or null | no | `true` copies the tapped URL's own parameters (not `adto_*` or AdTo's markers; `utm_*` included) onto the link's web destinations, over the destination's own value and the link's `utm_*`. It never copies them onto stores or schemes. `false` or `null` does not. Anything else answers `400 Invalid forward_query: must be true, false or null`. |
 | `routing_rules` | array or null | no | Up to 20 rules; `null` or `[]` stores none. See below. |
