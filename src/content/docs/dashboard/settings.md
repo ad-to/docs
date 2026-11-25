@@ -93,7 +93,7 @@ Keys for [`adto.js`](/sdk/web/) on your website. **New site key** takes a name a
 
 ## Connected apps
 
-AI assistants signed in to AdTo through [MCP](/guides/automation-and-agents/#mcp-server) from the browser, such as Claude Code after `claude mcp add --transport http adto https://api.adto.app/mcp`. The card shows that command. Each app in the list shows its name, who connected it, when it was connected and last used, and **Disconnect**, which ends its access at once. The owner sees and disconnects every app on the account; everyone else sees only their own. An app works with its person's role in the account, so it also stops when they leave the account or sign out everywhere. The card is hidden in support sessions.
+AI assistants signed in to AdTo through [MCP](/guides/automation-and-agents/#mcp-server) from the browser: Claude, Codex, Cursor or any other MCP client. The card shows a prompt to paste into any agent, with **Copy**, and the Claude Code command (`claude mcp add --transport http adto https://api.adto.app/mcp`). Each app in the list shows its name, who connected it (**You** for your own), when it was connected and last used, and **Disconnect**, which ends its access at once. The owner sees and disconnects every app on the account; everyone else sees only their own. An app works with its person's role in the account, so it also stops when they leave the account or sign out everywhere. The card is hidden in support sessions.
 
 ## Custom domain
 
