@@ -163,7 +163,7 @@ export function adtoHeaders(apiKey, rawBody = "") {
 
 ## OpenAPI
 
-`GET /openapi.json` serves an OpenAPI 3.1 description of every route, generated from the same table the server's tests check against the routes it answers. Routes marked `x-internal` serve the dashboard and may change without notice. Point a client generator or an agent at it: `https://api.adto.app/openapi.json` on the hosted service.
+`GET /openapi.json` serves an OpenAPI 3.1 description of every route customers can call, generated from the same table the server's tests check against the routes it answers. The site operator's own routes are left out. Routes marked `x-internal` serve the dashboard and may change without notice. It is served on the API and dashboard hosts. On an account's link domain, `/openapi.json` is an ordinary link slug. Point a client generator or an agent at it: `https://api.adto.app/openapi.json` on the hosted service.
 
 ## MCP
 
