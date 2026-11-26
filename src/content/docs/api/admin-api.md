@@ -350,7 +350,7 @@ A report needs at least one link or one group. Only slugs and groups new to a sa
 | `breakdown` | The links split by the breakdown dimension (`group_by=link,<dimension>`) |
 | `totals` | One row: the metrics over all the report's links (`group_by=none`) |
 
-The links go into the query as values, never through the URL, so a slug that starts with `-` is still a link, not an exclusion. A run reads its groups' links first, so a group of any size is one query.
+The links go into the query as values, never through the URL, so a slug that starts with `-` is still a link, not an exclusion. A run reads its groups' links first, so a group of any size is one query, and each answer repeats them as its `link` filter (the chart's holds only the links it draws). A run over more than 10,000 links is a `400` that names the count. `breakdown` returns every row up to 20,000, then marks the answer `truncated`; the chart's `truncated` also covers its ranking.
 
 **How many reports an account keeps:**
 

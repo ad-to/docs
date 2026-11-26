@@ -28,9 +28,9 @@ The list shows each saved report you may see:
 **Links.** A report compares up to 100 links you choose one by one, and up to 20 whole [link groups](/dashboard/links/#groups) of any size. **Choose links** opens a list of the account's links with a search by slug, name, label, campaign or group, and these shortcuts:
 - **Top 10 by installs** and **Top 10 by clicks**, over the last year, temporary links included;
 - **Every link of a campaign…**: past 100 links, the 100 with the most installs over the last year;
-- **Add a whole group…**: the group joins as one chip with its number of links, however many it holds. Its links show ticked, marked **in group**.
+- **Add a whole group…**: the group joins as one chip with its number of links, however many it holds. Its links show ticked, marked **in group**. Links you chose one by one stay chosen, so one that leaves the group later stays in the report. A group whose links are all deleted is offered too, marked **all deleted**.
 
-A group is read each time the report opens: a link added to the group later is in the report, and one taken out leaves it. Its deleted links keep their numbers. To compare more than 100 links, put them in a group.
+A group is read each time the report runs: a link added to the group later is in the report, and one taken out leaves it. Its deleted links keep their numbers. To compare more than 100 links, put them in a group. A report compares at most 10,000 links in all; past that it says how many its groups hold and shows no numbers until you remove a group.
 
 Temporary links are listed too. **Show deleted links** adds deleted ones, which keep their numbers. A link chosen one by one shows as a chip with its colour on the chart; a group shows as a dark chip. × removes either.
 
@@ -65,7 +65,7 @@ A filter keeps only the values chosen. Click its chip to change it; × removes i
   - Shading marks the larger numbers in each column.
   - The last row totals every link.
   - A link with nothing in the period shows zeros.
-- **By {dimension}:** the split, each link's rows together.
+- **By {dimension}:** the split, each link's rows together. It draws the first 1,000 rows; **Show all** draws the rest, and its own **CSV** downloads every row.
 
 **CSV** downloads the table.
 
