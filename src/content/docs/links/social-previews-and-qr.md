@@ -90,7 +90,7 @@ The link is rendered through the redirect engine itself with each user agent, so
 
 ### For any page
 
-The site's free [social preview checker](https://adto.app/tools/social-preview) runs the same nine crawlers against any page or link, with no account. It differs from the drawer's check in three ways:
+The site's free [social preview checker](https://adto.app/tools/social-preview) runs the same nine crawlers against any page or link, with no account. It differs from the link editor's check in three ways:
 
 - **Redirects:** it follows them one hop at a time, up to five. Every hop must be a public http or https address on the default port, and so must the image. The card shows where each crawler ended up.
 - **Your own links:** a hop onto one of your AdTo links, such as a shortener in front of it, is answered by the redirect engine for that crawler, and nothing is counted.
