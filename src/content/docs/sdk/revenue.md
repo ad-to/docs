@@ -143,6 +143,18 @@ RevenueCat sends the subscriber's **app user ID**, the ID the app logs in to Rev
 2. A new subscription goes to the subscriber's newest install from before it started. A reinstall, or a second phone, that came later never takes the credit. If that install came from no link, the link of an earlier install on the same phone keeps it.
 3. A subscriber AdTo doesn't know as a customer yet, such as one still on an app version without the SDK, is recorded under their app user ID, without an install. Once the app identifies them, their earlier rows take the install and link that rule 2 gives, and their next renewals follow. If the app reports the same transaction with `trackConversion`, the row takes the app's link and install.
 
+### Subscribers from before the webhook
+
+RevenueCat's events name only their own billing period, so the first renewal AdTo hears of a subscription that started earlier would be credited from the renewal's date: a reinstall since then could take it. If you keep your own copy of RevenueCat's webhooks, or a RevenueCat export, send when each subscription started to the webhook URL followed by `/subscriptions`, 500 per request, with the same authorization value:
+
+```bash
+curl -X POST <webhook URL>/subscriptions \
+  -H "authorization: <value>" -H "content-type: application/json" \
+  -d '{"subscriptions":[{"store":"APP_STORE","original_transaction_id":"410002448286245","started_at_ms":1745231896000}]}'
+```
+
+`started_at_ms` is the `purchased_at_ms` of the subscription's `INITIAL_PURCHASE`. The earliest start of a subscription wins, so sending the history again changes nothing. To fill in events from before the webhook was on, post them to the webhook URL as RevenueCat would: each is recorded once, by its `id`.
+
 RevenueCat's anonymous IDs (`$RCAnonymousID:…`) are never matched. A purchase made before the app logs the user in to RevenueCat is matched once RevenueCat has linked the two IDs, from its next event on.
 
 | RevenueCat event | Recorded as |
