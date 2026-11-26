@@ -56,7 +56,7 @@ Installs attribute to temporary links like to permanent ones. The verdict then c
 
 ## Editing
 
-The edit drawer on the **Temporary** tab and `PUT /api/v1/temp-links/{slug}` (SDK: `updateTempLink`) can change the target and the social preview; the drawer and the API also set the expired URL, and pause, archive or delete the link like a permanent one ([Dashboard: Links](/dashboard/links/#pausing-archiving-and-deleting)). The TTL and the expiry cannot be changed; create a new link instead.
+The link editor on the **Temporary** tab and `PUT /api/v1/temp-links/{slug}` (SDK: `updateTempLink`) can change the target and the social preview; the editor and the API also set the expired URL, and pause, archive or delete the link like a permanent one ([Dashboard: Links](/dashboard/links/#pausing-archiving-and-deleting)). The TTL and the expiry cannot be changed; create a new link instead.
 
 ## Expiry lifecycle
 

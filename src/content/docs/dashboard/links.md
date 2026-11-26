@@ -87,7 +87,7 @@ All per-link numbers are all-time totals, which is why they do not match the Ove
 
 Each row ends with **Edit** (a pencil; the label reads "Edit (custom social preview)" and the icon carries a dot when the link has its own preview), **Clone** (a copy icon with a plus), **Over time** (a line chart: opens the link alone in an unsaved [report](/dashboard/reports/)), **Screens after open** (a numbered list), **Pause** or **Resume**, **Archive** or **Unarchive**, and **Delete** (a trash can). On the **Deleted** view the row offers **Restore** and, for owners, **Delete permanently** instead. See [Pausing, archiving and deleting](#pausing-archiving-and-deleting).
 
-**Clone** asks for the copy's slug, suggesting `{slug}-copy`; left blank, it is generated. A slug cannot be changed later. It then makes the new link from that one and opens it in the link drawer, where you can change the rest before sharing it. The copy keeps:
+**Clone** asks for the copy's slug, suggesting `{slug}-copy`; left blank, it is generated. A slug cannot be changed later. It then makes the new link from that one and opens it in the link editor, where you can change the rest before sharing it. The copy keeps:
 - the destination and app;
 - the preview, routing and routing rules;
 - the tracking values and UTMs;
@@ -133,7 +133,7 @@ Empty states: "No permanent links yet.", "No temporary links. Pick an expiry whe
 
 ## Groups
 
-**Groups** opens a panel listing your groups with how many links each holds (deleted links not counted). Type a name and press **Create** to add one; names are unique, up to 100 characters. **Rename** edits a name in place; **Delete** asks first, and the group's links stay, in any other groups they are in. A link joins groups from the create form or under **Name and groups** in the link drawer. See [Link groups](/api/links/#link-groups).
+**Groups** opens a panel listing your groups with how many links each holds (deleted links not counted). Type a name and press **Create** to add one; names are unique, up to 100 characters. **Rename** edits a name in place; **Delete** asks first, and the group's links stay, in any other groups they are in. A link joins groups from the create form or under **Name and groups** in the link editor. See [Link groups](/api/links/#link-groups).
 
 ## Importing links
 
@@ -141,17 +141,17 @@ Empty states: "No permanent links yet.", "No temporary links. Pick an expiry whe
 
 ## Editing a link
 
-**Edit** opens a side drawer titled with the link's name, or **Edit link** when it has none, above its `/slug`. Permanent links get six blocks; temporary links get the expiry and the social preview.
+**Edit** opens the link's own page, `/dashboard/links?edit=<slug>`, in place of the list. Its top bar reads **Links /** and the link's name (or its `/slug` when it has none), with the link's URL and a copy button under it, and holds **Close** (**Discard** once something changed) and **Save changes**. The **Links** link goes back to the list. The blocks are in tabs (`&section=` in the address): **General** (name and groups, the QR code, expiry), **Social preview** (the preview and routing), **Routing** (routing rules and the route check), **Tracking** and **Health**. Temporary links have no Tracking tab and no name, groups, QR code or routing rules. A tab whose fields changed carries an orange dot, and **Save changes** saves every tab at once.
 
-**Link health**, at the top of the drawer (below the QR code on a permanent link), checks the saved link when the drawer opens: a score from 0 to 100, the checks that fail with a link to where each is fixed (the app's iOS or Android settings, the custom domain, the preview below), the passing ones folded away, and what a tap does with and without the app on an iPhone, an Android phone and a computer. **Check again** reruns it after you save. See [Link health](/links/how-a-tap-is-routed/#link-health).
+**Link health**, on the **Health** tab, checks the saved link when the page opens: a score from 0 to 100, the checks that fail with a link to where each is fixed (the app's iOS or Android settings, the custom domain, the preview below), the passing ones folded away, and what a tap does with and without the app on an iPhone, an Android phone and a computer. **Check again** reruns it after you save. See [Link health](/links/how-a-tap-is-routed/#link-health).
 
 ### Name and groups
 
-Permanent links only, at the top of the drawer. **Name** (up to 200 characters, only you see it) and **Groups**, the same checklist as the create form, where a new group can be created on the spot. Clearing the name and unticking every group both save. A drawer title shows the name above the slug when the link has one.
+Permanent links only, on the **General** tab. **Name** (up to 200 characters, only you see it) and **Groups**, the same checklist as the create form, where a new group can be created on the spot. Clearing the name and unticking every group both save. The top bar shows the name, with the slug under it, when the link has one.
 
 ### Tracking
 
-Permanent links only. The label, campaign, adgroup and creative from the create form, and the link's **UTM source**, **UTM medium**, **UTM campaign**, **UTM term** and **UTM content** (added to its web destinations; see [Link-level UTM values](/links/url-parameters/#link-level-utm-values)), each up to 255 characters, then two checkboxes, both off by default: **Add the click id to website destinations**, which adds `adto_click` to the link's web URLs (never a store or an app scheme) for [`adto.js`](/sdk/web/) on that site, and **Pass the link's query parameters to website destinations**, which copies a tap's own parameters (such as `?ref=anna`) onto those URLs, over their own values and the link's UTMs (see [Your own parameters](/links/url-parameters/#your-own-parameters)). **Save changes** at the foot of the drawer saves them with the drawer's other changes; an emptied field clears the stored value.
+Permanent links only. The label, campaign, adgroup and creative from the create form, and the link's **UTM source**, **UTM medium**, **UTM campaign**, **UTM term** and **UTM content** (added to its web destinations; see [Link-level UTM values](/links/url-parameters/#link-level-utm-values)), each up to 255 characters, then two checkboxes, both off by default: **Add the click id to website destinations**, which adds `adto_click` to the link's web URLs (never a store or an app scheme) for [`adto.js`](/sdk/web/) on that site, and **Pass the link's query parameters to website destinations**, which copies a tap's own parameters (such as `?ref=anna`) onto those URLs, over their own values and the link's UTMs (see [Your own parameters](/links/url-parameters/#your-own-parameters)). **Save changes** at the foot of the editor saves them with the editor's other changes; an emptied field clears the stored value.
 
 ### Expiry
 
@@ -186,7 +186,7 @@ Under the card, **Which social preview should this link use?** offers:
 
 The card and the **App preview** line are built from the app currently selected in the **New link** form's App dropdown, or from your oldest app when nothing is selected there. The preview people actually see when they share the link is resolved by the server from the link, then the link's app, then a generic card; see [Social previews and QR](/links/social-previews-and-qr/).
 
-At the bottom of the drawer, **Check the preview on each platform** asks for the link as the crawlers of Facebook, X, LinkedIn, Pinterest, Slack, Discord, WhatsApp, iMessage and Telegram do. Each platform is a tab with a dot (green, amber for issues, red for no preview); the selected one shows its card drawn the way that platform shows it, with **Looks right**, **{n} issues** or **No preview**, and each issue in a sentence: no image, an image host that refuses that crawler, an image too large for the platform, an image address that is a page, a link Pinterest would save as a plain Pin rather than a Rich Pin. It checks the saved link, so save first. See [Check the preview on each platform](/links/social-previews-and-qr/#check-the-preview-on-each-platform).
+On the **Social preview** tab, **Check the preview on each platform** asks for the link as the crawlers of Facebook, X, LinkedIn, Pinterest, Slack, Discord, WhatsApp, iMessage and Telegram do. Each platform is a tab with a dot (green, amber for issues, red for no preview); the selected one shows its card drawn the way that platform shows it, with **Looks right**, **{n} issues** or **No preview**, and each issue in a sentence: no image, an image host that refuses that crawler, an image too large for the platform, an image address that is a page, a link Pinterest would save as a plain Pin rather than a Rich Pin. It checks the saved link, so save first. See [Check the preview on each platform](/links/social-previews-and-qr/#check-the-preview-on-each-platform).
 
 ### Routing
 
@@ -194,16 +194,16 @@ Permanent links only.
 
 | Field | Options |
 |---|---|
-| **iOS deep link path**, **Android deep link path** | Free text, placeholder `products/42?color=black`, with the same server rules as the create form. Each box is disabled, with the placeholder `no scheme set`, while the link's own app has no scheme for that platform, because a path is only used in a scheme URL. The drawer's app preview and fallback default also come from the link's own app. |
+| **iOS deep link path**, **Android deep link path** | Free text, placeholder `products/42?color=black`, with the same server rules as the create form. Each box is disabled, with the placeholder `no scheme set`, while the link's own app has no scheme for that platform, because a path is only used in a scheme URL. The editor's app preview and fallback default also come from the link's own app. |
 | **If the app isn't installed** | **App stores** (marked **Default**) or **Custom URL** (placeholder `https://promo.example.com/offer`). Sets `redirect_url`. |
 | **Mobile landing pages** | **iOS tap-to-store page** and **Interstitial page**, each **App setting (on)** or **App setting (off)** (the default, following the link's app), **On for this link** or **Off for this link**. See [How a tap is routed](/links/how-a-tap-is-routed/#mobile-delivering-it). |
 | **If the app can't open the link (desktop)** | **Desktop visitors see**: **App setting (Fallback URL)** or **App setting (QR page)** (the default, following the link's app), **QR page for this link** or **Fallback URL for this link**; sets `desktop_qr`. Below it, **Fallback URL**: **None (QR page only)**, or **App fallback URL** when the link's app has one (marked **Default**), or **Custom URL** (placeholder `https://web.example.com/page`); sets `fallback_url`. A line under it says where a desktop click goes, for example "No fallback URL is set, so desktop clicks get the QR page, with a link on to shop.example." |
 
-**See where this link goes**, at the bottom of the drawer, routes one tap from an iPhone, an Android phone and a computer through the saved link and lists where each one ends up, without counting any of them. See [Check where a link goes](/links/how-a-tap-is-routed/#check-where-a-link-goes).
+**See where this link goes**, on the **Routing** tab, routes one tap from an iPhone, an Android phone and a computer through the saved link and lists where each one ends up, without counting any of them. See [Check where a link goes](/links/how-a-tap-is-routed/#check-where-a-link-goes).
 
 The last row sets the same `fallback_url` field, with the same labels, as the create form. The field is the desktop and no-destination tail: with no custom URL, a desktop visitor gets the app's Fallback URL if there is one, otherwise the branded QR page.
 
-**Save** sends the preview choice and, for permanent links, every routing field at once; an emptied field clears the stored value. Before sending, the drawer checks "Enter the custom redirect URL" and "Enter the custom fallback URL" when a Custom URL option is selected with an empty box. Success shows "Saved ✓"; failures show the server's message.
+**Save** sends the preview choice and, for permanent links, every routing field at once; an emptied field clears the stored value. Before sending, the editor checks "Enter the custom redirect URL" and "Enter the custom fallback URL" when a Custom URL option is selected with an empty box. Success shows "Saved ✓"; failures show the server's message.
 
 ## Pausing, archiving and deleting
 
