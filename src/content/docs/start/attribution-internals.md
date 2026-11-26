@@ -73,7 +73,7 @@ So the pool is the 50 newest web clicks (recorded by the redirect engine or synt
 | Device model | `device_model` (lower-cased) | `device_model` from `Sec-CH-UA-Model` or the WebView `Build/` token | +40 | Candidate excluded entirely |
 | OS major | `os_major` parsed from `os_version` | `os_major` parsed from `os` (platform-version hint on Android; Safari's `Version/` token on iOS, none for an 18.6 or later OS token without one) | +15 | −30 |
 | Language | `lang` from `language` | `lang` from `Accept-Language` | +10 | −15 |
-| Screen short side | `min(screen_width, screen_height)` in physical px | `min(screen_width, screen_height) × pixel_ratio` from the interstitial beacon | +15 when within 3 % | −40 |
+| Screen short side | `min(screen_width, screen_height)` in physical px | `min(screen_width, screen_height) × pixel_ratio` from the interstitial beacon | +15 when within 6 px or 0.5 %, whichever is larger: rounding only, since phone models sit a few percent apart (iPhones at 1170, 1179 and 1206 px) | −40 |
 | Network | `asn` | `asn` | +10 | 0 |
 
 There is no CPU signal. No phone browser sends an architecture (iOS Safari sends no client hints; Android Chrome answers `Sec-CH-UA-Arch` with an empty string), so the redirect no longer asks for it. The install's `cpu_type` and `cpu_family` are still stored, for the `emulator` rule.
@@ -173,7 +173,7 @@ The rules that acted are stored in `blocked_by` (null when none), sent on the we
 
 ### Same-device reinstall routing
 
-When the ladder and the fingerprint found nothing to credit or route, a reinstall (`is_reinstall = 1`) with a `device_id` gets the click its device's latest credited install consumed as `routing_click_id` with `match_confidence = 'medium'`, provided that tap is younger than the deterministic window of its link's app (`deterministic_window_hours`, default 168). The click stays credited to the first install; `match_details.reinstall_routing` names it.
+When the ladder and the fingerprint found nothing to credit or route, a reinstall (`is_reinstall = 1`) with a `device_id` gets the click its device's latest credited install consumed as `routing_click_id` with `match_confidence = 'medium'`, provided that tap is younger than the deterministic window of its link's app (`deterministic_window_hours`, default 168). The click stays credited to the first install; `match_details.reinstall_routing` names it. It is skipped when the fingerprint's top two candidates tied (less than 10 points apart, neither negative): a fresh tap on the install's network is likelier what brought the user back, so the install gets no routing rather than the old link.
 
 ### 5. After the insert
 
