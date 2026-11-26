@@ -15,9 +15,9 @@ The Apps screen, at https://dashboard.adto.app/dashboard/apps, holds the identif
 Most settings belong to the app a link is bound to: the link's **App**, or your oldest app when a link has none. **Fraud rules** and the **Low-entropy attribution window** belong to the app an install concerns, and so does an install's webhook event: the app of the credited or routed link; else the install's own app, the one whose Android package or iOS bundle ID equals the `package_name` the SDK sends (on an account with one app, that app); else the oldest app. The app's identifiers matter here: an install whose package name matches none of your apps falls back to the oldest app on an account with several.
 </Aside>
 
-## App cards
+## The apps table
 
-Each registered app is a card with two-letter initials, the name, the iOS bundle ID or Android package (or "No identifiers yet"), **Edit**, **Delete** and five status chips. A chip is green when its condition holds and gray otherwise.
+The registered apps are one table with the columns **App** (the store icon or two-letter initials, and the name), **iOS** (the bundle ID), **Android** (the package) and **Set up**, which holds five status chips. An identifier not saved yet reads "Not set". Clicking a row opens its editor; **Delete** shows on the row when the pointer is over it. A chip is green when its condition holds and gray otherwise.
 
 | Chip | Green when | Hover text |
 |---|---|---|
@@ -31,7 +31,7 @@ The oldest app is the account's default app. It serves links created with **Defa
 
 ## The editor
 
-The editor is titled `Edit <name>`, **Register your first app** or **Register an app**, with the subtitle "Only the name is required — fill in each platform as you set it up." On wide screens a side menu jumps to the sections below. The editor is always open while the account has no app.
+The editor replaces the table while it is open. Its top bar reads **Apps / <name>** for a saved app (the **Apps** link goes back to the table), or **Register your first app** or **New app** with the line "Only the name is required. Fill in each platform as you set it up." The top bar holds **Delete** (saved apps), **Close** (**Discard** once something changed) and **Save changes** (**Add app** for a new app). On wide screens a sticky menu beside the form jumps to its sections and marks the one in view; for a saved app **Setup** leads it. The editor is always open while the account has no app.
 
 ### Are we live yet?
 
@@ -185,7 +185,7 @@ The fraud rules and both windows are read from the app the install concerns (see
 
 ## Saving
 
-A sticky bar appears at the bottom once the form differs from what is saved, with **Save changes** (or **Add app** for a new app) and **Cancel**. While nothing is wrong it reads "Changes apply to new link taps right after saving." or "New apps can be edited any time." A rejected save keeps the bar up and replaces that text with the server's message. On success the editor closes and the status line shows "Saved ✓".
+**Save changes** (or **Add app**) in the top bar is enabled once the form differs from what is saved, and "Unsaved changes" shows beside it on wide screens. A rejected save keeps the editor open with the server's message above the form. On success the editor closes and the table shows "Saved ✓". Changes apply to new link taps right after saving.
 
 Updates are partial on the server: a field left out keeps its value, and an emptied field clears it (except the name). Identifier fields are validated after trimming but saved exactly as typed, so avoid leading or trailing spaces.
 
