@@ -152,7 +152,7 @@ The exported `/blog` page has its own title and share tags but loads the list of
 
 ## Host and path routing
 
-Some paths belong to the worker on every host: anything under `/api/`, `/r/`, `/.well-known/` and `/_/`, plus exactly `/healthz`, `/readyz`, `/openapi.json`, `/robots.txt` and `/sitemap.xml`. `/mcp` and `/adto.js` belong to the worker on the site and dashboard hosts; on an account's link host they are ordinary slugs. Everything else depends on the host. The port is ignored when matching hosts.
+Some paths belong to the worker on every host: anything under `/api/`, `/r/`, `/.well-known/` and `/_/`, plus exactly `/healthz`, `/readyz`, `/robots.txt` and `/sitemap.xml`. `/mcp` and `/adto.js` belong to the worker on the site and dashboard hosts; on an account's link host they are ordinary slugs. `/openapi.json` belongs to the worker only on the API and dashboard hosts; anywhere else, the site included, it is routed like any other path, and on an account's link host it finds no link, since slugs can't contain a dot. Everything else depends on the host. The port is ignored when matching hosts.
 
 The site host and the dashboard host both serve the dashboard's static export (its `/_next`, `/media` and `/fonts` files are shared), each owning some of its pages: the site pages (`/`, `/about`, `/blog`, `/blog/<slug>`, `/contact`, `/customers/istoria`, `/firebase-dynamic-links-alternative`, `/pricing`, `/privacy`, `/terms`) belong to the site host, the dashboard pages (`/login`, `/dashboard`, `/invite`, `/reset-password`) to the dashboard host. A page asked of the other host answers `301` to the same path and query string on its own host. When `SITE_URL` and `WEB_URL` name the same host, that host serves every page and nothing redirects.
 
@@ -164,9 +164,9 @@ The site host and the dashboard host both serve the dashboard's static export (i
 | any | `/.well-known/…` | The association files above. |
 | any | `/_/collect` | The link pages' beacon (POST): the screen profile and device settings, and which button the visitor took. |
 | any | `/healthz`, `/readyz`, `/robots.txt`, `/sitemap.xml` | See this page. |
-| any | `/openapi.json` | The OpenAPI description of every route. |
 | `api.adto.app`, `adto.app` | `/mcp` | The [MCP server](/guides/automation-and-agents/#mcp-server). |
 | `api.adto.app`, `adto.app` | `/adto.js` | The [web pixel](/sdk/web/). |
+| `api.adto.app`, `dashboard.adto.app` | `/openapi.json` | The [OpenAPI description](/api/overview/) of every route customers can call. |
 | `adto.app` | `/`, `/about`, `/contact`, `/customers/istoria`, `/firebase-dynamic-links-alternative`, `/pricing`, `/privacy`, `/terms`, `/SKILL.md`, `/llms.txt`, the export's files | The static export: the landing page, the site pages and the agent docs, so `curl https://adto.app/SKILL.md` works without a redirect. |
 | `adto.app` | `/blog`, `/blog/<slug>` | The export's blog pages with the worker's additions; an unknown slug answers `404` (see [Blog post pages](#blog-post-pages)). |
 | `adto.app` | `/login`, `/dashboard…`, `/invite`, `/reset-password` | `301` to `WEB_URL` plus the path and the query string: `https://adto.app/login?tab=signup` goes to `https://dashboard.adto.app/login?tab=signup`. |
