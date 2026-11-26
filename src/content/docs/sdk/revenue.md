@@ -125,7 +125,37 @@ A notification that names a token or order the app never reported is logged as `
 
 Store rows and the app's reports are the same rows: one per store, transaction id and type. A transaction the app already reported is confirmed by the store's notification (the store's amount wins, and the row is marked store-verified) instead of being counted again. A transaction the store reported first takes the link and install of the app's report when it arrives. A renewal or refund is credited to the link of the subscription's first purchase. The stores resend a notification until it is acknowledged; a resend changes nothing.
 
-The last 20 notifications of the app, with what each did (`recorded`, `updated`, `duplicate`, `ignored`, `unmatched`, `test`, `rejected`), are listed under the URLs. The log is kept for 90 days.
+The last 20 notifications of the app, with what each did (`recorded`, `updated`, `duplicate`, `ignored`, `unmatched`, `test`, `rejected`, `sandbox`), are listed under the URLs. The log is kept for 90 days.
+
+## RevenueCat
+
+If the app sells through [RevenueCat](https://www.revenuecat.com/), RevenueCat can report purchases, renewals, cancellations and refunds instead of the stores. Prices then arrive for Google Play too, and the app doesn't need to call `trackConversion`. RevenueCat's webhooks come with its Pro plan.
+
+An app uses either store notifications or RevenueCat, not both: the two can name a Google Play purchase differently, and it would count twice. In the dashboard, **Apps → your app → Store notifications → Use RevenueCat instead** turns RevenueCat on (and the store notification URLs off). It shows a URL and an authorization value. The value is shown only then, so copy it straight away; **New URL and value** makes new ones and stops the old ones.
+
+In RevenueCat, open **Integrations → Webhooks**, add a webhook with the URL, paste the value as the **authorization header value**, and send it production events. Use **Send test event** to check it: the dashboard lists it as `test`. A request without the value is refused with `401`. Sandbox events are logged as `sandbox` and never count as revenue.
+
+### Which link gets the credit
+
+RevenueCat sends the subscriber's **app user ID**, the ID the app logs in to RevenueCat with. Pass the same ID to [`identify`](/sdk/events/) as the customer ID, and AdTo knows which installs belong to the subscriber:
+
+1. A renewal, cancel or refund goes to the link of its subscription's first purchase, as with store notifications.
+2. A new subscription goes to the subscriber's newest install from before it started. A reinstall, or a second phone, that came later never takes the credit. If that install came from no link, the link of an earlier install on the same phone keeps it.
+3. A subscriber AdTo doesn't know as a customer yet, such as one still on an app version without the SDK, is recorded under their app user ID, without an install. Once the app identifies them, their earlier rows take the install and link that rule 2 gives, and their next renewals follow. If the app reports the same transaction with `trackConversion`, the row takes the app's link and install.
+
+RevenueCat's anonymous IDs (`$RCAnonymousID:…`) are never matched. A purchase made before the app logs the user in to RevenueCat is matched once RevenueCat has linked the two IDs, from its next event on.
+
+| RevenueCat event | Recorded as |
+|---|---|
+| `INITIAL_PURCHASE`, `RENEWAL`, `NON_RENEWING_PURCHASE` | a purchase, at the price in the customer's currency (a free trial is 0) |
+| `CANCELLATION` with `cancel_reason` `CUSTOMER_SUPPORT` | a refund of that transaction, when AdTo counted its purchase; otherwise logged as `unmatched` |
+| any other `CANCELLATION` | a cancel (counts nothing) |
+| `UNCANCELLATION` | the subscription's cancel is removed |
+| `REFUND_REVERSED` | the refund is removed; the purchase counts again |
+| `TEST` | logged only |
+| anything else, and stores other than the App Store and Google Play | logged and ignored |
+
+A RevenueCat row never changes a row the stores verified, and fills in the amount of a row the app reported first. Its `event.conversion` webhook carries `source: "revenuecat"`. RevenueCat retries an event it couldn't deliver for about 80 minutes; a resend changes nothing.
 
 ## One currency
 
