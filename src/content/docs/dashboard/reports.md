@@ -1,6 +1,6 @@
 ---
 title: Reports
-description: The Reports screen compares chosen links side by side over a period, with filters such as country and platform, a chart with a line per link, a table, a split by any dimension, CSV, and saved reports the team can open again.
+description: The Reports screen compares chosen links, or whole link groups of any size, side by side over a period, with filters such as country and platform, a chart with a line per link, a table, a split by any dimension, CSV, and saved reports the team can open again.
 sidebar:
   order: 2
 ---
@@ -14,7 +14,7 @@ The list shows each saved report you may see:
 | Column | What it shows |
 |---|---|
 | **Report** | Its name, which opens it, and **Private** when only its creator sees it |
-| **Links** | How many links it compares |
+| **Links** | How many links it compares, or its groups, such as `1 group` or `2 groups + 3` |
 | **Period** | Its period, such as **Last 30 days** |
 | **Made by** | **You**, or the teammate's email |
 | **Changed** | When it was last saved |
@@ -25,11 +25,14 @@ The list shows each saved report you may see:
 
 ### What it compares
 
-**Links (n of 100).** **Choose links** opens a list of the account's links with a search by slug, label or campaign, and three shortcuts:
+**Links.** A report compares up to 100 links you choose one by one, and up to 20 whole [link groups](/dashboard/links/#groups) of any size. **Choose links** opens a list of the account's links with a search by slug, name, label, campaign or group, and these shortcuts:
 - **Top 10 by installs** and **Top 10 by clicks**, over the last year, temporary links included;
-- **Every link of a campaign…**.
+- **Every link of a campaign…**: past 100 links, the 100 with the most installs over the last year;
+- **Add a whole group…**: the group joins as one chip with its number of links, however many it holds. Its links show ticked, marked **in group**.
 
-Temporary links are listed too. **Show deleted links** adds deleted ones, which keep their numbers. A chosen link shows as a chip with its colour on the chart; × removes it.
+A group is read each time the report opens: a link added to the group later is in the report, and one taken out leaves it. Its deleted links keep their numbers. To compare more than 100 links, put them in a group.
+
+Temporary links are listed too. **Show deleted links** adds deleted ones, which keep their numbers. A link chosen one by one shows as a chip with its colour on the chart; a group shows as a dark chip. × removes either.
 
 **Period:**
 - **Today** or **Yesterday**, charted by the hour;

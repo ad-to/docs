@@ -315,7 +315,7 @@ The dashboard's **Reports** tab: a named comparison of chosen links, run by the 
 | Method and path | Who | Purpose | Response |
 |---|---|---|---|
 | `GET /api/admin/reports` | any role | The reports the person may see, most recently changed first | `200 {data: [Report], limit: {max, used}}`. `max` is the plan's cap, null for any number |
-| `POST /api/admin/reports` | member | Save one: `{name, visibility?, definition, from?}`. `from`, the id of a report you can see, marks a copy of it: its links are not checked again, so a link deleted since does not block the copy | `201` Report. `400` for a bad definition or an unknown link. `402 plan_required` (with `limit`) past the plan's cap |
+| `POST /api/admin/reports` | member | Save one: `{name, visibility?, definition, from?}`. `from`, the id of a report you can see, marks a copy of it: its links and groups are not checked again, so one deleted since does not block the copy | `201` Report. `400` for a bad definition, an unknown link or an unknown group. `402 plan_required` (with `limit`) past the plan's cap |
 | `GET /api/admin/reports/:id` | any role | One report | `200` Report. `404` for someone else's private report |
 | `PUT /api/admin/reports/:id` | member | Change any of `name`, `visibility`, `definition` | `200` Report. `403` when changing who sees another person's report, or editing another person's private one as the owner |
 | `DELETE /api/admin/reports/:id` | member | Delete it: its creator, or the owner | `200 {success: true}`. `403` for another person's report |
@@ -329,7 +329,9 @@ The dashboard's **Reports** tab: a named comparison of chosen links, run by the 
 
 | Field | What it holds |
 |---|---|
-| `links` | 1 to 100 link slugs of the account, permanent or temporary, deleted ones included. Only slugs new to a saved report are checked, so a link deleted since never blocks a rename. |
+| `links` | Up to 100 link slugs of the account, permanent or temporary, deleted ones included. |
+| `groups` | Up to 20 link group ids of the account. A group stands for the links in it each time the report runs, however many, deleted ones included: a link added to it later is in the report, and a group deleted since covers none. A report saved before groups reads back with `groups: []`. |
+
 | `metrics` | Any of the analytics metrics. Default: `clicks`, `installs`, `reinstalls`, `opens`, `leads`, `revenue`. |
 | `filters` | `[{dimension, values, exclude?}]`: any analytics dimension but `link`, each once, 1 to 100 values. `exclude: true` drops those values. |
 | `period` | `{preset}`, one of `today`, `yesterday`, `7d`, `30d` (the default), `90d`, `this_month`, `last_month`, `365d`, counted from the day the report runs. Or `{start, end}`: fixed local days, at most 366. |
@@ -337,7 +339,7 @@ The dashboard's **Reports** tab: a named comparison of chosen links, run by the 
 | `chart_metric` | One of `metrics`, for the chart (default the first). |
 | `breakdown` | A dimension to split the links by, or null. |
 
-Any other field is a `400`.
+A report needs at least one link or one group. Only slugs and groups new to a saved report are checked, so a link or group deleted since never blocks a rename; an unknown one is a `400` (`Unknown link: …`, `Unknown link group: …`). Any other field is a `400`.
 
 **The views a run returns:**
 
@@ -348,7 +350,7 @@ Any other field is a `400`.
 | `breakdown` | The links split by the breakdown dimension (`group_by=link,<dimension>`) |
 | `totals` | One row: the metrics over all the report's links (`group_by=none`) |
 
-The links go into the query as values, never through the URL, so a slug that starts with `-` is still a link, not an exclusion.
+The links go into the query as values, never through the URL, so a slug that starts with `-` is still a link, not an exclusion. A run reads its groups' links first, so a group of any size is one query.
 
 **How many reports an account keeps:**
 
