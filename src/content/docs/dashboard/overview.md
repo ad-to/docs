@@ -169,7 +169,7 @@ The figures read the raw rows, so they reach back as far as the retention window
 
 The top 8 device models among installs in the window that reported a model, with an install count. Models are stored lowercased. A model AdTo knows shows its marketing name with the code after it (`Samsung Galaxy S23 Ultra sm-s918b`, `iPhone 17 iphone18,3`), or the name alone when the SDK already sent the marketing name (`iPhone 17`); any other shows as `{model} · {manufacturer}`. Android names come from Google Play's supported-devices list, refreshed weekly for the models your installs report; iPhone names from a list in AdTo for the iPhone 8 to the iPhone 18 Pro Max. The count is first installs; when the model also had reinstalls the row adds `+{n} reinstalls`. App updates are left out.
 
-Empty state: "No device data yet. Turn on `collectDeviceData` in the SDK." See [Device data and privacy](/sdk/device-data-and-privacy/).
+Empty state: "No device data yet. Turn on the device tier in the SDK (`AdtoCollection.deviceTier`)." See [Device data and privacy](/sdk/device-data-and-privacy/).
 
 ### Carriers
 
