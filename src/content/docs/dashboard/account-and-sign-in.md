@@ -19,7 +19,7 @@ Sign-in lives at https://dashboard.adto.app/login. The page is titled **Dashboar
 
 On success you are signed in and see **Account created — you are signed in.** with two keys: **SDK key, for your app** (listed again under Settings → [SDK keys](/dashboard/settings/#sdk-keys)) and **Account key, for servers and scripts**, which this screen shows once: "Copy it now: it is not shown again (Settings can replace it)." Then **Go to dashboard**.
 
-A footer line reads "Your account gets its own link subdomain and API key." Every account created through signup has the `user` role (see [Roles](#roles)). Its revenue currency starts as the currency of the country you signed up from, EGP from Egypt for example, or EUR when the country is not known; an owner changes it under Settings → [Revenue currency](/dashboard/settings/#revenue-currency).
+A footer line reads "Your account gets its own link subdomain and API key." Its revenue currency starts as the currency of the country you signed up from, EGP from Egypt for example, or EUR when the country is not known; an owner changes it under Settings → [Revenue currency](/dashboard/settings/#revenue-currency).
 
 ## Log in
 
@@ -105,15 +105,6 @@ Someone who joins from an invite has no account of their own: no username, no li
 Signing up on the login page, with a password or with Google, always creates an account of your own; only joining from an invite skips it.
 
 After joining, an **Account** menu at the top of the sidebar lists your own account (if you have one) and every account you belong to, each with your role there; choosing one reloads the dashboard on it, on its live data. **Leave** at the bottom of the Team card leaves the account shown; an owner has to invite you again. When an owner removes you, your next request lands on your own account, or on the next account you joined. Someone left in no account at all sees **No account yet**, with the same **Open my account** form and **Log out**; opening another invite link joins that account.
-
-## Roles
-
-Every account also has a platform role: `owner` or `user`. It is separate from the team roles above.
-
-- **Users** see Overview, Links, Apps, Customers and Settings of the account chosen in the **Account** menu, as far as their team role there allows (a viewer has no Customers). There is no cross-account view.
-- The **owner** additionally sees **Blog** and **Messages** in the sidebar; see [Blog and messages](/dashboard/blog-and-messages/). Non-owners who open `/dashboard/blog` or `/dashboard/messages` by URL are sent back to the Overview, and the API answers `403 Owner access required`.
-
-The owner is the account created by the deployment's bootstrap call, or by the local demo seed. When the role column was introduced, the oldest existing account became the owner. Signup and Google sign-in always create `user` accounts, and there is no screen or API call to change a role. On the hosted service, accounts created through signup are `user` accounts with the full dashboard; Blog and Messages belong to the site operator.
 
 ## What the dashboard does not offer
 
