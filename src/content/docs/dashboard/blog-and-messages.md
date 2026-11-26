@@ -54,7 +54,7 @@ Saving creates or updates the post. The first publish stamps the publication dat
 
 ## Messages
 
-`/dashboard/messages`, titled **Messages** ("Messages sent through the contact form."). The screen loads the newest 200 messages. Each card shows the subject, the time it arrived in your local time, a trash icon, `{name} · {email}` with the email as a `mailto:` link, and the message text. There is no search, no pagination and no read or unread state.
+`/dashboard/messages`, titled **Messages** ("Messages sent through the contact form."). The screen loads the newest 200 messages. Each card shows the subject, the time it arrived in your local time, a trash icon, `{name} · {email}` with the email as a `mailto:` link, and the message text. Below the text, a line shows where the sender was (city, region and country), their device, OS and browser, the site that referred them (**Direct or unknown referrer** when there was none) and their IP address; **All details** opens every field the message keeps, listed under [Who sent it](#who-sent-it). Messages sent before 26 November 2026 have none of these. There is no search, no pagination and no read or unread state.
 
 The trash icon asks **Delete message**: "Are you sure you want to delete this message? This action cannot be undone." Empty state: "No messages yet." If the list cannot be loaded: "Could not load messages."
 
@@ -70,6 +70,22 @@ Messages come from https://adto.app/contact ("Get in Touch"). The form is checke
 | **Message** | 10 to 2,000 characters. |
 
 The server accepts at most 5 submissions per hour per IP address. Submissions are counted before validation, so rejected ones use up the allowance; the sixth gets `Too many messages — try again later`. A message is only stored; no email is sent to anyone. The sender sees "Message sent!" with "Thank you for contacting us. We'll get back to you soon.", or "Message not sent" with the error.
+
+### Who sent it
+
+Each message keeps, beside what the sender typed:
+
+| Field | Source |
+| --- | --- |
+| **IP address** | The request. Not kept when the deployment sets `STORE_RAW_IP=0`. |
+| **Location** and **Network** | The approximate city, region and country of the IP address, and the network it belongs to (a carrier, an ISP or a host). |
+| **Device** and **User agent** | The browser's user agent, and the device type (iPhone, iPad, Android or desktop), OS and browser it names. |
+| **Language** | The browser's `Accept-Language`. |
+| **Time zone** and **Screen** | Reported by the page: the IANA time zone and the screen size, such as `393x852@3`. |
+| **Came from** | The referrer of the first site page the visitor opened in that tab, so a search or post that brought them in still shows after they browse to Contact. |
+| **Landed on** and **Sent from** | That first page, and the page the form was sent from. |
+
+The three URLs keep only campaign tags (`utm_*`, `ref`) and ad click IDs (`gclid`, `fbclid`, `msclkid` and the like): every other query parameter, the fragment and any user name or password are removed in the browser and again by the server, so a link pasted into the [deep-link tester](https://adto.app/tools/deep-link) never reaches the inbox. A value the page reports that is not plain text or an http(s) URL is dropped, and the message is stored without it.
 
 ## Plans
 
