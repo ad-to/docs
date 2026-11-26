@@ -141,14 +141,14 @@ RevenueCat sends the subscriber's **app user ID**, the ID the app logs in to Rev
 
 1. A renewal, cancel or refund goes to the link of its subscription's first purchase, as with store notifications.
 2. A new subscription goes to the subscriber's newest install from before it started. A reinstall, or a second phone, that came later never takes the credit. If that install came from no link, the link of an earlier install on the same phone keeps it.
-3. A subscriber AdTo doesn't know as a customer is recorded without a link. If the app reports the same transaction later with `trackConversion`, the row takes the app's link and install.
+3. A subscriber AdTo doesn't know as a customer yet, such as one still on an app version without the SDK, is recorded under their app user ID, without an install. Once the app identifies them, their earlier rows take the install and link that rule 2 gives, and their next renewals follow. If the app reports the same transaction with `trackConversion`, the row takes the app's link and install.
 
 RevenueCat's anonymous IDs (`$RCAnonymousID:…`) are never matched. A purchase made before the app logs the user in to RevenueCat is matched once RevenueCat has linked the two IDs, from its next event on.
 
 | RevenueCat event | Recorded as |
 |---|---|
 | `INITIAL_PURCHASE`, `RENEWAL`, `NON_RENEWING_PURCHASE` | a purchase, at the price in the customer's currency (a free trial is 0) |
-| `CANCELLATION` with `cancel_reason` `CUSTOMER_SUPPORT` | a refund of that transaction |
+| `CANCELLATION` with `cancel_reason` `CUSTOMER_SUPPORT` | a refund of that transaction, when AdTo counted its purchase; otherwise logged as `unmatched` |
 | any other `CANCELLATION` | a cancel (counts nothing) |
 | `UNCANCELLATION` | the subscription's cancel is removed |
 | `REFUND_REVERSED` | the refund is removed; the purchase counts again |
