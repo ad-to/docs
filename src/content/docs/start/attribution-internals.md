@@ -173,7 +173,7 @@ The rules that acted are stored in `blocked_by` (null when none), sent on the we
 
 ### Same-device reinstall routing
 
-When the ladder and the fingerprint found nothing to credit or route, a reinstall (`is_reinstall = 1`) with a `device_id` gets the click its device's latest credited install consumed as `routing_click_id` with `match_confidence = 'medium'`, provided that tap is younger than the deterministic window of its link's app (`deterministic_window_hours`, default 168). The click stays credited to the first install; `match_details.reinstall_routing` names it. It is skipped when the fingerprint's top two candidates tied (less than 10 points apart, neither negative): a fresh tap on the install's network is likelier what brought the user back, so the install gets no routing rather than the old link.
+When the ladder and the fingerprint found nothing to credit or route, a reinstall (`is_reinstall = 1`) with a `device_id` gets the click its device's latest credited install consumed as `routing_click_id` with `match_confidence = 'medium'`, provided that tap is younger than the deterministic window of its link's app (`deterministic_window_hours`, default 168). The click stays credited to the first install; `match_details.reinstall_routing` names it. It is skipped when the fingerprint's top two candidates tied (less than 10 points apart, neither score negative) and both were clicked after the first install: a fresh tap on the install's network is likelier what brought the user back, so the install gets no routing rather than the old link.
 
 ### 5. After the insert
 
