@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-The Links screen, at https://dashboard.adto.app/dashboard/links, is where you create the links people tap. Its header reads "Deep links that open your app, track installs and expire when you want." Next to it, **Groups** manages [link groups](#groups), **Import CSV** creates many links from a file ([Importing links](#importing-links)), and **New link** opens the create panel; the panel is always open while the account has no links.
+The Links screen, at https://dashboard.adto.app/dashboard/links, is where you create the links people tap. Its top bar holds **Groups**, which manages [link groups](#groups), **Import CSV** creates many links from a file ([Importing links](#importing-links)), and **New link**, which opens the create panel; the panel is always open while the account has no links. The **Create** menu's **Link**, at the top of every dashboard page, opens the same panel (`/dashboard/links?new=1`). On a phone the three top-bar buttons show only their icons.
 
 On load the screen fetches your links, your apps (an account with exactly one app gets it preselected) and your username, which the deep-link previews use.
 
@@ -68,7 +68,7 @@ The complete decision order for a tap is in [How a tap is routed](/links/how-a-t
 
 ## The list
 
-Three tabs, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, sit above a table. Next to them, **Active**, **Archived** and **Deleted** pick which links the tabs show: active links (paused and expired ones included), archived links, or deleted links, with a count once there is one. On the Permanent tab, **Group: any** (once you have groups) shows only the links in one group, or **In no group**; a group chip on a row picks that group too. **Made with: any** narrows the list to links made with the **Dashboard**, the **API**, an **SDK** key or **MCP**, or to **Unknown** links: those made before AdTo recorded it, whose creation the audit log no longer holds. The **Search links** box filters the current tab in the browser, case-insensitively: slug, name, destination, campaign, label and group names on the Permanent tab; slug and destination on the Temporary tab; slug, customer and campaign on the Referrals tab. There is no pagination; the screen loads every permanent and temporary link, and the referral links when their tab opens.
+Three tabs in the top bar, **Permanent {n}**, **Temporary {n}** and **Referrals {n}**, pick the list; the open tab is part of the address (`?tab=temporary`). The list is one card: a toolbar, then a table. In the toolbar, **Active**, **Archived** and **Deleted** pick which links the tabs show: active links (paused and expired ones included), archived links, or deleted links, with a count once there is one. On the Permanent tab, **Group: any** (once you have groups) shows only the links in one group, or **In no group**; a group chip on a row picks that group too. **Made with: any** narrows the list to links made with the **Dashboard**, the **API**, an **SDK** key or **MCP**, or to **Unknown** links: those made before AdTo recorded it, whose creation the audit log no longer holds. The **Search links** box filters the current tab in the browser, case-insensitively: slug, name, destination, campaign, label and group names on the Permanent tab; slug and destination on the Temporary tab; slug, customer and campaign on the Referrals tab. There is no pagination; the screen loads every permanent and temporary link, and the referral links when their tab opens.
 
 ### Permanent links
 
@@ -141,7 +141,7 @@ Empty states: "No permanent links yet.", "No temporary links. Pick an expiry whe
 
 ## Editing a link
 
-**Edit** opens a side drawer titled **Edit link** `/slug`. Permanent links get six blocks; temporary links get the expiry and the social preview.
+**Edit** opens a side drawer titled with the link's name, or **Edit link** when it has none, above its `/slug`. Permanent links get six blocks; temporary links get the expiry and the social preview.
 
 **Link health**, at the top of the drawer (below the QR code on a permanent link), checks the saved link when the drawer opens: a score from 0 to 100, the checks that fail with a link to where each is fixed (the app's iOS or Android settings, the custom domain, the preview below), the passing ones folded away, and what a tap does with and without the app on an iPhone, an Android phone and a computer. **Check again** reruns it after you save. See [Link health](/links/how-a-tap-is-routed/#link-health).
 

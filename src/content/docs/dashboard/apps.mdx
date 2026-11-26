@@ -9,7 +9,7 @@ import { Aside } from '@astrojs/starlight/components';
 
 The Apps screen, at https://dashboard.adto.app/dashboard/apps, holds the identifiers AdTo needs to route taps and open your app. Its header reads "Register your iOS and Android apps. Their identifiers power store routing, deep links and the Universal Links / App Links files AdTo serves for you."
 
-An **Add app** button opens the editor. While the editor is closed, a status line shows "Saved ✓", "Deleted ✓" or the last error.
+**Add app**, in the top bar once the account has an app, opens the editor. While the editor is closed, a status line shows "Saved ✓", "Deleted ✓" or the last error.
 
 <Aside type="caution" title="Which app's settings apply">
 Most settings belong to the app a link is bound to: the link's **App**, or your oldest app when a link has none. **Fraud rules** and the **Low-entropy attribution window** belong to the app an install concerns, and so does an install's webhook event: the app of the credited or routed link; else the install's own app, the one whose Android package or iOS bundle ID equals the `package_name` the SDK sends (on an account with one app, that app); else the oldest app. The app's identifiers matter here: an install whose package name matches none of your apps falls back to the oldest app on an account with several.

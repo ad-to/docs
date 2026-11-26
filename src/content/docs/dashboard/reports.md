@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-The Reports screen, at https://dashboard.adto.app/dashboard/reports, compares the links you choose. Its header reads "Compare links side by side". A report is saved under a name, and opening it again runs it on fresh numbers. The links list's **Compare** opens a report too (see [Links](/dashboard/links/#compare)).
+The Reports screen, at https://dashboard.adto.app/dashboard/reports, compares the links you choose. Its intro reads "Compare links side by side: pick the links, a period and filters such as country or platform, and save the report to open it again with fresh numbers." A report is saved under a name, and opening it again runs it on fresh numbers. The links list's **Compare** opens a report too (see [Links](/dashboard/links/#compare)).
 
 ## The list
 
@@ -19,7 +19,7 @@ The list shows each saved report you may see:
 | **Made by** | **You**, or the teammate's email |
 | **Changed** | When it was last saved |
 
-**New report** opens an empty one. On Free and Starter, a count such as `2 of 3 saved` shows how many reports the plan keeps (Free 3, Starter 10; Growth and Scale any number). With the plan's reports all saved, a notice says so. Comparing links without saving still works.
+**New report**, in the top bar, opens an empty one, as does **Report** in the **Create** menu at the top of every dashboard page. On Free and Starter, a count such as `2 of 3 saved` shows how many reports the plan keeps (Free 3, Starter 10; Growth and Scale any number). With the plan's reports all saved, a notice says so. Comparing links without saving still works.
 
 ## A report
 

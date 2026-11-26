@@ -5,7 +5,22 @@ sidebar:
   order: 6
 ---
 
-The Settings screen, at https://dashboard.adto.app/dashboard/settings, has up to thirteen cards: **Account**, **Revenue currency**, **Plan**, **Account key**, **SDK keys**, **Link configuration**, **QR code style**, **Site keys**, **Custom domain**, **Team**, **Test environment**, **Audit log** and **Flutter SDK quickstart**. Which you see depends on your [role](/dashboard/account-and-sign-in/#teams) in the account: **Account key** is for owners; **SDK keys**, **Team** and **Audit log** are hidden from viewers; only owners can change the revenue currency and the retention window. Messages appear in a banner under the title: green for a copied or regenerated key, red for an error.
+The Settings screen, at https://dashboard.adto.app/dashboard/settings, groups its cards under tabs in the top bar. The open tab is part of the address (`?tab=developers`); **General** is the default.
+
+| Tab | Cards |
+|---|---|
+| **General** | [Account](#account), [Revenue currency](#revenue-currency), [Test environment](#test-environment) |
+| **Team** | [Team](#team) |
+| **Billing** | [Plan](#plan) |
+| **Links & domains** | [Link configuration](#link-configuration), [Custom domain](#custom-domain), [QR code style](#qr-code-style) |
+| **Developers** | [Account key](#account-key), [SDK keys](#sdk-keys), [Flutter SDK quickstart](#flutter-sdk-quickstart), [Site keys](#site-keys), [Connected apps](#connected-apps) |
+| **Audit log** | [Audit log](#audit-log) |
+
+Which you see depends on your [role](/dashboard/account-and-sign-in/#teams) in the account: **Account key** is for owners; **SDK keys** and the **Team** and **Audit log** tabs are hidden from viewers; only owners can change the revenue currency and the retention window. **Billing** shows only where the deployment bills, as the hosted service does. A tab you cannot see opens **General** instead.
+
+Links from before the tabs still land in the right place: `#billing`, a plan picked on the pricing page (`?plan=`) and the return from checkout (`?billing=done`) open **Billing**; `#custom-domain` opens **Links & domains**; `#team` opens **Team**; `#audit-log` opens **Audit log**; `#test-environment` and `#revenue-currency` open **General**.
+
+Messages appear in a banner above the cards of every tab: green for a copied or regenerated key, red for an error.
 
 ## Account
 
