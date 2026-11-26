@@ -71,7 +71,7 @@ A filter keeps only the values chosen. Click its chip to change it; × removes i
 
 ### Saving and sharing
 
-- **Save** stores the report. A new one needs a name, typed in its title.
+- **Save** stores the report. A new one needs a name, typed in the **Name** field above the settings; the top bar shows it.
 - **Team** or **Only me** sets who sees it. A team report is everyone's in the account. Only its creator sees a private one, and the owner sees it listed and may delete it.
 - **Save as copy** saves the settings as a new report of your own.
 - **Delete** is there for the report's creator and for the owner.
