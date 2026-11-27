@@ -57,7 +57,7 @@ Testing on an emulator or a debug build? **Emulator** flags every simulator inst
 
 ### iOS specifics
 
-- The pasteboard read is on by default. It only attributes when the link was on the pasteboard: turn on iOS tap-to-store (Apps, Advanced) so the "Get the app" button copies the link before opening the App Store. With it off, taps inside in-app browsers (Instagram, Facebook, TikTok) still get that page once your iOS build with the SDK has reported an install, unless the link has a custom redirect or the pasteboard read is Off; Safari taps need the switch on. See [Deterministic attribution](/sdk/deterministic-attribution/).
+- The pasteboard read is on by default. It only attributes when the link was on the pasteboard: turn on iOS tap-to-store (Apps, Advanced) so the "Get the app" button copies the link before opening the App Store. With it off, taps inside in-app browsers (Instagram, Facebook, TikTok) still get that page once your iOS build with the SDK has reported an install (with Universal Links, the “Open in app” page copies the link instead), unless the link has a custom redirect or the pasteboard read is Off; Safari taps need the switch on. See [Deterministic attribution](/sdk/deterministic-attribution/).
 - On iOS 16 and later the read shows the system "Allow paste from …?" alert when the pasteboard holds a URL. A user who declines leaves the install on the fingerprint. `willShowPasteboardPrompt()` tells you in advance; `AdtoPasteButton` lets the user paste later and sends a late claim.
 - Simulators cannot install from the App Store and do not open Universal Links. Test on a device.
 
