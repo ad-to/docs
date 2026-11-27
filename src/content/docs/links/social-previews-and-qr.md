@@ -62,7 +62,7 @@ Use a 1200 × 630 px JPG or PNG. That is the size the link editor recommends and
 
 ## Check the preview on each platform
 
-The link drawer's **Check the preview on each platform** (`GET /api/admin/links/:slug/preview-check`) shows what nine platforms get for a link, as their crawlers ask for it. Pick a platform to see its card drawn the way that platform shows it:
+The link editor's **Check the preview on each platform** (`GET /api/admin/links/:slug/preview-check`) shows what nine platforms get for a link, as their crawlers ask for it. Pick a platform to see its card drawn the way that platform shows it:
 
 | Platform | User agent it is checked with |
 |---|---|
@@ -90,7 +90,7 @@ The link is rendered through the redirect engine itself with each user agent, so
 
 ### For any page
 
-The site's free [social preview checker](https://adto.app/tools/social-preview) runs the same nine crawlers against any page or link, with no account. It differs from the drawer's check in three ways:
+The site's free [social preview checker](https://adto.app/tools/social-preview) runs the same nine crawlers against any page or link, with no account. It differs from the link editor's check in three ways:
 
 - **Redirects:** it follows them one hop at a time, up to five. Every hop must be a public http or https address on the default port, and so must the image. The card shows where each crawler ended up.
 - **Your own links:** a hop onto one of your AdTo links, such as a shortener in front of it, is answered by the redirect engine for that crawler, and nothing is counted.
@@ -134,7 +134,7 @@ pause or expiry settings. Deleted and unknown links return 404. Downloads curren
 support permanent links with a four-module margin. In
 [Settings → QR code style](/dashboard/settings/#qr-code-style), owners can change the
 pattern, corner borders and centers, colors, and PNG/JPG logo. The saved style applies
-to downloads, the link drawer preview and [the QR page](#the-qr-page). Already downloaded images retain
+to downloads, the link editor preview and [the QR page](#the-qr-page). Already downloaded images retain
 their design. Temporary links and bulk downloads are not supported.
 
 ## The QR page

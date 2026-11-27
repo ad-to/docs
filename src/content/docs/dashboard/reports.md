@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-The Reports screen, at https://dashboard.adto.app/dashboard/reports, compares the links you choose. Its header reads "Compare links side by side". A report is saved under a name, and opening it again runs it on fresh numbers. The links list's **Compare** opens a report too (see [Links](/dashboard/links/#compare)).
+The Reports screen, at https://dashboard.adto.app/dashboard/reports, compares the links you choose. Its intro reads "Compare links side by side: pick the links, a period and filters such as country or platform, and save the report to open it again with fresh numbers." A report is saved under a name, and opening it again runs it on fresh numbers. The links list's **Compare** opens a report too (see [Links](/dashboard/links/#compare)).
 
 ## The list
 
@@ -19,7 +19,7 @@ The list shows each saved report you may see:
 | **Made by** | **You**, or the teammate's email |
 | **Changed** | When it was last saved |
 
-**New report** opens an empty one. On Free and Starter, a count such as `2 of 3 saved` shows how many reports the plan keeps (Free 3, Starter 10; Growth and Scale any number). With the plan's reports all saved, a notice says so. Comparing links without saving still works.
+**New report**, in the top bar, opens an empty one, as does **Report** in the **Create** menu at the top of every dashboard page. On Free and Starter, a count such as `2 of 3 saved` shows how many reports the plan keeps (Free 3, Starter 10; Growth and Scale any number). With the plan's reports all saved, a notice says so. Comparing links without saving still works.
 
 ## A report
 
@@ -71,7 +71,7 @@ A filter keeps only the values chosen. Click its chip to change it; × removes i
 
 ### Saving and sharing
 
-- **Save** stores the report. A new one needs a name, typed in its title.
+- **Save** stores the report. A new one needs a name, typed in the **Name** field above the settings; the top bar shows it.
 - **Team** or **Only me** sets who sees it. A team report is everyone's in the account. Only its creator sees a private one, and the owner sees it listed and may delete it.
 - **Save as copy** saves the settings as a new report of your own.
 - **Delete** is there for the report's creator and for the owner.

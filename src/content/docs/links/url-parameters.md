@@ -101,7 +101,7 @@ The Overview's **Installs by campaign** and **Installs by source** charts group 
 
 ### Link-level UTM values
 
-A link can carry its own `utm_source`, `utm_medium`, `utm_campaign`, `utm_term` and `utm_content` (API fields of the same names; **Tracking** in the link drawer). They do two things:
+A link can carry its own `utm_source`, `utm_medium`, `utm_campaign`, `utm_term` and `utm_content` (API fields of the same names; **Tracking** in the link editor). They do two things:
 
 - A click whose URL has no value for a key stores the link's.
 - Every web destination of a tap gets the link's values added as query parameters, each only when the destination URL has none of its own: the desktop fallback, the custom redirect, the app's Fallback URL, the link's target, and a `adto_redirect` or `adto_fallback` URL. Store URLs never get them, and neither do scheme and `intent://` URLs.
@@ -127,7 +127,7 @@ The rules:
 
 A warm open still has the whole opened URL, unfiltered, in `click.queryParameters`.
 
-**The website.** Turn on **Pass the link's query parameters to website destinations** in the link drawer, under Tracking. Over the API, set `forward_query: true` on the link. The tap's own parameters are then copied onto every web destination that `utm_*` values reach (see above):
+**The website.** Turn on **Pass the link's query parameters to website destinations** in the link editor, under Tracking. Over the API, set `forward_query: true` on the link. The tap's own parameters are then copied onto every web destination that `utm_*` values reach (see above):
 
 - **What is copied:** the same keys the app gets, plus the tap's `utm_*`.
 - **Precedence:** a tapped key wins over the destination URL's own value for it, and over the link's `utm_*`.

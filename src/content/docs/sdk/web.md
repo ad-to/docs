@@ -9,7 +9,7 @@ Your links also send people to your website: the desktop QR page's website link,
 
 ## Set it up
 
-1. **Turn on the click id for those links.** In the link drawer, under Tracking, tick **Add the click id to website destinations** (`append_click_id: true` in the API). The link then adds `adto_click=<click id>` to its web destinations; never to an App Store or Play URL, an AppsFlyer, Adjust or Singular link, or an app scheme. A URL that already has `adto_click` keeps it.
+1. **Turn on the click id for those links.** In the link editor, on the Tracking tab, tick **Add the click id to website destinations** (`append_click_id: true` in the API). The link then adds `adto_click=<click id>` to its web destinations; never to an App Store or Play URL, an AppsFlyer, Adjust or Singular link, or an app scheme. A URL that already has `adto_click` keeps it.
 2. **Create a site key.** In **Settings > Site keys**, list the origins of your site, like `https://shop.example.com` (scheme, host and port; no path), and select **New site key**. A site key (`adto_site_…`) is public: it sits in your page source, works only from the origins you listed, and can only record leads, purchases and custom events. It is not an SDK key and not the account key.
 3. **Add the script** to every page, before your own code that calls it:
 
