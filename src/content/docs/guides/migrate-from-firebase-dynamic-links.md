@@ -40,7 +40,7 @@ FDL encoded routing in the URL. AdTo stores routing on the link and on the app a
 | `ipfl`, `ipbi` (iPad fallback and bundle) | No equivalent. An iPad with a mobile user agent is routed as iOS. iPadOS Safari in desktop mode is routed as desktop. | |
 | `isi` (App Store ID) | `ios_store_url`, for example `https://apps.apple.com/app/id<isi>` | App |
 | `imv` (minimum iOS version) | No equivalent | |
-| `efr` (skip the app preview page) | Nothing to skip. Mobile taps get a plain 302 unless you turn on the mobile interstitial or the iOS tap-to-store page. | App, Advanced |
+| `efr` (skip the app preview page) | Nothing to skip. Mobile taps get a plain 302 unless you turn on the mobile interstitial or the iOS tap-to-store page (iPhone taps inside in-app browsers get the tap-to-store page either way). | App, Advanced |
 | `ofl` (other platforms fallback) | The link's `fallback_url`, or `adto_fallback` on the shared URL. Without either, desktop visitors get the branded QR page. | Link, URL |
 | `st`, `sd`, `si` (social meta tags) | `og_title`, `og_description`, `og_image_url` on the link; the app's values are the defaults. Titles and descriptions are limited to 150 characters. | Link, app |
 | `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content` | Same names. Stored on every click as given. `utm_campaign` and `utm_source` feed the Overview campaign and source charts. | URL |
