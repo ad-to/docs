@@ -380,6 +380,19 @@ The public site's routes under `/api`.
 
 The public `GET /api/blog/…` routes answer with `X-Robots-Tag: noindex`: `robots.txt` lets crawlers fetch them, since the blog pages load their posts from them, but the JSON is not a page to index. See [robots.txt and sitemap.xml](/api/well-known-seo-and-routing/#robotstxt-and-sitemapxml).
 
+## Inspector
+
+The site owner's record of what the server did, under `/api/admin/inspector`. It records only while the server runs with `INSPECTOR=1`, and keeps each entry `INSPECTOR_RETENTION_DAYS` days (7 by default, 1 to 90). Entries are of seven types: `request` (every request, with its headers and bodies, the account, the SDK build and the queries it ran), `exception` (what a handler threw, with the stack), `query` (one at least `INSPECTOR_SLOW_QUERY_MS` long, 100 by default, `0` for every query, with its values, hashes left out), `outbound` (a call the server made, such as a webhook delivery), `job` (a scheduled run; the minute run only when it failed, called out or took 5 seconds), `mail` (an email, its links' tokens removed) and `log` (a warning or error logged while serving). An entry's `trace_id` is the request id (`x-request-id`) or the scheduled run's id, so one request's entries read together. Health checks, static files and the inspector's own routes are never recorded. The bodies of sign-in, sign-up, password and support-session routes are not kept; on those and on the routes that make keys, secrets and invites, neither are the queries' values. A device's or customer's erasure, export and detail are stored with the id in their path replaced by `:id`, and a store notification URL with its token replaced by `:token`. Before anything is stored, passwords, tokens, secrets, keys, signatures and cookies are replaced with `[redacted]`, AdTo keys are cut to their prefix, and bodies are cut at 32,768 characters.
+
+| Method and path | Auth | Purpose | Response |
+|---|---|---|---|
+| `GET /api/admin/inspector/status` | owner | Whether it records, the retention, the slow-query threshold, whether Sentry is on, the entries waiting to be written and dropped since the server started, and the last 24 hours' count of each type. | `200 {enabled, retention_days, slow_query_ms, sentry, buffered, dropped, last_day: {request, exception, query, outbound, job, mail, log}}` |
+| `GET /api/admin/inspector/entries?type=&q=&status=&min_ms=&limit=&before=` | owner | Entries newest first. `type` is one of the seven or `all` (default `request`); `q` matches a request id, device id, account id or username exactly, or any text of the summary; `status` is `2xx` to `5xx` or one code; `min_ms` keeps the ones that took at least that long; `limit` default 50, max 100; `before` is the last page's `next_cursor`. | `200 {entries: [{id, trace_id, type, created_at, user_id, device_id, status, duration_ms, summary, username}], next_cursor}`; `400` for another `type` or a `before` that is not a cursor |
+| `GET /api/admin/inspector/entries/:id` | owner | One entry with its `content` (the headers, bodies, queries, stack or text its type keeps), its account, and the other entries of its request or run, oldest first (up to 300). | `200 {entry, account, related}`; `404 Entry not found` |
+| `DELETE /api/admin/inspector/entries` | owner | Deletes every entry. Audited as `inspector.cleared`. | `200 {deleted}` |
+
+With `SENTRY_DSN` set, each exception a handler throws, each failed scheduled run and each failed background task is also sent to that Sentry project: its type, message and stack, the method, route and request id, and the account id, never headers or bodies. At most 30 a minute are sent, and Sentry's rate limits are kept.
+
 ## Rate limits
 
 | Route | Limit |
