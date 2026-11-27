@@ -57,7 +57,7 @@ Testing on an emulator or a debug build? **Emulator** flags every simulator inst
 
 ### iOS specifics
 
-- The pasteboard read is on by default. It only attributes when the link was on the pasteboard: turn on iOS tap-to-store (Apps, Advanced) so the "Get the app" button copies the link before opening the App Store. Taps inside in-app browsers (Instagram, Facebook, TikTok) get that page even with the switch off; Safari taps need it on. See [Deterministic attribution](/sdk/deterministic-attribution/).
+- The pasteboard read is on by default. It only attributes when the link was on the pasteboard: turn on iOS tap-to-store (Apps, Advanced) so the "Get the app" button copies the link before opening the App Store. With it off, taps inside in-app browsers (Instagram, Facebook, TikTok) still get that page once your iOS build with the SDK has reported an install, unless the link has a custom redirect or the pasteboard read is Off; Safari taps need the switch on. See [Deterministic attribution](/sdk/deterministic-attribution/).
 - On iOS 16 and later the read shows the system "Allow paste from …?" alert when the pasteboard holds a URL. A user who declines leaves the install on the fingerprint. `willShowPasteboardPrompt()` tells you in advance; `AdtoPasteButton` lets the user paste later and sends a late claim.
 - Simulators cannot install from the App Store and do not open Universal Links. Test on a device.
 
@@ -101,7 +101,7 @@ Start with the [AASA validator](https://adto.app/tools/aasa-validator). It check
 ## Links open the browser or the store instead of the app
 
 - The domain is not verified for the installed build: see the two sections above.
-- The tap came from an in-app browser. Android in-app browsers and WebViews get a plain 302 to the store, never the intent bounce. On iOS an app with a Team ID and bundle ID sends such a tap to the in-app browser page first, whose **Open in app** button opens the app through its Universal Link; without them, the tap-to-store page (which these taps get even with the switch off) leads with "Open in app" when the app has an iOS scheme.
+- The tap came from an in-app browser. Android in-app browsers and WebViews get a plain 302 to the store, never the intent bounce. On iOS an app with a Team ID and bundle ID sends such a tap to the in-app browser page first, whose **Open in app** button opens the app through its Universal Link. Without them, with iOS tap-to-store on, the tap-to-store page leads with "Open in app" inside Facebook, Instagram, Messenger, LINE, WeChat and Snapchat when the app has an iOS scheme.
 - The visitor is on a desktop user agent. Desktop never redirects to the target; it gets the QR page or a fallback URL. An iPad asks for desktop sites with a Mac user agent; its Safari tap counts as iOS only when the link's app is set up for iOS (a bundle ID, App Store URL or iOS scheme). See [How a tap is routed](/links/how-a-tap-is-routed/).
 - The SDK reports `Invalid AdTo URL format`: the tapped host does not match `baseUrl` and `linkRootDomain`. For AdTo leave both unset: the SDKs default to `https://api.adto.app` and `adto.app`.
 - The app has no store URL: a phone without the app goes to the app's fallback URL, then the link target, then the QR page. Add the store URLs on the Apps page.

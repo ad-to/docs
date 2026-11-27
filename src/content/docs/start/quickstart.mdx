@@ -161,7 +161,7 @@ This page uses the hosted service: the dashboard lives at `https://dashboard.adt
        3. Install the app (App Store or TestFlight) and open it. On iOS 16 and later the system asks to allow the paste; accept it.
        4. `onAppInstalled` emits `matched: true`, `matchSource: 'clipboard'` and `matchConfidence: 'guaranteed'`.
 
-       Without tap-to-store, or when the user declines the paste, iOS installs rely on the fingerprint. Taps inside in-app browsers (Instagram, Facebook, TikTok) get the page even with tap-to-store off.
+       Without tap-to-store, or when the user declines the paste, iOS installs rely on the fingerprint. Once your iOS build with the SDK has reported an install, taps inside in-app browsers (Instagram, Facebook, TikTok) get the page even with tap-to-store off.
      </TabItem>
    </Tabs>
 
