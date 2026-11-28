@@ -5,7 +5,7 @@ sidebar:
   order: 4
 ---
 
-AdTo does deep linking and install attribution for your own links. It is not a mobile measurement partner. This page lists what it does not do, so nobody finds out after integrating.
+AdTo does deep linking and install attribution for your own links. This page lists what it does not do, so nobody finds out after integrating.
 
 ## Ad networks and Apple's frameworks
 
