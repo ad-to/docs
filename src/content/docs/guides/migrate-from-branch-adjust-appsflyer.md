@@ -117,4 +117,4 @@ A `clickid` or `pid` already in the tracking link is kept. Store URLs, scheme li
 
 ## What AdTo does not do
 
-AdTo is not a mobile measurement partner: no SKAdNetwork or AdAttributionKit, no ad-network integrations or postbacks, advertising identifiers only through the optional `flutter_adto_adid` package, no re-attribution windows, and SDKs for Flutter, React Native and the web. The full list, with the probabilistic-matching limits and Apple's fingerprinting rules, is on [What AdTo does not do](/start/what-adto-does-not-do/).
+AdTo has no SKAdNetwork or AdAttributionKit support, no ad-network integrations or postbacks and no re-attribution windows. It takes advertising identifiers only through the optional `flutter_adto_adid` package, and its SDKs are for Flutter, React Native and the web. The full list, with the probabilistic-matching limits and Apple's fingerprinting rules, is on [What AdTo does not do](/start/what-adto-does-not-do/).
